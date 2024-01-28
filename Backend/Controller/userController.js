@@ -1,7 +1,6 @@
 const User = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const sendEmail = require("../helper/sendEmail")
-const mongoose = require("mongoose")
 
 const getAllUsers = async(req,res)=>{
     const users = await User.find()
