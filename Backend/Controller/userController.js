@@ -270,6 +270,41 @@ const editProfile = async(req,res)=>{
     }
 }
 
+const blockUser = async (req,res)=>{
+    try{
+        isAdmin = req.session.user.isAdmin
+        if(isAdmin){
+            const user = await User.findByIdAndUpdate(req.params.id,{isBlocked:true},{new:true,runValidators:true})
+            if(!user){
+                res.send({msg:"User not found",success:false,status:404})
+            }
+            res.send({msg:`User with id: ${req.params.id} blocked successfully`,success:true,status:200})
+        } else{
+            res.send({ msg: "You are not authorized to access", success: false, status: 401 })
+        }
+    } catch(error){
+        console.log(error.message);
+    }
+}
+
+const unblockUser = async (req,res)=>{
+    try{
+        isAdmin = req.session.user.isAdmin
+        if(isAdmin){
+            const user = await User.findByIdAndUpdate(req.params.id,{isBlocked:false},{new:true,runValidators:true})
+            if(!user){
+                res.send({msg:"User not found",success:false,status:404})   
+            }
+            res.status(200).send({msg:`User with id: ${req.params.id} unblocked successfully`,success:true})
+        } else{
+            res.send({ msg: "You are not authorized to access", success: false, status: 401 })
+        }
+    } catch(error){
+        console.log(error.message);
+    }
+}
+
+
 
 module.exports = {
     getAllUsers,
@@ -280,5 +315,7 @@ module.exports = {
     forgotPassword,
     changePassword,
     deleteaccount,
-    editProfile
+    editProfile,
+    blockUser,
+    unblockUser
 }
