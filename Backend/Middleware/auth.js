@@ -13,7 +13,7 @@ const isLogin = async(req,res,next)=>{
 const isLogout = async(req,res,next)=>{
     try{
         if((req.session.user)){
-            res.redirect('/dashboard')
+            res.redirect('/dashboard') //set this in frontend
         }
         next()
     } catch(error){

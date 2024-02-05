@@ -41,7 +41,7 @@ const registerUser = async(req,res)=>{
                             const data = {
                                 to: email,
                                 text: `Hey ${name}`,
-                                subject: "Welcome to our chat application ",
+                                subject: "Welcome to our E-Commerce website ",
                                 html: html
                             }
                             sendEmail(data)
@@ -82,9 +82,203 @@ const logoutUser = async(req,res)=>{
     }
 }
 
+const profile = async(req,res)=>{
+    try{
+        const currentId = req.session.user._id
+        const user = await User.findOne({_id:currentId})
+        res.send({user:user,success:true,status:200})
+    } catch(error){
+        console.log(error.message)
+    }
+}
+
+const forgotPassword = async(req,res)=>{
+    try{
+        const email = req.body.email
+        const user = await User.findOne({email:email})
+        const characters = process.env.PASSWORD_GENERATOR_STRING;
+        if(user){
+            let generatedPassword = '';
+            for (let i = 0; i < 15; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                generatedPassword += characters.charAt(randomIndex);
+            }
+            const salt = await bcryptjs.genSalt(10);    
+            const hashedPassword = await bcryptjs.hash(generatedPassword, salt)
+            const html = `
+            <h2>Password Recovery Instructions</h2>
+            <p>Dear ${user.name},</p>
+            <p>We received a request to recover your account password. If you did not initiate this request, please disregard this email.</p>
+            <p>Your new temporary password is <b>${generatedPassword}</b> you can change this later after loging in.Please dont share this to other for you safety purpose.If you have any questions or did not request a password reset, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a>.</p>
+            <p>Best regards,<br>Jinay Shah</p>
+            `
+            const data = {
+                to: email,
+                text: `Recover Password`,
+                subject: "Password Recovery Instructions",
+                html: html
+            }
+            await User.updateOne({email:email},{$set:{password:hashedPassword}})
+            sendEmail(data)
+            res.send({message:"Check your email address",success:true,status:200})
+        } else{
+            res.send({message:"user not found",success:false,status:404})
+        }
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
+const changePassword = async(req,res)=>{
+    try{
+        const currentId = req.session.user._id
+        const user = await User.findOne({_id:currentId})
+        const {oldPassword,newPassword} = req.body
+        const validPassword = await bcryptjs.compare(oldPassword, user.password)
+        if (!validPassword) {
+            res.send({ message: "Old Password is incorrect", success: false,status:401})
+        } else {
+            if(await bcryptjs.compare(newPassword, user.password)){
+                res.render({ message: "Password same as previous", success: false,staus:403})
+            } else{
+                if(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/.test(newPassword)){
+                    const salt = await bcryptjs.genSalt(10);    
+                    const hashedPassword = await bcryptjs.hash(newPassword, salt)
+                    const html = `
+                    <h2>Password Recovery Instructions</h2>
+                    <p>Dear ${user.name},</p>
+                    <p>We received a request to change your account password. If you did not initiate this request, please or if you have any questions or did not request a password change, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a>.</p>
+                    <p>As per your request we have successfully changed your password you can verify it by again loging in.</p>
+                    <p>Best regards,<br>Jinay Shah</p>
+                    `
+                    const data = {
+                        to: user.email,
+                        text: `Change Password`,
+                        subject: "Password Reset Instructions",
+                        html: html
+                    }
+                    await User.updateOne({_id:currentId},{$set:{password:hashedPassword}})
+                    sendEmail(data)
+                    res.send({message: "Password changed successfully", success: true,staus:200})
+                } else{
+                    res.send({message:'Enter strong password',success:false,status:403})
+                }
+            }
+        }
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
+const deleteaccount = async(req,res)=>{
+    try{
+        const userId = req.session.user._id
+        const name = req.session.user.name
+        const email = req.session.user.email
+        const html = `
+                    <h2>Delete Account </h2>
+                    <p>Dear ${name},</p>
+                    <p>We have successfully deleted your account. If this request was not initiated by you or if you have any concerns, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a>.</p>
+                    <p>If you did not request this action, please reach out to us immediately.</p>
+                    <p>Best regards,<br>Jinay Shah</p>
+                    `;
+        const data = {
+            to: email,
+            text: `Delete Account`,
+            subject: "Deleted Account",
+            html: html
+        }
+
+        await User.deleteOne({_id:userId})
+        sendEmail(data)
+        req.session.destroy()
+        res.send({msg:"user deleted successfully",success:true,status:200})
+    } catch(error){
+        console.log(error.message);
+    }
+}
+
+const editProfile = async(req,res)=>{
+    try{
+        const {name,email,mobile,address} = req.body
+        const userId = req.session.user._id
+        const user = await User.findOne({_id:userId})
+        if(name == ''){
+            res.send({msg:'name can not be empty',success:false,status:204})
+        }
+        if(name){
+            var nameupdate = User.updateOne({_id:userId},{name:name})
+        }
+        if(address && address!=""){
+            var addressupdate = User.updateOne({_id:userId},{address:address})
+        } else{
+            res.send({msg:"Address cant be empty",success:false,status:204})
+        }
+        if(mobile){
+            if(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile)){
+                const allNumber = await User.find({mobile:mobile})
+                if(allNumber.length == 0){
+                    var numberupdate = User.updateOne({_id:userId},{mobile:mobile})
+                } else{
+                    res.send({msg:'User with same Mobile Number already exist',success:false,status:409})
+                }
+            } else{
+                res.send({msg:'Enter Valid moile number',success:false,status:422})
+            }
+        }
+        if(email){
+            if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){
+                const allEmail = await User.find({email:email})
+                if(allEmail.length == 0){
+                    var emailupdate = User.updateOne({_id:userId},{email:email})
+                } else{
+                    res.send({msg:'User with same email address already exist',success:false,status:409})
+                }   
+            } else{
+                res.send({msg:'Enter Valid email address',success:false,status:422})
+            }
+        }
+        await nameupdate
+        await numberupdate
+        await emailupdate
+        await addressupdate
+        const oldEmail = user.email
+        const updatedUser = await User.updateOne({email:oldEmail},{name,email,mobile})
+        const html = `
+                <h2>Your Profile has been Updatedn </h2>
+                <p>Dear ${name},</p>
+                <p>We want to inform you that your profile on our application has been successfully updated. Your changes have been saved, and your profile now reflects the updated information.If you have any further updates or need assistance, feel free to log in to your account and make the necessary changes. If you have any questions, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a></p>
+                <p>Best regards,<br>[Jinay Shah]</p>
+            `
+        var data = {
+            to: email,
+            text: `Hey ${name}`,
+            subject: "Your Profile has been Updated",
+            html: html
+        }
+        sendEmail(data)
+        data = {
+            to: oldEmail,
+            text: `Hey ${name}`,
+            subject: "Your Profile has been Updated",
+            html: html
+        }
+        sendEmail(data)
+        res.send({ msg:"Profil edited successfully",success:true,status:200});
+    }catch(error){
+        console.log(error);
+    }
+}
+
+
 module.exports = {
     getAllUsers,
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    profile,
+    forgotPassword,
+    changePassword,
+    deleteaccount,
+    editProfile
 }
