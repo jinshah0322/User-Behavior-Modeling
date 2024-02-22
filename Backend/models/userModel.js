@@ -10,26 +10,33 @@ var userSchema = new mongoose.Schema({
         required:true,
         unique:true,
     },
-    mobile:{
+    phonenumber:{
         type:String,
         required:true,
-        unique:true,
     },
     password:{
         type:String,
         required:true,
     },
-    age:{
-        type:Number,
+    city:{
+        type:String,
         required:true
     },
     address:{
         type:String,
         required:true
     },
-    isBlocked:{
-        type:Boolean,
-        default:false
+    region:{
+        type:String,
+        required:true
+    },
+    country:{
+        type:String,
+        required:true
+    },
+    postalcode:{
+        type: String,
+        required:true
     },
     isAdmin:{
         type:Boolean,
