@@ -1,71 +1,40 @@
-
 import { FaShoppingBag } from "react-icons/fa";
 import { useState } from "react";
 
 export default function ChangePassword() {
-  const [errors, setErrors] = useState({});
   const [FormData, setFormData] = useState({
     email: "",
     password: "",
     confirmpassword: "",
   });
 
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...FormData, [name]: value });
-    setErrors({ ...errors, [name]: validateField(name, value) });
-    if (name === "confirmpassword") {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [name]: validateField(name, value, FormData.password),
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [name]: validateField(name, value),
-        }));
-      }
-  };
-
-  const validateField = (filedName, value, password) => {
-    const password_regx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    const email_regx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     let error = "";
 
-    if (filedName === "email") {
-      if (!value.trim()) error = "Email cannot be empty";
-      else if (!email_regx.test(value)) error = "Invalid email format";
-    } else if (filedName === "password") {
-      if (!value.trim()) error = "Password is required";
-      else if (!password_regx.test(value))
-        error =
-          "Password must contain at least one digit, one lowercase and one uppercase letter, and be at least 8 characters long";
+    switch (name) {
+      case "email":
+        error = value.trim() ? (/\S+@\S+\.\S+/.test(value) ? "" : "Invalid email address") : "Email address is required";
+        break;
+      case "password":
+        error = value.trim() ? (value.length >= 8 ? "" : "Password must be at least 8 characters long") : "Password is required";
+        break;
+      case "confirmpassword":
+        error = value === FormData.password ? "" : "Passwords do not match";
+        break;
+      default:
+        break;
     }
-    if (filedName === "confirmpassword") {
-      if (!value.trim()) return "Confirm password is required";
-      else if (value.trim() !== password) return "Passwords do not match";
-    }
-    return error;
-  };
 
-  const validate = () => {
-    let isValid = true;
-    for (const key in FormData) {
-      const fieldError = validateField(key, FormData[key]);
-      setErrors((prevErrors) => ({ ...prevErrors, [key]: fieldError }));
-      if (fieldError) isValid = false;
-    }
-    return isValid;
+    setFormData({ ...FormData, [name]: value });
+    setErrors({ ...errors, [name]: error });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isValid = validate();
-
-    if (isValid) {
-      console.log("Form is valid. Submitting data:", FormData);
-    }
-
+    console.log("Form submitted:", FormData);
     setFormData({
       email: "",
       password: "",
@@ -100,6 +69,7 @@ export default function ChangePassword() {
                   id="email"
                   name="email"
                   onChange={handleChange}
+                  value={FormData.email}
                   type="email"
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -123,9 +93,10 @@ export default function ChangePassword() {
                 <input
                   id="password"
                   name="password"
+                  value={FormData.password}
+                  onChange={handleChange}
                   type="password"
                   autoComplete="current-password"
-                  onChange={handleChange}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
                 {errors.password && (
@@ -144,6 +115,7 @@ export default function ChangePassword() {
               <input
                 type="password"
                 name="confirmpassword"
+                value={FormData.confirmpassword}
                 onChange={handleChange}
                 id="confirm-password"
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -162,8 +134,6 @@ export default function ChangePassword() {
               </button>
             </div>
           </form>
-
-       
         </div>
       </div>
     </>
