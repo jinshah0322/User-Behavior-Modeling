@@ -13,6 +13,7 @@ import ChangePassword from "./components/ChangePassword";
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
+const path = window.location.pathname;
 const Product = lazy(() => import("./pages/Product"));
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
           pauseOnHover
           theme="light"
         />
-        <NavBar />
+        {path !== "/login" && path !== "/register" ?<NavBar />:""}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Signup />} />

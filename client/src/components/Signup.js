@@ -36,13 +36,13 @@ const Signup = () => {
       try {
         // Send POST request to register user
         const response = await axios.post(
-          `${process.env.REACT_APP_SERVERURL}/api/v1/user/register`,
+          `http://localhost:5000/api/v1/user/register`,
           FormData
         );
   
-        console.log(response.data);
+        console.log(response);
         alert("Registration successful!");
-        
+        if(response.data.status === "success") {
         // Clear form data after successful registration
         setFormData({
           name: "",
@@ -55,15 +55,20 @@ const Signup = () => {
           postalcode: "",
           password: "",
         });
+        setErrors({});
+      }
   
         // Clear errors
-        setErrors({});
       } catch (error) {
         console.log(error);
         alert("Failed!");
       }
     }
+    else{
+      alert("Please fill all the fields correctly");
+    }
   };
+  console.log(FormData)
   
   const validate = () => {
     let isValid = true;
@@ -111,7 +116,7 @@ const Signup = () => {
     const password_regx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     const postalcode_regx = /^\d{5}$/;
     let error = "";
-
+  
     if (fieldName === "name") {
       if (!value.trim()) error = "Name cannot be empty";
       else if (!name_regx.test(value))
@@ -139,15 +144,15 @@ const Signup = () => {
       else if (!password_regx.test(value))
         error =
           "Password must contain at least one digit, one lowercase and one uppercase letter, and be at least 8 characters long";
-    }
-    if (fieldName === "confirmpassword") {
-      if (!value.trim()) return "Confirm password is required";
-      else if (value.trim() !== password) return "Passwords do not match";
-      else return ""; // Add this line to handle the case when passwords match
+    }else if (fieldName === "confirmpassword") {
+      if (!value?.trim()) return "Confirm password is required";
+      else if (value?.trim() !== password.trim()) return "Passwords do not match";
+      else return ""; // Passwords match
     }
     
     return error;
   };
+  
 
 
   return (
@@ -163,9 +168,10 @@ const Signup = () => {
           </h2>
         </div>
 
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" >
-            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
+          <form className="space-y-2" >
+            <div>
+            <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div class="sm:col-span-4">
                 <label
                   htmlFor="name"
@@ -174,14 +180,14 @@ const Signup = () => {
                   Username
                 </label>
                 <div className="mt-2">
-                  <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                  <div className="flex rounded-md outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                     <input
                       type="text"
                       name="name"
                       id="name"
                       onChange={handleChange}
                       autoComplete="name"
-                      className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      className="block flex-1 pl-2 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     />
                   </div>
                   {errors.name && (
@@ -204,13 +210,14 @@ const Signup = () => {
                     type="email"
                     onChange={handleChange}
                     autoComplete="email"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full pl-2 rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
                 {errors.email && (
                   <p className="text-sm text-red-800">{errors.email}</p>
                 )}
               </div>
+              
 
               <div className="sm:col-span-4">
                 <label
@@ -227,7 +234,7 @@ const Signup = () => {
                     <select
                       id="country"
                       name="country"
-                      className="h-full rounded-md border-0 bg-transparent bg-none py-0 pl-2 pr-9 text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
+                      className="h-full w-28 pl-2 rounded-md border-0 bg-transparent bg-none py-0 pl-2 pr-2 text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
                     >
                       {data.map((country) => (
                         <option
@@ -239,19 +246,65 @@ const Signup = () => {
                       ))}
                     </select>
                   </div>
-                  <input
+                  <input 
                     type="tel"
                     name="phonenumber"
                     id="phone-number"
                     autoComplete="tel"
                     onChange={handleChange}
-                    className="block w-full rounded-md border-0 pl-[6rem] px-5 py-2  text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 pl-32 py-2 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
                 {errors.phonenumber && (
                   <p className="text-sm text-red-800">{errors.phonenumber}</p>
                 )}
               </div>
+
+              <div className="sm:col-span-4">
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Password
+                </label>
+              </div>
+              <div className="mt-2">
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  onChange={handleChange}
+                  autoComplete="current-password"
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+              {errors.password && (
+                <p className="text-sm text-red-800">{errors.password}</p>
+              )}
+            </div>
+            
+            <div className="sm:col-span-4">
+              <label
+                htmlFor="confirm-password"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Confirm password
+              </label>
+              <input
+                type="password"
+                name="confirmpassword"
+                onChange={handleChange}
+                id="confirm-password"
+                className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+              {errors.confirmpassword && (
+                <p className="text-sm text-red-800">{errors.confirmpassword}</p>
+              )}
+            </div>
+              
+              </div>
+              <div>
 
               <div className="sm:col-span-3">
                 <label
@@ -265,7 +318,7 @@ const Signup = () => {
                     id="country"
                     name="country"
                     autoComplete="country-name"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     onChange={(e) => {
                       handleCountrySelect(e.target.value);
                       handleChange(e);
@@ -284,52 +337,8 @@ const Signup = () => {
                   <p className="text-sm text-red-800">{errors.country}</p>
                 )}
               </div>
-
-              <div className="col-span-full">
-                <label
-                  htmlFor="street-address"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Street address
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="address"
-                    onChange={handleChange}
-                    id="street-address"
-                    autoComplete="street-address"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                  {errors.address && (
-                    <p className="text-sm text-red-800">{errors.address}</p>
-                  )}
-                </div>
-              </div>
-
+                               
               <div className="sm:col-span-2 sm:col-start-1">
-                <label
-                  htmlFor="city"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  City
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="city"
-                    id="city"
-                    onChange={handleChange}
-                    autoComplete="address-level2"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-                {errors.city && (
-                  <p className="text-sm text-red-800">{errors.city}</p>
-                )}
-              </div>
-
-              <div className="sm:col-span-2">
                 <label
                   htmlFor="region"
                   className="block text-sm font-medium leading-6 text-gray-900"
@@ -341,7 +350,7 @@ const Signup = () => {
                     id="region"
                     name="region"
                     autoComplete="region"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                     onChange={(e) => {
                       handleStateSelect(e.target.value);
                       handleChange(e);
@@ -368,6 +377,28 @@ const Signup = () => {
 
               <div className="sm:col-span-2">
                 <label
+                  htmlFor="city"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  City
+                </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="city"
+                    id="city"
+                    onChange={handleChange}
+                    autoComplete="address-level2"
+                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                </div>
+                {errors.city && (
+                  <p className="text-sm text-red-800">{errors.city}</p>
+                )}
+              </div>
+
+              <div className="sm:col-span-2">
+                <label
                   htmlFor="postal-code"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
@@ -380,7 +411,7 @@ const Signup = () => {
                     onChange={handleChange}
                     id="postal-code"
                     autoComplete="postal-code"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
                 {errors.postalcode && (
@@ -388,56 +419,39 @@ const Signup = () => {
                 )}
               </div>
             </div>
-            <div>
-              <div className="flex items-center justify-between">
+            <div className="col-span-full">
                 <label
-                  htmlFor="password"
+                  htmlFor="street-address"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                  Password
+                  Street address
                 </label>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    name="address"
+                    onChange={handleChange}
+                    id="street-address"
+                    autoComplete="street-address"
+                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  />
+                  {errors.address && (
+                    <p className="text-sm text-red-800">{errors.address}</p>
+                  )}
+                </div>
               </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  onChange={handleChange}
-                  autoComplete="current-password"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-              {errors.password && (
-                <p className="text-sm text-red-800">{errors.password}</p>
-              )}
-            </div>
-            <div>
-              <label
-                htmlFor="confirm-password"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Confirm password
-              </label>
-              <input
-                type="password"
-                name="confirmpassword"
-                onChange={handleChange}
-                id="confirm-password"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-              {errors.confirmpassword && (
-                <p className="text-sm text-red-800">{errors.confirmpassword}</p>
-              )}
-            </div>
+            
 
             <div>
               <button
-                type="submit"
+                type="button"
                 onClick={handleSubmit}
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white outline-none border border-gray-100 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Create an account
               </button>
+            </div>
+
             </div>
           </form>
 
@@ -457,3 +471,5 @@ const Signup = () => {
 };
 
 export default Signup;
+
+
