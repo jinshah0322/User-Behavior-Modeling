@@ -30,13 +30,13 @@ function App() {
           pauseOnHover
           theme="light"
         />
-        {path !== "/login" && path !== "/register" ?<NavBar />:""}
+        {path !== "/login" && path !== "/register" && path !== "/forgotpassword" ?<NavBar />:""}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/forgot" element={<ForgetPassword />} />
-          <Route path="/cpass" element={<ChangePassword />} />
+          <Route path="/forgotpassword" element={<ForgetPassword />} />
+          <Route path="/changepassword" element={<ChangePassword />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />

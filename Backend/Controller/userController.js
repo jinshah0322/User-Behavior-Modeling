@@ -134,6 +134,7 @@ const forgotPassword = async(req,res)=>{
 const changePassword = async(req,res)=>{
     try{
         const {oldPassword,newPassword,_id} = req.body
+        console.log(req.body);
         const currentId = _id
         const user = await User.findOne({_id:currentId})
         const validPassword = await bcryptjs.compare(oldPassword, user.password)
@@ -141,7 +142,7 @@ const changePassword = async(req,res)=>{
             res.send({ message: "Old Password is incorrect", success: false,status:401})
         } else {
             if(await bcryptjs.compare(newPassword, user.password)){
-                res.render({ message: "Password same as previous", success: false,staus:403})
+                res.send({ message: "Password same as previous", success: false,staus:403})
             } else{
                 if(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/.test(newPassword)){
                     const salt = await bcryptjs.genSalt(10);    
