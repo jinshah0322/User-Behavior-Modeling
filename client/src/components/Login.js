@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { FaShoppingBag } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {toast,Toaster} from 'react-hot-toast';
 import axios from 'axios';
 
 export default function Login() {
@@ -14,59 +15,45 @@ export default function Login() {
 
   const handleLogin = async() =>
   {
-    const isValid = validate();
-    if(isValid) {
+    if(!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(FormData.email))){
+      toast.error('Invalid Email');
+      return;
+    }
+ 
       try {
-        await axios.post(`${process.env.REACT_APP_SERVERURL}/api/v1/user/login`, FormData);
-        console.log("Login success!");
-        setFormData({
-          email: "",
-          password: "",
-        });
-        navigate("/");
+        const response = await axios.post(`http://localhost:5000/api/v1/user/login`, FormData);
+        const data = await response;
+        console.log(data);
+        if(data?.data?.success === true){
+          setFormData({
+            email: "",
+            password: "",
+          });
+          navigate("/");
+        }     
+        else{
+          toast.error(data?.data?.msg);
+        }  
       } catch (error) {
         console.log(error);
         navigate("/login");
       }
+    
     }
-  }
+  
   
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...FormData, [name]: value });
-    setErrors({ ...errors, [name]: validateField(name, value) });
   };
 
-  const validateField = (filedName, value) => {
-    const password_regx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    const email_regx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    let error = "";
 
-    if (filedName === "email") {
-      if (!value.trim()) error = "Email cannot be empty";
-      else if (!email_regx.test(value)) error = "Invalid email format";
-    } else if (filedName === "password") {
-      if (!value.trim()) error = "Password is required";
-      else if (!password_regx.test(value))
-        error =
-          "Password must contain at least one digit, one lowercase and one uppercase letter, and be at least 8 characters long";
-    }
-    return error;
-  };
 
-  const validate = () => {
-    let isValid = true;
-    for (const key in FormData) {
-      const fieldError = validateField(key, FormData[key]);
-      setErrors((prevErrors) => ({ ...prevErrors, [key]: fieldError }));
-      if (fieldError) isValid = false;
-    }
-    return isValid;
-  };
 
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+        <Toaster />
         <div className="sm:mx-auto sm:w-full sm:max-w-sm content-center">
           <div className="flex justify-center text-[2rem] items-center text-gray-900 ">
             <FaShoppingBag className="text-black text-3xl mr-2" />
@@ -126,17 +113,15 @@ export default function Login() {
                   autoComplete="current-password"
                   onChange={handleChange}
                   className="pl-2 outline-none block w-full border border-gray-100 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-                {errors.password && (
-                  <p className="text-sm text-red-800">{errors.password}</p>
-                )}
+                />                
               </div>
             </div>
 
             <div>
               <button
-                type="submit"
+                type="button"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                onClick={handleLogin}
               >
                 Sign in
               </button>

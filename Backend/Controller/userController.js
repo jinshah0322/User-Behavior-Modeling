@@ -14,7 +14,6 @@ const getAllUsers = async(req,res)=>{
 const registerUser = async (req, res) => {
     try {
         const { name, email, phonenumber, password, city, state, streetAddress, postalcode, country } = req.body;
-        
         const existingUserEmail = await User.findOne({ email: email });
         const existingUserNumber = await User.findOne({ phonenumber: phonenumber });
         if(!existingUserEmail){
