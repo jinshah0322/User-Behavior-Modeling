@@ -13,7 +13,7 @@ const getAllUsers = async(req,res)=>{
 }
 const registerUser = async (req, res) => {
     try {
-        const { name, email, phonenumber, password, city, address, region, postalcode, country } = req.body;
+        const { name, email, phonenumber, password, city, state, region, postalcode, country } = req.body;
         
         const existingUserEmail = await User.findOne({ email: email });
         const existingUserNumber = await User.findOne({ phonenumber: phonenumber });
@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
                                 email:email,
                                 password:hashedPassword,
                                 phonenumber:phonenumber,
-                                address:address,
+                                state:state,
                                 city:city,
                                 region:region,
                                 postalcode:postalcode,
@@ -203,7 +203,7 @@ const deleteaccount = async(req,res)=>{
 
 const editProfile = async(req,res)=>{
     try{
-        const {name, email, phonenumber, password, city, region, postalcode, country} = req.body
+        const {name, email, phonenumber, password, city, region, postalcode, country,state} = req.body
         const userId = req.session.user._id
         const user = await User.findOne({_id:userId})
         if(name == ''){
@@ -241,7 +241,7 @@ const editProfile = async(req,res)=>{
         await emailupdate
         await addressupdate
         const oldEmail = user.email
-        const updatedUser = await User.updateOne({email:oldEmail},{name,email,phonenumber,password, city, region, postalcode, country})
+        await User.updateOne({email:oldEmail},{name,email,phonenumber,password, city, region, postalcode, country,state})
         const html = `
                 <h2>Your Profile has been Updatedn </h2>
                 <p>Dear ${name},</p>

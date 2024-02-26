@@ -22,7 +22,7 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    address:{
+    state:{
         type:String,
         required:true
     },
