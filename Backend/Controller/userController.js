@@ -133,9 +133,9 @@ const forgotPassword = async(req,res)=>{
 
 const changePassword = async(req,res)=>{
     try{
-        const currentId = req.session.user._id
+        const {oldPassword,newPassword,_id} = req.body
+        const currentId = _id
         const user = await User.findOne({_id:currentId})
-        const {oldPassword,newPassword} = req.body
         const validPassword = await bcryptjs.compare(oldPassword, user.password)
         if (!validPassword) {
             res.send({ message: "Old Password is incorrect", success: false,status:401})
