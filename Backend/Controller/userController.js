@@ -29,7 +29,6 @@ const registerUser = async (req, res) => {
                                 email:email,
                                 password:hashedPassword,
                                 phonenumber:phonenumber,
-                                age:age,
                                 address:address,
                                 city:city,
                                 region:region,
