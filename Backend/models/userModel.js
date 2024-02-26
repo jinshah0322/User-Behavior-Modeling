@@ -18,7 +18,7 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
-    city:{
+    country:{
         type:String,
         required:true
     },
@@ -26,11 +26,11 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    region:{
+    city:{
         type:String,
         required:true
     },
-    country:{
+    streetAddress:{
         type:String,
         required:true
     },
