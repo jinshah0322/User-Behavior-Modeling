@@ -13,8 +13,7 @@ const getAllUsers = async(req,res)=>{
 }
 const registerUser = async (req, res) => {
     try {
-        const { name, email, phonenumber, password, city, address, region, postalcode, country } = req.body;
-        
+        const { name, email, phonenumber, password, city, state, streetAddress, postalcode, country } = req.body;
         const existingUserEmail = await User.findOne({ email: email });
         const existingUserNumber = await User.findOne({ phonenumber: phonenumber });
         if(!existingUserEmail){
@@ -29,9 +28,9 @@ const registerUser = async (req, res) => {
                                 email:email,
                                 password:hashedPassword,
                                 phonenumber:phonenumber,
-                                address:address,
+                                state:state,
                                 city:city,
-                                region:region,
+                                streetAddress:streetAddress,
                                 postalcode:postalcode,
                                 country:country
                             })
@@ -134,15 +133,16 @@ const forgotPassword = async(req,res)=>{
 
 const changePassword = async(req,res)=>{
     try{
-        const currentId = req.session.user._id
+        const {oldPassword,newPassword,_id} = req.body
+        console.log(req.body);
+        const currentId = _id
         const user = await User.findOne({_id:currentId})
-        const {oldPassword,newPassword} = req.body
         const validPassword = await bcryptjs.compare(oldPassword, user.password)
         if (!validPassword) {
             res.send({ message: "Old Password is incorrect", success: false,status:401})
         } else {
             if(await bcryptjs.compare(newPassword, user.password)){
-                res.render({ message: "Password same as previous", success: false,staus:403})
+                res.send({ message: "Password same as previous", success: false,staus:403})
             } else{
                 if(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/.test(newPassword)){
                     const salt = await bcryptjs.genSalt(10);    
@@ -203,7 +203,7 @@ const deleteaccount = async(req,res)=>{
 
 const editProfile = async(req,res)=>{
     try{
-        const {name, email, phonenumber, password, city, region, postalcode, country} = req.body
+        const {name, email, phonenumber, password, city, streetAddress, postalcode, country,state} = req.body
         const userId = req.session.user._id
         const user = await User.findOne({_id:userId})
         if(name == ''){
@@ -241,7 +241,7 @@ const editProfile = async(req,res)=>{
         await emailupdate
         await addressupdate
         const oldEmail = user.email
-        const updatedUser = await User.updateOne({email:oldEmail},{name,email,phonenumber,password, city, region, postalcode, country})
+        await User.updateOne({email:oldEmail},{name,email,phonenumber,password, city, streetAddress, postalcode, country,state})
         const html = `
                 <h2>Your Profile has been Updatedn </h2>
                 <p>Dear ${name},</p>

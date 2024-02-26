@@ -1,329 +1,203 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaShoppingBag } from "react-icons/fa";
+// Import necessary dependencies and styles
+import React, { useState } from 'react';
 import axios from 'axios';
-const Signup = () => {
-  const data = require("./data.json");
-  const statesData = require("./states.json");
+import { toast, Toaster } from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedState, setSelectedState] = useState("");
-  const [errors, setErrors] = useState({});
-  const [FormData, setFormData] = useState({
-    name: "",
-    email: "",
-    phonenumber: "",
-    country: "",
-    address: "",
-    city: "",
-    region: "",
-    postalcode: "",
-    password: "",
+// Define the Signup component
+const Signup = () => {
+  const [step, setStep] = useState(1);
+  const navigate = useNavigate();
+  const statesData = require("./states.json");
+  const data = require("./data.json");
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phonenumber: '',
+    password: '',
+    repassword: '',
+    country: '',
+    state: '',
+    city: '',
+    postalcode: '',
+    streetAddress: ''
   });
 
-  const handleCountrySelect = (country) => {
-    setSelectedCountry(country);
-    setSelectedState("");
+  const handleNextClick = () => {
+    setStep((prevStep) => prevStep + 1);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    
-    // Validate form data
-    const isValid = validate();
-    
-    if (isValid) { // Proceed if form data is valid
-      try {
-        // Send POST request to register user
-        const response = await axios.post(
-          `http://localhost:5000/api/v1/user/register`,
-          FormData
-        );
-  
-        console.log(response);
-        alert("Registration successful!");
-        if(response.data.status === "success") {
-        // Clear form data after successful registration
-        setFormData({
-          name: "",
-          email: "",
-          phonenumber: "",
-          country: "",
-          address: "",
-          city: "",
-          region: "",
-          postalcode: "",
-          password: "",
-        });
-        setErrors({});
+  // Function to handle moving back to the previous step
+  const handleBackClick = () => {
+    setStep((prevStep) => Math.max(prevStep - 1, 1));
+  };
+
+  // Function to handle input changes in the form
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  // Function to handle signup submission
+  const handleSignupClick = async (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.repassword) {
+      setStep(1);
+      toast.error('Password and Re-enter Password does not match');      
+      return;
+    }
+    if (formData.name === '' || formData.email === '' || formData.phonenumber === '' || formData.password === '' || formData.repassword === '') {
+      setStep(1);
+      toast.error('All fields are required');
+      return;
+    }
+    if (formData.country === '' || formData.state === '' || formData.city === '' || formData.postalcode === '' || formData.streetAddress === '') {
+      setStep(2);
+      toast.error('All fields are required');
+      return;
+    }
+    if(!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(formData.email))){
+      toast.error('Invalid Email');
+      return;
+    }
+    if(!(/^[0-9]{10}$/.test(formData.phonenumber))){
+      toast.error('Invalid Phone Number');
+      return;
+    }
+    if(!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/.test(formData.password))){
+      setStep(1);
+      toast.error('Weak Password');
+      return;
+    }
+    if(!(/^[0-9]{6}$/.test(formData.postalcode))){
+      toast.error('Invalid Postal Code');
+      return;
+    }    
+
+    try {
+      const response = await axios.post(`http://localhost:5000/api/v1/user/register`, formData);
+      const data = await response;
+      console.log(data);
+      if (data?.data?.success === true) {
+        navigate("/login");
       }
-  
-        // Clear errors
-      } catch (error) {
-        console.log(error);
-        alert("Failed!");
+      else{
+        toast.error(data?.data?.msg);
       }
-    }
-    else{
-      alert("Please fill all the fields correctly");
-    }
-  };
-  console.log(FormData)
-  
-  const validate = () => {
-    let isValid = true;
-    for (const key in FormData) {
-      const fieldError = validateField(key, FormData[key]);
-      setErrors((prevErrors) => ({ ...prevErrors, [key]: fieldError }));
-      if (fieldError) isValid = false;
-    }
-    return isValid;
-  };
-  
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...FormData, [name]: value });
-  
-    if (name === "confirmpassword") {
-      if (FormData.password) { // Check if password field has a value
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [name]: validateField(name, value, FormData.password),
-        }));
-      } else {
-        // Clear the confirm password error if passwords match
-        setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-      }
-    } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: validateField(name, value),
-      }));
+    } catch (error) {
+      console.log(error);
     }
   };
-  
-  
-
-  const handleStateSelect = (state) => {
-    setSelectedState(state);
-  };
-
-  const validateField = (fieldName, value, password) => {
-    const name_regx = /^[a-zA-Z.\-_]{1,30}$/;
-    const email_regx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phone_regx = /^\d{10}$/;
-    const password_regx = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-    const postalcode_regx = /^\d{5}$/;
-    let error = "";
-  
-    if (fieldName === "name") {
-      if (!value.trim()) error = "Name cannot be empty";
-      else if (!name_regx.test(value))
-        error = "Only alphabets, dots, hyphens, and underscores are allowed";
-    } else if (fieldName === "email") {
-      if (!value.trim()) error = "Email cannot be empty";
-      else if (!email_regx.test(value)) error = "Invalid email format";
-    } else if (fieldName === "phonenumber") {
-      if (!value.trim()) error = "Phone number cannot be empty";
-      else if (!phone_regx.test(value)) error = "Invalid phone number format";
-    } else if (fieldName === "country") {
-      if (!value.trim()) error = "Please select country";
-    } else if (fieldName === "address") {
-      if (!value.trim()) error = "Address cannot be empty";
-    } else if (fieldName === "city") {
-      if (!value.trim()) error = "City name cannot be empty";
-    } else if (fieldName === "region") {
-      if (!value.trim()) error = "Please select state";
-    } else if (fieldName === "postalcode") {
-      if (!value.trim()) error = "Postal code cannot be empty";
-      else if (!postalcode_regx.test(value))
-        error = "Invalid postal code format";
-    } else if (fieldName === "password") {
-      if (!value.trim()) error = "Password is required";
-      else if (!password_regx.test(value))
-        error =
-          "Password must contain at least one digit, one lowercase and one uppercase letter, and be at least 8 characters long";
-    }else if (fieldName === "confirmpassword") {
-      if (!value?.trim()) return "Confirm password is required";
-      else if (value?.trim() !== password.trim()) return "Passwords do not match";
-      else return ""; // Passwords match
-    }
-    
-    return error;
-  };
-  
-
 
   return (
-    <div>
-      <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm content-center">
-          <div className="flex justify-center text-[2rem] items-center text-gray-900 ">
-            <FaShoppingBag className="text-black text-3xl mr-2" />
-            Quick Mart
-          </div>
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Create an account
-          </h2>
-        </div>
-
-        <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-2" >
-            <div>
-            <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-              <div class="sm:col-span-4">
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Username
-                </label>
-                <div className="mt-2">
-                  <div className="flex rounded-md outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                    <input
-                      type="text"
-                      name="name"
-                      id="name"
-                      onChange={handleChange}
-                      autoComplete="name"
-                      className="block flex-1 pl-2 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                  {errors.name && (
-                    <p className="text-sm text-red-800">{errors.name}</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="sm:col-span-4">
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Email address
-                </label>
-                <div className="mt-2">
+    <>
+      {/* Main content of the Signup component */}
+      <div className="flex justify-center items-center w-full min-h-screen bg-white">
+        <Toaster />
+        <div className="lg:w-1/2 p-4 bg-white rounded-md ">
+          <h1 className="text-3xl font-medium text-gray-800">Sign up</h1>
+          <form className="mt-4">
+            {/* Form fields */}
+            {/* Step 1 */}
+            {step === 1 && (
+              <>
+                <div className="mb-4">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                    Your Name
+                  </label>
                   <input
-                    id="email"
-                    name="email"
+                    type="text"
+                    id="name"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    placeholder="Enter your name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                    Your Email
+                  </label>
+                  <input
                     type="email"
-                    onChange={handleChange}
-                    autoComplete="email"
-                    className="block w-full pl-2 rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    id="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    placeholder="Enter your email"
+                    required
                   />
                 </div>
-                {errors.email && (
-                  <p className="text-sm text-red-800">{errors.email}</p>
-                )}
-              </div>
-              
-
-              <div className="sm:col-span-4">
-                <label
-                  htmlFor="phone-number"
-                  className="block text-sm font-semibold leading-6 text-gray-900"
-                >
-                  Phone number
-                </label>
-                <div className="relative mt-2.5">
-                  <div className="absolute inset-y-0 left-0 flex items-center">
-                    <label htmlFor="country" className="sr-only">
-                      Country
-                    </label>
-                    <select
-                      id="country"
-                      name="country"
-                      className="h-full w-28 pl-2 rounded-md border-0 bg-transparent bg-none py-0 pl-2 pr-2 text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                    >
-                      {data.map((country) => (
-                        <option
-                          key={country.phone_code}
-                          value={country.phone_code}
-                        >
-                          {`${country.iso2 + " " + country.phone_code}`}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <input 
-                    type="tel"
-                    name="phonenumber"
-                    id="phone-number"
-                    autoComplete="tel"
-                    onChange={handleChange}
-                    className="block w-full rounded-md border-0 pl-32 py-2 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                <div className="mb-4">
+                  <label htmlFor="phonenumber" className="block text-sm font-medium text-gray-700">
+                    Your Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    id="phonenumber"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    placeholder="Enter your Phone Number"
+                    value={formData.phonenumber}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
-                {errors.phonenumber && (
-                  <p className="text-sm text-red-800">{errors.phonenumber}</p>
-                )}
-              </div>
-
-              <div className="sm:col-span-4">
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                <div className="mb-4">
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                    Your Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="repassword" className="block text-sm font-medium text-gray-700">
+                    Your Password
+                  </label>
+                  <input
+                    type="password"
+                    id="repassword"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    placeholder="Retype your password"
+                    value={formData.repassword}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <br></br>
+                <button
+                  type="button"
+                  onClick={handleNextClick}
+                  className="float-right bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue"
                 >
-                  Password
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  onChange={handleChange}
-                  autoComplete="current-password"
-                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-              {errors.password && (
-                <p className="text-sm text-red-800">{errors.password}</p>
-              )}
-            </div>
-            
-            <div className="sm:col-span-4">
-              <label
-                htmlFor="confirm-password"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Confirm password
-              </label>
-              <input
-                type="password"
-                name="confirmpassword"
-                onChange={handleChange}
-                id="confirm-password"
-                className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-              {errors.confirmpassword && (
-                <p className="text-sm text-red-800">{errors.confirmpassword}</p>
-              )}
-            </div>
-              
-              </div>
-              <div>
+                  Next
+                </button>
+              </>
+            )}
 
-              <div className="sm:col-span-3">
-                <label
-                  htmlFor="country"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Country
-                </label>
-                <div className="mt-2">
+            {/* Step 2 */}
+            {step === 2 && (
+              <>
+                <div className="mb-4">
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                    Your Conutry
+                  </label>
                   <select
                     id="country"
                     name="country"
                     autoComplete="country-name"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                    onChange={(e) => {
-                      handleCountrySelect(e.target.value);
-                      handleChange(e);
-                    }}
-                    value={selectedCountry}
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    onChange={handleInputChange}
+                    value={formData.country}
                   >
                     <option value="">Select a country</option>
                     {data.map((country) => (
@@ -333,35 +207,23 @@ const Signup = () => {
                     ))}
                   </select>
                 </div>
-                {errors.country && (
-                  <p className="text-sm text-red-800">{errors.country}</p>
-                )}
-              </div>
-                               
-              <div className="sm:col-span-2 sm:col-start-1">
-                <label
-                  htmlFor="region"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  State / Province
-                </label>
-                <div className="mt-2">
+                <div className="mb-4">
+                  <label htmlFor="state" className="block text-sm font-medium text-gray-700">
+                    Your State
+                  </label>
                   <select
-                    id="region"
-                    name="region"
-                    autoComplete="region"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
-                    onChange={(e) => {
-                      handleStateSelect(e.target.value);
-                      handleChange(e);
-                    }}
-                    value={selectedState}
+                    id="state"
+                    name="state"
+                    autoComplete="state"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    onChange={handleInputChange}
+                    value={formData.state}
                   >
                     <option value="">Select a state</option>
-                    {selectedCountry &&
+                    {formData.country &&
                       statesData
                         .filter(
-                          (state) => state.country_name === selectedCountry
+                          (state) => state.country_name === formData.country
                         )
                         .map((state) => (
                           <option key={state.name} value={state.name}>
@@ -369,107 +231,81 @@ const Signup = () => {
                           </option>
                         ))}
                   </select>
-                  {errors.region && (
-                    <p className="text-sm text-red-800">{errors.region}</p>
-                  )}
                 </div>
-              </div>
-
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="city"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  City
-                </label>
-                <div className="mt-2">
+                <div className="mb-4">
+                  <label htmlFor="city" className="block text-sm font-medium text-gray-700">
+                    Your City
+                  </label>
                   <input
                     type="text"
-                    name="city"
                     id="city"
-                    onChange={handleChange}
-                    autoComplete="address-level2"
-                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    placeholder="Enter your City"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
-                {errors.city && (
-                  <p className="text-sm text-red-800">{errors.city}</p>
-                )}
-              </div>
-
-              <div className="sm:col-span-2">
-                <label
-                  htmlFor="postal-code"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  ZIP / Postal code
-                </label>
-                <div className="mt-2">
+                <div className="mb-4">
+                  <label htmlFor="streetAddress" className="block text-sm font-medium text-gray-700">
+                    Your Street Address
+                  </label>
                   <input
                     type="text"
-                    name="postalcode"
-                    onChange={handleChange}
-                    id="postal-code"
-                    autoComplete="postal-code"
-                    className="px-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    id="streetAddress"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    placeholder="Enter your Street Address"
+                    value={formData.streetAddress}
+                    onChange={handleInputChange}
+                    required
                   />
                 </div>
-                {errors.postalcode && (
-                  <p className="text-sm text-red-800">{errors.postalcode}</p>
-                )}
-              </div>
-            </div>
-            <div className="col-span-full">
-                <label
-                  htmlFor="street-address"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Street address
-                </label>
-                <div className="mt-2">
+                <div className="mb-4">
+                  <label htmlFor="postalcode" className="block text-sm font-medium text-gray-700">
+                    Your Postal Code
+                  </label>
                   <input
                     type="text"
-                    name="address"
-                    onChange={handleChange}
-                    id="street-address"
-                    autoComplete="street-address"
-                    className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 outline-none border border-gray-100 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    id="postalcode"
+                    className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:border-blue-500"
+                    placeholder="Enter your Postal Code"
+                    value={formData.postalcode}
+                    onChange={handleInputChange}
+                    required
                   />
-                  {errors.address && (
-                    <p className="text-sm text-red-800">{errors.address}</p>
-                  )}
                 </div>
-              </div>
-            
+                <div className="flex justify-between mt-4">
+                  <button
+                    type="button"
+                    onClick={handleBackClick}
+                    className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-gray"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSignupClick}
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue"
+                  >
+                    Signup
+                  </button>
+                </div>
+              </>
 
-            <div>
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white outline-none border border-gray-100 hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Create an account
-              </button>
-            </div>
+            )}
 
-            </div>
+
           </form>
-
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-            >
-              Login here
-            </Link>
-          </p>
+          {/* Navigation links */}
+          <div className="mt-4">
+            <a href="/login" passHref>
+              <p className="text-blue-500 hover:underline inline-block">Back to Login</p>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
 export default Signup;
-
-

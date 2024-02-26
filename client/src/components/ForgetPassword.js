@@ -1,10 +1,36 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useState } from "react";
+import { toast, Toaster } from "react-hot-toast";
+import axios from "axios";
 const ForgetPassword = () => {
+  const [formData, setFormData] = useState({ "email": "" });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/v1/user/forgetpassword`,
+        {"email": formData.email }
+      );
+      const data = await response;
+      console.log(data);
+      if (data?.data?.success === true) {
+        setFormData({ "email": "" });
+        toast.success(data?.data?.message);
+      } else {
+        setFormData({ "email": "" });
+        toast.error(data?.data?.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className="">
       <div class="mx-auto max-w-md h-[80vh] flex items-center justify-center flex-col">
+        <Toaster />
         <div class="rounded-xl border border-gray-200 bg-white shadow-sm">
           <div class="p-4 sm:p-7">
             <div class="text-center">
@@ -44,35 +70,19 @@ const ForgetPassword = () => {
                         type="email"
                         id="email"
                         name="email"
+                        value={formData.email}
                         class="peer block w-full rounded-md border border-gray-200 bg-gray-50 py-3 px-4 text-sm outline-none ring-offset-1 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         required
                         aria-describedby="email-error"
                       />
-                      <div class="pointer-events-none absolute top-3 right-0 hidden items-center px-3 peer-invalid:flex">
-                        <svg
-                          class="h-5 w-5 text-rose-500"
-                          width="16"
-                          height="16"
-                          fill="currentColor"
-                          viewBox="0 0 16 16"
-                          aria-hidden="true"
-                        >
-                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
-                        </svg>
-                      </div>
-                      <p
-                        class="mt-2 hidden text-xs text-rose-600 peer-invalid:block"
-                        id="email-error"
-                      >
-                        Valid email address required for the account recovery
-                        process
-                      </p>
                     </div>
                   </div>
 
                   <button
-                    type="submit"
+                    type="button"
                     class="inline-flex items-center justify-center gap-2 rounded-md border border-transparent bg-blue-500 py-3 px-4 text-sm font-semibold text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    onClick={handleSubmit}
                   >
                     Reset password
                   </button>
@@ -87,7 +97,7 @@ const ForgetPassword = () => {
             Remember your password?
             <Link
               class="font-medium text-blue-600 decoration-2 hover:underline"
-              to="/signup"
+              to="/login"
             >
               {" "}
               Sign in here{" "}
