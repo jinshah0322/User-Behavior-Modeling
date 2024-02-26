@@ -16,11 +16,11 @@ const registerUser = async (req, res) => {
         const { name, email, phonenumber, password, city, address, region, postalcode, country } = req.body;
         
         const existingUserEmail = await User.findOne({ email: email });
-        const existingUserNumber = await User.findOne({ mobile: mobile });
+        const existingUserNumber = await User.findOne({ phonenumber: phonenumber });
         if(!existingUserEmail){
             if(!existingUserNumber){
                 if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){
-                    if(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile)){
+                    if(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(phonenumber)){
                         if(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/.test(password)){
                             const salt = await bcryptjs.genSalt(10);    
                             const hashedPassword = await bcryptjs.hash(password, salt)
@@ -29,7 +29,6 @@ const registerUser = async (req, res) => {
                                 email:email,
                                 password:hashedPassword,
                                 phonenumber:phonenumber,
-                                age:age,
                                 address:address,
                                 city:city,
                                 region:region,

@@ -170,7 +170,6 @@ const Signup = () => {
 
         <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-2" >
-            <div>
             <div className="mt-0 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div class="sm:col-span-4">
                 <label
@@ -187,7 +186,7 @@ const Signup = () => {
                       id="name"
                       onChange={handleChange}
                       autoComplete="name"
-                      className="block flex-1 pl-2 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      className="block w-full flex-1 pl-2 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     />
                   </div>
                   {errors.name && (
@@ -303,8 +302,6 @@ const Signup = () => {
               )}
             </div>
               
-              </div>
-              <div>
 
               <div className="sm:col-span-3">
                 <label
@@ -452,7 +449,6 @@ const Signup = () => {
               </button>
             </div>
 
-            </div>
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
