@@ -239,7 +239,6 @@ const editProfile = async(req,res)=>{
         await nameupdate
         await numberupdate
         await emailupdate
-        await addressupdate
         const oldEmail = user.email
         await User.updateOne({email:oldEmail},{name,email,phonenumber,password, city, streetAddress, postalcode, country,state})
         const html = `
