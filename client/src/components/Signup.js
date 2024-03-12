@@ -5,17 +5,10 @@ import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FaShoppingBag } from "react-icons/fa";
-import {
-  CitySelect,
-  CountrySelect,
-  StateSelect,
-} from "react-country-state-city";
-
+import { Country, State, City } from "country-state-city";
 // Define the Signup component
 const Signup = () => {
-  // const [step, setStep] = useState(1);
-  const [countryid, setCountryid] = useState(0);
-  const [stateid, setstateid] = useState(0);
+  
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -116,7 +109,7 @@ const Signup = () => {
     <>
       <Toaster />
       <div className="flex min-h-screen items-center justify-center bg-gray-100">
-        <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-xl">
+        <div className="max-w-xl w-full p-6 bg-white rounded-lg shadow-xl">
           <div className="flex items-center justify-center text-3xl text-gray-900">
             <FaShoppingBag className="text-black mr-2" />
 
@@ -198,23 +191,90 @@ const Signup = () => {
                 >
                   Country
                 </label>
-                <CountrySelect
-                  id="country"
-                  name="country"
-                  autoComplete="country-name"
-                  onChange={(selectedCountry) => {
-                    handleInputChange({
-                      target: {
-                        id: "country",
-                        value: selectedCountry.name,
-                      },
-                    });
-                    setCountryid(selectedCountry.id);
-                  }}
-                  value={formData.country}
-                  className="block w-full border-2 bg-white border-gray-100 rounded-md p-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  placeHolder="Select Country"
-                />
+                <div>
+                  <select
+                    id="country"
+                    name="country"
+                    autoComplete="country-name"
+                    onChange={(e) => handleInputChange(e)}
+                    value={formData.country}
+                    className=" w-full border-2 border-gray-100 rounded-md p-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option>Select Country</option>
+                    {Country.getAllCountries().map((c) => {
+                      return (
+                        <>
+                          <option key={c.isoCode} value={c.isoCode}>
+                            {c.name}
+                          </option>
+                        </>
+                      );
+                    })}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="region"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  State / Province
+                </label>
+
+                <select
+                  id="state"
+                  name="state"
+                  autoComplete="state"
+                  onChange={(e) => handleInputChange(e)}
+                  value={formData.state}
+                  className=" w-full border-2 border-gray-100 rounded-md p-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                >
+                  {formData.country ? (
+                    State.getStatesOfCountry(formData.country).map((s) => {
+                      return (
+                        <>
+                          <option key={s.isoCode} value={s.isoCode}>
+                            {s.name}
+                          </option>
+                        </>
+                      );
+                    })
+                  ) : (
+                    <option>Select State</option>
+                  )}
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="city"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  City
+                </label>
+                <select
+                  id="city"
+                  name="city"
+                  autoComplete="city"
+                  onChange={(e) => handleInputChange(e)}
+                  value={formData.city}
+                  className="w-full border-2 border-gray-100 rounded-md p-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                >
+                  {formData.country && formData.state ? (
+                    <>
+                      {City.getCitiesOfState(
+                        formData.country,
+                        formData.state
+                      ).map((city) => (
+                        <option key={city.isoCode} value={city.isoCode}>
+                          {city.name}
+                        </option>
+                      ))}
+                    </>
+                  ) : (
+                    <option value="">Select City</option>
+                  )}
+                </select>
               </div>
               <div>
                 <label
@@ -234,57 +294,6 @@ const Signup = () => {
                   className="block w-full border-2 border-gray-100 rounded-md  p-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
-
-              <div>
-                <label
-                  htmlFor="city"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  City
-                </label>
-                <CitySelect
-                  countryid={countryid}
-                  stateid={stateid}
-                  onChange={(selectedCity) => {
-                    handleInputChange({
-                      target: {
-                        id: "city",
-                        value: selectedCity.name,
-                      },
-                    });
-                  }}
-                  id="city"
-                  placeholder="Enter your City"
-                  value={formData.city}
-                  required
-                  className="block w-full border-2 bg-white border-gray-100 rounded-md p-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="region"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  State / Province
-                </label>
-                <StateSelect
-                  countryid={countryid}
-                  onChange={(selectedState) => {
-                    setFormData({
-                      ...formData,
-                      state: selectedState.name, // Update formData.state with the name of the selected state
-                    });
-                    setstateid(selectedState.id); // Update stateid with the id of the selected state
-                  }}
-                  placeHolder="Select State"
-                  id="state"
-                  name="state"
-                  autoComplete="state"
-                  value={formData.state}
-                  className="block w-full border-2 bg-white border-gray-100 rounded-md p-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
-              </div>
-
               <div>
                 <label
                   htmlFor="postal-code"
@@ -318,6 +327,7 @@ const Signup = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   required
+                  placeholder="Enter your password"
                   autoComplete="current-password"
                   className="block w-full border-2 bg-white border-gray-100 rounded-md p-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
