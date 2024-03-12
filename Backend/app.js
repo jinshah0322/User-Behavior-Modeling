@@ -5,6 +5,8 @@ const session = require('express-session');
 const bodyParser = require("body-parser");
 const cors = require("cors")
 const user = require("./routes/userRoutes");
+const category = require("./routes/categoryRoutes")
+const product = require("./routes/productRoutes")
 
 const app = express()
 app.use(bodyParser.json())
@@ -13,6 +15,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret:process.env.EXPRESS_SESSION_SECRET}))
 
 app.use("/api/v1/user",user)
+app.use("/api/v1/category",category)
+app.use("/api/v1/product",product)
 
 const port = process.env.PORT
 const mongo_url = process.env.MONGO_URL
