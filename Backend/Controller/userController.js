@@ -193,7 +193,7 @@ const deleteaccount = async(req,res)=>{
 const editProfile = async(req,res)=>{
     try{
         const {name, email, phonenumber, password, city, streetAddress, postalcode, country,state} = req.body
-        const userId = req.session.user._id
+        const userId = req.params.id
         const user = await User.findOne({_id:userId})
         if(name == ''){
             res.send({msg:'name can not be empty',success:false,status:204})
