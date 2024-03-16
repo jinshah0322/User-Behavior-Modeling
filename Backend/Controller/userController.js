@@ -69,18 +69,8 @@ const loginUser = async(req,res)=>{
         if (!validPassword) {
             res.send({ msg: "Incorrect Password", success: false, status: 401 })
         } else {
-            req.session.user = user
             res.send({ user, name: user.name, success: true, status: 200 })
         }
-    }
-}
-
-const logoutUser = async(req,res)=>{
-    try{
-        req.session.destroy()
-        res.send({ msg: "Log Out Successful", success: true, status: 200 })
-    } catch(error){
-        console.log(error.message);
     }
 }
 
@@ -194,7 +184,6 @@ const deleteaccount = async(req,res)=>{
 
         await User.deleteOne({_id:userId})
         sendEmail(data)
-        req.session.destroy()
         res.send({msg:"user deleted successfully",success:true,status:200})
     } catch(error){
         console.log(error.message);
@@ -307,7 +296,6 @@ module.exports = {
     getAllUsers,
     registerUser,
     loginUser,
-    logoutUser,
     profile,
     forgotPassword,
     changePassword,
