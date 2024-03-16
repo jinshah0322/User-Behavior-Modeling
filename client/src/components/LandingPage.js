@@ -1,8 +1,15 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCategoriesAsync } from '../app/features/category/categorySlice';
+
 const LandingPage = () => {
-  const categoryCount = useSelector(state => state.category.categoryList);
-  console.log(categoryCount)
+  const dispatch = useDispatch();
+  const categoryCount = useSelector(state => state.category.categoryList.length);
+
+  // Fetch categories data when the component mounts
+  useEffect(() => {
+    dispatch(fetchCategoriesAsync());
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen flex items-center justify-center">
@@ -11,12 +18,12 @@ const LandingPage = () => {
         <p className="text-lg text-center text-gray-600 mb-8">Welcome back, Admin!</p>
         <div className="grid grid-cols-2 gap-4">
           <div className="p-6 bg-purple-200 rounded-lg text-center">
-            <h2 className="text-2xl font-semibold mb-4 text-purple-800"> Categories</h2>
-            <p className="text-lg text-purple-700">You have {categoryCount.length} categories</p>
+            <h2 className="text-2xl font-semibold mb-4 text-purple-800">Categories</h2>
+            <p className="text-lg text-purple-700">You have {categoryCount} categories</p>
           </div>
           <div className="p-6 bg-pink-200 rounded-lg text-center">
             <h2 className="text-2xl font-semibold mb-4 text-pink-800">Products</h2>
-            <p className="text-lg text-pink-700">You have products </p>
+            <p className="text-lg text-pink-700">You have products</p>
           </div>
         </div>
       </div>

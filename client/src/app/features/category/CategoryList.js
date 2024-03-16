@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addCategoryAsync, deleteCategoryAsync } from "./categorySlice";
+import {
+  addCategoryAsync,
+  deleteCategoryAsync,
+  fetchCategoriesAsync,
+} from "./categorySlice";
 
 const CategoryList = () => {
   const categoryList = useSelector((state) => state.category.categoryList);
+
+  console.log(categoryList);
   const loading = useSelector((state) => state.category.loading);
   const error = useSelector((state) => state.category.error);
   const dispatch = useDispatch();
@@ -17,12 +23,16 @@ const CategoryList = () => {
     description: false,
   });
 
-  const handleAddCategory = (event) => {
+  useEffect(() => {
+    dispatch(fetchCategoriesAsync());
+  }, [dispatch]);
+
+  const handleAddCategory = async (event) => {
     event.preventDefault();
     const hasEmptyField = Object.values(formData).some(
       (value) => value.trim() === ""
     );
-
+  
     if (hasEmptyField) {
       setFormErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
@@ -32,21 +42,28 @@ const CategoryList = () => {
         return newErrors;
       });
     } else {
-      dispatch(
-        addCategoryAsync({
-          category: formData.category,
-          des: formData.description,
-        })
-      );
-      setFormData({
-        category: "",
-        description: "",
-      });
+      try {
+        await dispatch(
+          addCategoryAsync({
+            name: formData.category,
+            description: formData.description,
+          })
+        );
+        // Fetch categories after adding a new category
+        dispatch(fetchCategoriesAsync());
+        setFormData({
+          category: "",
+          description: "",
+        });
+      } catch (error) {
+        console.error("Error adding category:", error.message);
+      }
     }
   };
+  
 
-  const handleDeleteCategory = (categoryId) => {
-    dispatch(deleteCategoryAsync(categoryId));
+  const handleDeleteCategory = (categoryName) => {
+    dispatch(deleteCategoryAsync(categoryName)); // Pass category name instead of ID
   };
 
   const handleChange = (e) => {
@@ -100,8 +117,7 @@ const CategoryList = () => {
           >
             {loading ? "Adding..." : "Add Category"}
           </button>
-          {error && <p className="text-red-500 mt-2">{error}</p>} 
-          
+          {error && <p className="text-red-500 mt-2">{error}</p>}
         </form>
       </div>
       <h2 className="mt-4 text-xl font-semibold">Category Table</h2>
@@ -119,13 +135,13 @@ const CategoryList = () => {
             </thead>
             <tbody>
               {categoryList.map((category) => (
-                <tr key={category.id} className="text-gray-700">
-                  <td className="px-4 py-2">{category.id}</td>
-                  <td className="px-4 py-2">{category.category}</td>
-                  <td className="px-4 py-2">{category.des}</td>
+                <tr key={category._id} className="text-gray-700">
+                  <td className="px-4 py-2">{category._id}</td>
+                  <td className="px-4 py-2">{category.name}</td>
+                  <td className="px-4 py-2">{category.description}</td>
                   <td className="px-4 py-2">
                     <button
-                      onClick={() => handleDeleteCategory(category.id)}
+                      onClick={() => handleDeleteCategory(category.name)} // Pass category name
                       className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-red-600"
                       disabled={loading} // Disable button while loading
                     >
