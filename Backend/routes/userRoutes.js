@@ -10,7 +10,7 @@ router.route("/profile/:id").get(profile)
 router.route("/forgetpassword").post(forgotPassword)
 router.route("/changepassword").post(changePassword)
 router.route("/deleteaccount").post(deleteaccount)
-router.route("/editProfile/:id").post(editProfile)
+router.route("/editProfile/:id").put(editProfile)
 router.route("/blockuser/:id").patch( blockUser)
 router.route("/unblockuser/:id").patch( unblockUser)
 

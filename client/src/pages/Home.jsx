@@ -4,7 +4,7 @@ import Section from "../components/Section";
 import { products, discoutProducts } from "../utils/products";
 import SliderHome from "../components/Slider";
 import useWindowScrollToTop from "../hooks/useWindowScrollToTop";
-
+import { useEffect } from "react";
 const Home = () => {
   const newArrivalData = products.filter(
     (item) => item.category === "mobile" || item.category === "wireless"

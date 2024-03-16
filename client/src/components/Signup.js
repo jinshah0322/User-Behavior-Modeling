@@ -1,5 +1,5 @@
 // Import necessary dependencies and styles
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
@@ -90,6 +90,12 @@ const Signup = () => {
       console.log(error);
     }
   };
+
+  useEffect(()=>{
+    if(localStorage.getItem("id")){
+      navigate("/");
+    }
+  })
 
   return (
     <>
