@@ -5,10 +5,17 @@ import { fetchProductsAsync } from './productSlice';
 const GetProduct = () => {
   const dispatch = useDispatch();
   const { productList, loading, error } = useSelector(state => state.product);
-  
+  const categoryList = useSelector(state => state.category.categoryList);
+
   useEffect(() => {
     dispatch(fetchProductsAsync());
   }, [dispatch]);
+
+  // Function to get category name from category ID
+  const getCategoryName = (categoryId) => {
+    const category = categoryList.find(category => category._id === categoryId);
+    return category ? category.name : 'Unknown Category';
+  };
 
   return (
     <div>
@@ -41,7 +48,7 @@ const GetProduct = () => {
                   <td className="px-4 py-2">{product._id}</td>
                   <td className="px-4 py-2">{product.title}</td>
                   <td className="px-4 py-2">{product.price}</td>
-                  <td className="px-4 py-2">{product.category}</td>
+                  <td className="px-4 py-2">{getCategoryName(product.category)}</td> {/* Display category name */}
                   <td className="px-4 py-2">{product.description}</td>
                   <td className="px-4 py-2">{product.brand}</td>
                 </tr>

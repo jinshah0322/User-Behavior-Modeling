@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProductsAsync, deleteProductAsync } from './productSlice';
 
-const GetProduct = () => {
+const DeleteProduct = () => {
   const dispatch = useDispatch();
   const { productList, loading, error } = useSelector(state => state.product);
-  
+  const categoryList = useSelector(state => state.category.categoryList);
+
   useEffect(() => {
     dispatch(fetchProductsAsync());
   }, [dispatch]);
@@ -18,6 +19,12 @@ const GetProduct = () => {
     } catch (error) {
       console.error('Error deleting product:', error);
     }
+  };
+
+  // Function to get category name from category ID
+  const getCategoryName = (categoryId) => {
+    const category = categoryList.find(category => category._id === categoryId);
+    return category ? category.name : 'Unknown Category';
   };
 
   return (
@@ -52,7 +59,7 @@ const GetProduct = () => {
                   <td className="px-4 py-2">{product._id}</td>
                   <td className="px-4 py-2">{product.title}</td>
                   <td className="px-4 py-2">{product.price}</td>
-                  <td className="px-4 py-2">{product.category}</td>
+                  <td className="px-4 py-2">{getCategoryName(product.category)}</td> {/* Display category name */}
                   <td className="px-4 py-2">{product.description}</td>
                   <td className="px-4 py-2">{product.brand}</td>
                   <td className="px-4 py-2">
@@ -80,4 +87,4 @@ const GetProduct = () => {
   );
 };
 
-export default GetProduct;
+export default DeleteProduct;
