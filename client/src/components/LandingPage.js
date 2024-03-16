@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchCategoriesAsync } from '../app/features/category/categorySlice';
+import { fetchProductsAsync } from '../app/features/product/productSlice';
 
 const LandingPage = () => {
   const dispatch = useDispatch();
   const categoryCount = useSelector(state => state.category.categoryList.length);
+  const productCount = useSelector(state => state.product.productList.length);
 
-  // Fetch categories data when the component mounts
+  // Fetch categories and products data when the component mounts
   useEffect(() => {
     dispatch(fetchCategoriesAsync());
+    dispatch(fetchProductsAsync());
   }, [dispatch]);
 
   return (
@@ -23,7 +26,7 @@ const LandingPage = () => {
           </div>
           <div className="p-6 bg-pink-200 rounded-lg text-center">
             <h2 className="text-2xl font-semibold mb-4 text-pink-800">Products</h2>
-            <p className="text-lg text-pink-700">You have products</p>
+            <p className="text-lg text-pink-700">You have {productCount} products</p>
           </div>
         </div>
       </div>

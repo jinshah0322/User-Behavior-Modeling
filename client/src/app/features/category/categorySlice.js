@@ -108,5 +108,4 @@ export const categoryMiddleware = (store) => (next) => (action) => {
   }
   return result;
 };
-
 export default categorySlice.reducer;

@@ -4,6 +4,8 @@ import CategoryList from "../app/features/category/CategoryList";
 import LandingPage from "../components/LandingPage";
 import AddProduct from "../app/features/product/AddProduct";
 import UpdateProduct from "../app/features/product/UpdateProduct";
+import GetProduct from "../app/features/product/GetProduct";
+import DeleteProduct from "../app/features/product/DeleteProduct";
 const Dashboard = () => {
   const [selectedLink, setSelectedLink] = useState("LandingPage");
 
@@ -78,6 +80,12 @@ const Dashboard = () => {
           )}
           {selectedLink === "update" && (
             <UpdateProduct className="bg-blue-200" /> 
+          )}
+          {selectedLink === "get" && (
+            <GetProduct className="bg-blue-200" /> 
+          )}
+          {selectedLink === "delete" && (
+            <DeleteProduct className="bg-blue-200" /> 
           )}
         </div>
       </main>
