@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import NavBar from "./components/Navbar/Navbar";
+import NavBar from "./components/Navbar/NavBar";
 import Loader from "./components/Loader/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,6 +9,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import ForgetPassword from "./components/ForgetPassword";
 import ChangePassword from "./components/ChangePassword";
+import Dashboard from "./pages/Dashboard";
 
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
@@ -40,6 +41,7 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
   
       </Router>
