@@ -1,5 +1,6 @@
 const Product = require("../models/productModel")
 const Category = require("../models/categoryModel")
+const User = require("../models/userModel")
 
 exports.createProduct = async (req, res) => {
     try {
@@ -25,6 +26,10 @@ exports.getProductByID = async (req, res) => {
         const product = await Product.findById(req.params.id)
         const category = await Category.findById(product.category)
         const categoryName = category.name.charAt(0).toUpperCase() + category.name.slice(1)
+        for(let i=0;i<product.ratings.length;i++){
+            console.log(product.ratings[i]._id)
+            const user = await User.findById(product.ratings[i]._id)
+        }
         if (!product) {
             return res.send({ msg: 'Product not found', success: false, status: 404 });
         }
