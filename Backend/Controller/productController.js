@@ -27,9 +27,10 @@ exports.getProductByID = async (req, res) => {
         const category = await Category.findById(product.category)
         const categoryName = category.name.charAt(0).toUpperCase() + category.name.slice(1)
         for(let i=0;i<product.ratings.length;i++){
-            console.log(product.ratings[i]._id)
-            const user = await User.findById(product.ratings[i]._id)
+            const user = await User.findById(product.ratings[i].postedby)
+            product.ratings[i].name = user?.name
         }
+        console.log(product)
         if (!product) {
             return res.send({ msg: 'Product not found', success: false, status: 404 });
         }
