@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import CategoryList from "../app/features/category/CategoryList";
 import LandingPage from "../components/LandingPage";
-
+import AddProduct from "../app/features/product/AddProduct";
+import UpdateProduct from "../app/features/product/UpdateProduct";
 const Dashboard = () => {
   const [selectedLink, setSelectedLink] = useState("LandingPage");
 
@@ -34,7 +35,7 @@ const Dashboard = () => {
               }`}
               onClick={() => handleLinkClick("create")}
             >
-              Register New Employee
+              Add New Product
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
@@ -42,7 +43,7 @@ const Dashboard = () => {
               }`}
               onClick={() => handleLinkClick("get")}
             >
-              Get All Employee
+              Get All Product
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
@@ -50,7 +51,7 @@ const Dashboard = () => {
               }`}
               onClick={() => handleLinkClick("update")}
             >
-              Update Employee Data
+              Update Product Details
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
@@ -58,7 +59,7 @@ const Dashboard = () => {
               }`}
               onClick={() => handleLinkClick("delete")}
             >
-              Delete Employee
+              Delete Product
             </li>
           </ul>
         </div>
@@ -71,6 +72,12 @@ const Dashboard = () => {
           )}
           {selectedLink === "Category" && (
             <CategoryList className="bg-blue-200" /> 
+          )}
+          {selectedLink === "create" && (
+            <AddProduct className="bg-blue-200" /> 
+          )}
+          {selectedLink === "update" && (
+            <UpdateProduct className="bg-blue-200" /> 
           )}
         </div>
       </main>
