@@ -86,7 +86,7 @@ const logoutUser = async(req,res)=>{
 
 const profile = async(req,res)=>{
     try{
-        const currentId = req.session.user._id
+        const currentId = req.params.id
         const user = await User.findOne({_id:currentId})
         res.send({user:user,success:true,status:200})
     } catch(error){
