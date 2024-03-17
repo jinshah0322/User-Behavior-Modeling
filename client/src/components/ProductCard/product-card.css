@@ -101,3 +101,10 @@ button.add {
 .product:hover .product-like {
     opacity: 1;
 }
+
+.title_product{
+    max-width: 130px !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+}

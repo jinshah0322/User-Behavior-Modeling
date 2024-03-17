@@ -6,39 +6,38 @@ import { useParams } from "react-router-dom";
 import ProductDetails from "../components/ProductDetails/ProductDetails";
 import ProductReviews from "../components/ProductReviews/ProductReviews";
 import useWindowScrollToTop from "../hooks/useWindowScrollToTop";
-
+import axios from "axios";
 const Product = () => {
   const { id } = useParams();
-  const [selectedProduct, setSelectedProduct] = useState(
-    products.filter((item) => parseInt(item.id) === parseInt(id))[0]
-  );
+  console.log(id);
+  const [selectedProduct, setSelectedProduct] = useState();
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [category, setCategory] = useState();
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/v1/product/${id}`);
+      const data = await response
+      setSelectedProduct(data?.data?.product);
+      setCategory(data?.data?.categoryName);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    window.scrollTo(0, 0);
-    setSelectedProduct(
-      products.filter((item) => parseInt(item.id) === parseInt(id))[0]
-    );
-    setRelatedProducts(
-      products.filter(
-        (item) =>
-          item.category === selectedProduct?.category &&
-          item.id !== selectedProduct?.id
-      )
-    );
-  }, [selectedProduct, id]);
-
+    fetchData();
+  }, [id]);
   useWindowScrollToTop();
 
   return (
     <Fragment>
-      <ProductDetails selectedProduct={selectedProduct} />
-      <ProductReviews selectedProduct={selectedProduct} />
-      <section className="related-products">
+      <ProductDetails selectedProduct={selectedProduct} category={category} />
+      <ProductReviews selectedProduct={selectedProduct} fetchData={fetchData} />
+      {/* <section className="related-products">
         <Container>
           <h3>You might also like</h3>
         </Container>
         <ShopList productItems={relatedProducts} />
-      </section>
+      </section> */}
     </Fragment>
   );
 };

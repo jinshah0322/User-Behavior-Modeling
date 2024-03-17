@@ -1,7 +1,7 @@
 // Import necessary dependencies and styles
-import React, { useState } from "react";
-import axios from "axios";
-import { toast, Toaster } from "react-hot-toast";
+import React, { useState ,useEffect} from 'react';
+import axios from 'axios';
+import { toast, Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FaShoppingBag } from "react-icons/fa";
@@ -104,6 +104,12 @@ const Signup = () => {
       console.log(error);
     }
   };
+
+  useEffect(()=>{
+    if(localStorage.getItem("id")){
+      navigate("/");
+    }
+  })
 
   return (
     <>

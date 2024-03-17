@@ -7,8 +7,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import Profile from "./pages/Profile";
 import ForgetPassword from "./components/ForgetPassword";
 import ChangePassword from "./components/ChangePassword";
+import "./app.css"
 import Dashboard from "./pages/Dashboard";
 
 const Home = lazy(() => import("./pages/Home"));
@@ -41,6 +43,7 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/shop/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
   
