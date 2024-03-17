@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import NavBar from "./components/Navbar/NavBar";
+// import NavBar from "./components/Navbar/NavBar";
 import Loader from "./components/Loader/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -31,7 +31,7 @@ function App() {
           pauseOnHover
           theme="light"
         />
-        {path !== "/login" && path !== "/register" && path !== "/forgotpassword" ?<NavBar />:""}
+        {/* {path !== "/login" && path !== "/register" && path !== "/forgotpassword" ?<NavBar />:""} */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Signup />} />

@@ -1,12 +1,12 @@
 const Category = require("../models/categoryModel")
 
-const getAllCategory = async(req,res)=>{
+exports.getAllCategory = async(req,res)=>{
     const categories = await Category.find()
     res.send({categories,count:categories.length,success:true,status:200})
 
 }
 
-const addCategory = async(req,res)=>{
+exports.addCategory = async(req,res)=>{
     const {name,description} = req.body
     const lowerName = name.toLowerCase()
     const existingCategory = await Category.findOne({name:lowerName})
@@ -22,16 +22,10 @@ const addCategory = async(req,res)=>{
     }
 }
 
-const deleteCategory = async(req,res)=>{
+exports.deleteCategory = async(req,res)=>{
     const {name} = req.body
     const lowerName = name.toLowerCase()
     const category = await Category.deleteOne({name:lowerName})
     res.send({msg:"Category deleted successfully",success:true,status:200})
 
-}
-
-module.exports = {
-    getAllCategory,
-    addCategory,
-    deleteCategory
 }
