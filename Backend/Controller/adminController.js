@@ -12,15 +12,13 @@
 // }
 
 const Category = require("../models/categoryModel")
+const Product = require("../models/productModel")
 
 exports.admin = async (req,res)=>{
     const {skip,limit,search,sort,category} = req.body
     let query = Category.find({}) 
     if(search) {
         query = query.find({name:{$regex:search,$options:'i'}})
-    }
-    if(category){
-        
     }
     if(sort){
         const sortOrder = sort.direction ? 1 : -1
@@ -32,6 +30,15 @@ exports.admin = async (req,res)=>{
     if(limit){
         query = query.limit(limit)
     }
+    if(category){
+        const categoryID = []
+        for(let i =0;i<category.length;i++){
+            const currentCategory = category[i].toLowerCase()
+            const currentCategoryID = await Category.findOne({name:currentCategory})
+            categoryID.push(currentCategoryID._id)
+        }
+        var products = await Product.find({category:{$in:categoryID}})
+    }
     const categories = await query.exec()
-    res.send({categories,success:true,status:200})
+    res.send({categories,products,success:true,status:200})
 }
