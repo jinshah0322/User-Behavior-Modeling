@@ -9,7 +9,13 @@ export const addCategoryAsync = createAsyncThunk(
   async (categoryData, { dispatch }) => {
     try {
       const response = await axios.post("http://localhost:5000/api/v1/category", categoryData);
+      if(response?.data?.status === 200){
       toast.success("Category added successfully!");
+      fetchCategoriesAsync()
+      }
+      else{
+        toast.error(response?.data?.msg);
+      }
       return response.data; // Return the new category data if needed
     } catch (error) {
       toast.error(`Error adding category: ${error.message}`);
@@ -23,8 +29,38 @@ export const deleteCategoryAsync = createAsyncThunk(
   'category/deleteCategoryAsync',
   async (categoryName, { dispatch }) => {
     try {
-      await axios.delete("http://localhost:5000/api/v1/category", { data: { name: categoryName } });
-      toast.warning("Category deleted successfully!");
+      const res = await axios.delete("http://localhost:5000/api/v1/category", { data: { name: categoryName } });
+      console.log(res)
+      if(res?.data?.status === 200){
+
+        toast.warning(res?.data?.msg);
+      }
+      else{
+        toast.error("Oops! Something went wrong");
+      }
+
+      return categoryName; // Return the deleted category name if needed
+    } catch (error) {
+      toast.error(`Error deleting category: ${error.message}`);
+      throw error;
+    }
+  }
+);
+
+export const updateCategoryAsync = createAsyncThunk(
+  'category/updateCategoryAsync',
+  async (categoryName,id, { dispatch }) => {
+    try {
+      const res = await axios.put(`http://localhost:5000/api/v1/category/${id}`,  { name: categoryName } );
+      console.log(res)
+      if(res?.data?.status === 200){
+
+        toast.warning(res?.data?.msg);
+      }
+      else{
+        toast.error("Oops! Something went wrong");
+      }
+
       return categoryName; // Return the deleted category name if needed
     } catch (error) {
       toast.error(`Error deleting category: ${error.message}`);
@@ -40,6 +76,21 @@ export const fetchCategoriesAsync = createAsyncThunk(
     try {
       const response = await axios.get("http://localhost:5000/api/v1/category");
       return response.data.categories; // Return the fetched categories array
+    } catch (error) {
+      toast.error(`Error fetching categories: ${error.message}`);
+      throw error;
+    }
+  }
+);
+
+export const fetchProductCategory = createAsyncThunk(
+  'category/fetchProductCategory',
+  async (_, { dispatch },categoryList) => {
+    try {
+      console.log("cllaa")
+      console.log(categoryList)
+      const response = await axios.post(`http://localhost:5000/api/v1/admin`,{category:categoryList});
+      return response.data.category; // Return the fetched categories array
     } catch (error) {
       toast.error(`Error fetching categories: ${error.message}`);
       throw error;
@@ -68,6 +119,18 @@ export const categorySlice = createSlice({
         state.categoryList = action.payload; // Update categoryList with fetched categories
       })
       .addCase(fetchCategoriesAsync.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateCategoryAsync.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateCategoryAsync.fulfilled, (state, action) => {
+        state.loading = false;
+        state.categoryList = action.payload; // Update categoryList with fetched categories
+      })
+      .addCase(updateCategoryAsync.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })

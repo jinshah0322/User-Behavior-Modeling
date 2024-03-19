@@ -38,6 +38,7 @@ exports.admin = async (req,res)=>{
             categoryID.push(currentCategoryID._id)
         }
         var products = await Product.find({category:{$in:categoryID}})
+        console.log(products)
     }
     const categories = await query.exec()
     res.send({categories,products,success:true,status:200})

@@ -17,6 +17,7 @@ const UpdateProduct = () => {
   const closeModal = () => {
     setSelectedProduct(null);
   };
+  console.log(categoryList)
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -53,21 +54,25 @@ const UpdateProduct = () => {
                 <th className="px-4 py-2 text-left">Description</th>
                 <th className="px-4 py-2 text-left">Brand</th>
                 <th className="px-4 py-2 text-left">Quantity</th>
+                <th className="px-4 py-2 text-left">Sold</th>
+                <th className="px-4 py-2 text-left">Rating</th>
                 <th className="px-4 py-2 text-left">Action</th>
               </tr>
             </thead>
             <tbody>
               {productList.map((product, index) => (
                 <tr key={index} className="text-gray-700">
-                  <td className="px-4 py-2">{product._id}</td>
+                  <td className="px-4 py-2">{index+1}</td>
                   <td className="px-4 py-2">{product.title}</td>
                   <td className="px-4 py-2">{product.price}</td>
                   <td className="px-4 py-2">
-                    {categoryList.find(cat => cat._id === product.category)?.name}
+                    {categoryList.find(cat => cat.id === product.category)?.name}
                   </td>
                   <td className="px-4 py-2">{product.description}</td>
                   <td className="px-4 py-2">{product.brand}</td>
                   <td className="px-4 py-2">{product.quantity}</td>
+                  <td className="px-4 py-2">{product.sold}</td>
+                  <td className="px-4 py-2">{product.totalrating}</td>
                   <td className="px-4 py-2">
                     <button
                       onClick={() => openModal(product)}

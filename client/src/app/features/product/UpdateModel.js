@@ -6,9 +6,9 @@ const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
   const categoryList = useSelector((state) => state.category.categoryList);
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
-      <div className="bg-white p-8 rounded shadow-lg w-1/2">
+      <div className="bg-white max-h-[400px] p-8 rounded shadow-lg w-1/2">
         <h2 className="text-xl font-bold mb-4">Update Product</h2>
-        <form onSubmit={handleUpdate}>
+        <form onSubmit={handleUpdate} className="max-h-[300px] overflow-auto">
           <div className="mb-4">
             <label
               htmlFor="product"
