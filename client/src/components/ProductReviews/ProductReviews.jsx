@@ -121,6 +121,7 @@ const ProductReviews = ({ selectedProduct ,fetchData}) => {
               </div>
             ))}
             </div>         
+            </div>           
           </div>
         ) : (
           <div className="w-full py-12 flex items-center justify-center">
@@ -136,7 +137,7 @@ const ProductReviews = ({ selectedProduct ,fetchData}) => {
         >
           Add Your Review
         </button>
-
+       
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>Add Your Review</Modal.Title>
