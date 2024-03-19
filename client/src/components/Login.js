@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaShoppingBag } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {toast,Toaster} from 'react-hot-toast';
 import axios from 'axios';
@@ -47,6 +47,11 @@ export default function Login() {
     setFormData({ ...FormData, [name]: value });
   };
 
+  useEffect(()=>{
+    if(localStorage.getItem("id")){
+      navigate("/");
+    }
+  })
 
 
 

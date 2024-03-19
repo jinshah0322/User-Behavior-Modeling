@@ -4,12 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../app/features/cart/cartSlice";
+import { FaStar, FaRegStar,FaStarHalfAlt } from 'react-icons/fa';
 
 const ProductCard = ({ title, productItem }) => {
   const dispatch = useDispatch();
   const router = useNavigate();
   const handelClick = () => {
-    router(`/shop/${productItem.id}`);
+    router(`/shop/${productItem._id}`);
   };
   const handelAdd = (productItem) => {
     dispatch(addToCart({ product: productItem, num: 1 }));
@@ -23,31 +24,43 @@ const ProductCard = ({ title, productItem }) => {
       <img
         loading="lazy"
         onClick={() => handelClick()}
-        src={productItem.imgUrl}
+        src={productItem.imgUrl || "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png"}
         alt=""
       />
       <div className="product-like">
         <ion-icon name="heart-outline"></ion-icon>
       </div>
       <div className="product-details">
-        <h3 onClick={() => handelClick()}>{productItem.productName}</h3>
-        <div className="rate">
-          <i className="fa fa-star"></i>
-          <i className="fa fa-star"></i>
-          <i className="fa fa-star"></i>
-          <i className="fa fa-star"></i>
-          <i className="fa fa-star"></i>
+        <div className="flex w-full justify-between items-center">
+        <h3 className="title_product" onClick={() => handelClick()}>{productItem.title}</h3>
+        <div className="rate flex items-center">
+  {/* Full stars */}
+  {Array.from({ length: Math.floor(productItem?.totalrating) }, (_, index) => (
+    <FaStar key={index} className="text-yellow-500 ml-1"/>
+  ))}
+  
+  {/* Half star */}
+  {productItem?.totalrating % 1 !== 0 && (
+    <FaStarHalfAlt className="text-yellow-500 ml-1"/>
+  )}
+
+  {/* Empty stars */}
+  {Array.from({ length: Math.floor(5 - productItem?.totalrating) }, (_, index) => (
+    <FaRegStar key={index} className="ml-1"/>
+  ))}
+</div>        
+        </div>      
+
+       
+        <div className="mt-2 flex w-full justify-between items-center">
+          <h4>${productItem.price}</h4>        
+        <div>
+          {productItem?.quantity > 0 ? (
+            <span className="in-stock">In Stock</span>
+          ) : (
+            <span className="out-stock">Out of Stock</span>
+          )}
         </div>
-        <div className="price">
-          <h4>${productItem.price}</h4>
-          <button
-            aria-label="Add"
-            type="submit"
-            className="add"
-            onClick={() => handelAdd(productItem)}
-          >
-            <ion-icon name="add"></ion-icon>
-          </button>
         </div>
       </div>
     </Col>
