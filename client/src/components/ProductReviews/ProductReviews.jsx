@@ -120,13 +120,8 @@ const ProductReviews = ({ selectedProduct ,fetchData}) => {
                 <p className="mt-2">{rate.comment}</p>
               </div>
             ))}
-            </div>
-            <button
-          className="bg-blue-500 rounded-md px-4 py-2 text-white m-4"
-          onClick={handleShowModal}
-        >
-          Add Your Review
-        </button>
+            </div>         
+            </div>           
           </div>
         ) : (
           <div className="w-full py-12 flex items-center justify-center">
@@ -136,8 +131,13 @@ const ProductReviews = ({ selectedProduct ,fetchData}) => {
         )
         
         }
+          <button
+          className="bg-blue-500 rounded-md px-4 py-2 text-white m-4"
+          onClick={handleShowModal}
+        >
+          Add Your Review
+        </button>
        
-
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
             <Modal.Title>Add Your Review</Modal.Title>

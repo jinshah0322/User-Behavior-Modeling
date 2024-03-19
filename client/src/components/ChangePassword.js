@@ -1,4 +1,4 @@
-import { FaShoppingBag } from "react-icons/fa";
+
 import { useState } from "react";
 import {toast,Toaster} from 'react-hot-toast';
 import axios from 'axios';

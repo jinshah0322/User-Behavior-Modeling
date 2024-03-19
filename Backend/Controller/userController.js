@@ -2,7 +2,7 @@ const User = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const sendEmail = require("../helper/sendEmail")
 
-const getAllUsers = async(req,res)=>{
+exports.getAllUsers = async(req,res)=>{
     const users = await User.find()
     isAdmin = req.session.user.isAdmin
     if(isAdmin){
@@ -11,7 +11,8 @@ const getAllUsers = async(req,res)=>{
         res.send({ msg: "You are not authorized to access", success: false, status: 401 })
     }
 }
-const registerUser = async (req, res) => {
+
+exports.registerUser = async (req, res) => {
     try {
         const { name, email, phonenumber, password, city, state, streetAddress, postalcode, country } = req.body;
         const existingUserEmail = await User.findOne({ email: email });
@@ -59,7 +60,7 @@ const registerUser = async (req, res) => {
     }
 };
 
-const loginUser = async(req,res)=>{
+exports.loginUser = async(req,res)=>{
     const { email, password } = req.body
     const user = await User.findOne({ email: email })
     if (!user) {
@@ -74,7 +75,7 @@ const loginUser = async(req,res)=>{
     }
 }
 
-const profile = async(req,res)=>{
+exports.profile = async(req,res)=>{
     try{
         const currentId = req.params.id
         const user = await User.findOne({_id:currentId})
@@ -84,7 +85,7 @@ const profile = async(req,res)=>{
     }
 }
 
-const forgotPassword = async(req,res)=>{
+exports.forgotPassword = async(req,res)=>{
     try{
         const email = req.body.email
         const user = await User.findOne({email:email})
@@ -121,7 +122,7 @@ const forgotPassword = async(req,res)=>{
     }
 }
 
-const changePassword = async(req,res)=>{
+exports.changePassword = async(req,res)=>{
     try{
         const {oldPassword,newPassword,_id} = req.body
         console.log(req.body);
@@ -163,7 +164,7 @@ const changePassword = async(req,res)=>{
     }
 }
 
-const deleteaccount = async(req,res)=>{
+exports.deleteaccount = async(req,res)=>{
     try{
         const userId = req.session.user._id
         const name = req.session.user.name
@@ -190,7 +191,7 @@ const deleteaccount = async(req,res)=>{
     }
 }
 
-const editProfile = async(req,res)=>{
+exports.editProfile = async(req,res)=>{
     try{
         const {name, email, phonenumber, password, city, streetAddress, postalcode, country,state} = req.body
         const userId = req.params.id
@@ -253,7 +254,7 @@ const editProfile = async(req,res)=>{
     }
 }
 
-const blockUser = async (req,res)=>{
+exports.blockUser = async (req,res)=>{
     try{
         isAdmin = req.session.user.isAdmin
         if(isAdmin){
@@ -270,7 +271,7 @@ const blockUser = async (req,res)=>{
     }
 }
 
-const unblockUser = async (req,res)=>{
+exports.unblockUser = async (req,res)=>{
     try{
         isAdmin = req.session.user.isAdmin
         if(isAdmin){
@@ -285,19 +286,4 @@ const unblockUser = async (req,res)=>{
     } catch(error){
         console.log(error.message);
     }
-}
-
-
-
-module.exports = {
-    getAllUsers,
-    registerUser,
-    loginUser,
-    profile,
-    forgotPassword,
-    changePassword,
-    deleteaccount,
-    editProfile,
-    blockUser,
-    unblockUser
 }
