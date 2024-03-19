@@ -3,7 +3,20 @@ const Category = require("../models/categoryModel")
 exports.getAllCategory = async(req,res)=>{
     const categories = await Category.find()
     res.send({categories,count:categories.length,success:true,status:200})
+}
 
+exports.updateCategory = async(req,res)=>{
+    const {name} = req.body
+    const id = req.params.id
+    const lowerName = name.toLowerCase()
+    const category = await Category.findById({_id:id})
+    if(category){
+        category.name = lowerName
+        await category.save()
+        res.send({msg:"Category updated successfully",success:true,status:200})
+    } else{
+        res.send({msg:"Category not found",success:false,status:404})
+    }
 }
 
 exports.addCategory = async(req,res)=>{
