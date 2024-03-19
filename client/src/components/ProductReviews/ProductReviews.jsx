@@ -122,7 +122,6 @@ const ProductReviews = ({ selectedProduct ,fetchData}) => {
             ))}
             </div>         
             </div>           
-          </div>
         ) : (
           <div className="w-full py-12 flex items-center justify-center">
             <h2>No reviews yet</h2>
