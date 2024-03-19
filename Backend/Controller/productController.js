@@ -41,7 +41,10 @@ exports.getProductByID = async (req, res) => {
 
 exports.updateProductById = async (req, res) => {
     try {
-        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const {id,title,description,price,category,brand,quantity,sold} = req.body
+        var categoryID = await Category.findOne({name:category.toLowerCase()})
+        const updateProduct = {id,title,description,price,category:categoryID._id,brand,quantity,sold}
+        const product = await Product.findByIdAndUpdate(req.params.id, updateProduct, { new: true });
         if (!product) {
             return res.send({ msg: 'Product not found', success: false, status: 404 });
         }
