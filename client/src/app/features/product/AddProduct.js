@@ -10,7 +10,7 @@ const AddProduct = () => {
     category: "",
     brand: "",
     quantity: "",
-    image: null, // For storing image file
+    image: null,
   });
 
   const dispatch = useDispatch();
@@ -30,13 +30,15 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formDataToSend = new FormData();
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
-    }
-    dispatch(addProductAsync(formDataToSend));
-  };
 
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result;
+      const formDataToSend = { ...formData, image: base64String };
+      dispatch(addProductAsync(formDataToSend));
+    };
+    reader.readAsDataURL(formData.image);
+  };
   return (
     <div className="container mx-auto">
       <div className="bg-white-200 p-4 rounded-lg ">
@@ -54,7 +56,6 @@ const AddProduct = () => {
             required
             className="w-full px-3 py-2 rounded border focus:outline-none focus:border-blue-500"
           />
-          {/* Other input fields */}
           <textarea
             name="description"
             placeholder="Description"
