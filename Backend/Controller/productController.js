@@ -4,7 +4,10 @@ const User = require("../models/userModel")
 
 exports.createProduct = async (req, res) => {
     try {
-        const product = await Product.create(req.body)
+        const category = await Category.findOne({name:req.body.category.toLowerCase()})
+        const  {title,description,price,brand,quantity} = req.body
+        const body = {title,description,price,category:category._id,brand,quantity}
+        const product = await Product.create(body)
         await product.save()
         res.send({ msg: "Product created successfully", product, success: true, status: 200 })
     } catch (error) {
