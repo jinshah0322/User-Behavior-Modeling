@@ -6,9 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 // Define your async thunk for adding a product
 export const addProductAsync = createAsyncThunk(
   'product/addProductAsync',
-  async (productData, { dispatch }) => {
+  async (productData) => {
     try {
       const response = await axios.post("http://localhost:5000/api/v1/product", productData);
+      console.log(response)
       toast.success("Product added successfully!");
       return response.data; // Return the new product data if needed
     } catch (error) {
@@ -50,7 +51,7 @@ export const updateProductAsync = createAsyncThunk(
 
 export const fetchProductsAsync = createAsyncThunk(
     'product/fetchProductsAsync',
-    async (_, { dispatch }) => {
+    async () => {
       try {
         console.log("Fetching products...");
         const response = await axios.get("http://localhost:5000/api/v1/product");

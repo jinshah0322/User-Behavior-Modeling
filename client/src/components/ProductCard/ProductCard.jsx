@@ -24,7 +24,7 @@ const ProductCard = ({ title, productItem }) => {
       <img
         loading="lazy"
         onClick={() => handelClick()}
-        src={productItem.imgUrl || "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png"}
+        src={productItem.image || "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png"}
         alt=""
       />
       <div className="product-like">

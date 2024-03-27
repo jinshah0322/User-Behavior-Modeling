@@ -34,7 +34,15 @@ const AddProduct = () => {
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64String = reader.result;
-      const formDataToSend = { ...formData, image: base64String };
+      const formDataToSend = {
+        title: formData.title,
+        description: formData.description,
+        price: parseInt(formData.price),
+        category: formData.category,
+        brand: formData.brand,
+        quantity: parseInt(formData.quantity),
+        image: base64String
+      };
       dispatch(addProductAsync(formDataToSend));
     };
     reader.readAsDataURL(formData.image);
@@ -110,7 +118,7 @@ const AddProduct = () => {
             accept="image/*"
             name="image"
             onChange={handleImageChange}
-            required
+            // required
             className="w-full px-3 mt-2 py-2 rounded border focus:outline-none focus:border-blue-500"
           />
           <button

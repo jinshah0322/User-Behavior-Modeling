@@ -31,7 +31,7 @@ const ProductDetails = ({ selectedProduct,category }) => {
       <Container>
         <div className="flex w-full">
           <div className="w-[50%] top-0">
-            <img loading="lazy" className="top-0" src={selectedProduct?.imgUrl || "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png"} alt="" />
+            <img loading="lazy" className="top-0" src={selectedProduct?.image || "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png"} alt="" />
           </div>
           <div className="ml-10 w-[50%]">
             <h2 className="text-3xl top-0 font-bold">{selectedProduct?.title}</h2>
