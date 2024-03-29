@@ -29,7 +29,7 @@ const GetProduct = () => {
         </div>
       ) : productList && productList.length > 0 ? (
         <>
-          <h2 className="mt-4 text-xl font-semibold">Product Table</h2>
+          <h2 className="mt-4 text-xl font-semibold">Product Table</h2>          
 
           <table className="w-full mt-4 bg-white shadow-md rounded-lg overflow-hidden">
             <thead className="bg-gray-800 text-white">
@@ -45,7 +45,7 @@ const GetProduct = () => {
             <tbody>
               {productList.map((product, index) => (
                 <tr key={index} className="text-gray-700">
-                  <td className="px-4 py-2">{product._id}</td>
+                  <td className="px-4 py-2">{index+1}</td>
                   <td className="px-4 py-2">{product.title}</td>
                   <td className="px-4 py-2">{product.price}</td>
                   <td className="px-4 py-2">{getCategoryName(product.category)}</td> {/* Display category name */}

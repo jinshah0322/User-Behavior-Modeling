@@ -38,7 +38,7 @@ const ProductDetails = ({ selectedProduct,category }) => {
             <h2 className="text-md mt-3">{selectedProduct?.brand}</h2>
             <h2 className="text-md mt-3">{category}</h2>
             <div className="info">
-              <span className="price mt-8 font-bold">${selectedProduct?.price}</span>
+              <span className="price mt-8 font-bold">₹ {selectedProduct?.price}</span>
             </div>
             <div className="info">
               <span className="mt-3">{selectedProduct?.quantity > 0 ? "In Stock" : "Out of Stock"}</span>
