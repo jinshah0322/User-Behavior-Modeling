@@ -29,6 +29,7 @@ export default function Login() {
             password: "",
           });
           localStorage.setItem("id", data?.data?.user?._id);
+          localStorage.setItem("name", data?.data?.name);
           navigate("/");
         }     
         else{

@@ -12,6 +12,8 @@ import ForgetPassword from "./components/ForgetPassword";
 import ChangePassword from "./components/ChangePassword";
 import "./app.css"
 import Dashboard from "./pages/Dashboard";
+import ProfilePage from "./components/Profile/ProfilePage.jsx";
+import ProfileAddress from "./components/Profile/ProfileAddress.jsx";
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -43,6 +45,8 @@ function App() {
           <Route path="/shop/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/user" element={<ProfilePage />} />
+          <Route path="/profile/address" element={<ProfileAddress />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
   

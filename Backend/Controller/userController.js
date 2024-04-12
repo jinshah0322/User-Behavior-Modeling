@@ -199,19 +199,19 @@ exports.editProfile = async(req,res)=>{
         if(name){
             var nameupdate = User.updateOne({_id:userId},{name:name})
         }
-        if(phonenumber !== user.phonenumber){
+        if(phonenumber && phonenumber !== user.phonenumber){
             if(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(phonenumber)){
                 const allNumber = await User.find({phonenumber:phonenumber})
                 if(allNumber.length == 0){
                     var numberupdate = User.updateOne({_id:userId},{phonenumber:phonenumber})
                 } else{
-                    res.send({msg:'User with same phonenumber Number already exist',success:false,status:409})
+                    res.send({msg:'User with same phone number Number already exist',success:false,status:409})
                 }
             } else{
-                res.send({msg:'Enter Valid moile number',success:false,status:422})
+                res.send({msg:'Enter Valid phone number',success:false,status:422})
             }
         }
-        if(email!==user.email){
+        if(email && email!==user.email){
             if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){
                 const allEmail = await User.find({email:email})
                 if(allEmail.length == 0){
@@ -230,20 +230,20 @@ exports.editProfile = async(req,res)=>{
         await User.updateOne({email:oldEmail},{name,email,phonenumber,password, city, streetAddress, postalcode, country,state})
         const html = `
                 <h2>Your Profile has been Updated </h2>
-                <p>Dear ${name},</p>
+                <p>Dear ${user?.name},</p>
                 <p>We want to inform you that your profile on our application has been successfully updated. Your changes have been saved, and your profile now reflects the updated information.If you have any further updates or need assistance, feel free to log in to your account and make the necessary changes. If you have any questions, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a></p>
                 <p>Best regards,<br>[Jinay Shah]</p>
             `
         var data = {
             to: email,
-            text: `Hey ${name}`,
+            text: `Hey ${user?.name}`,
             subject: "Your Profile has been Updated",
             html: html
         }
         sendEmail(data)
         data = {
             to: oldEmail,
-            text: `Hey ${name}`,
+            text: `Hey ${user?.name}`,
             subject: "Your Profile has been Updated",
             html: html
         }
