@@ -121,14 +121,14 @@ exports.fetchProducts = async (req, res) => {
 
         const sortOptions = {};
         if (sort) {
-            sortOptions.price = sort === true ? 1 : -1; // Ascending if true, descending if false
+            sortOptions.price = sort === true ? 1 : -1; 
         }
 
         const totalProducts = await Product.countDocuments(filter);
         const products = await Product.find(filter)
+            .sort(sortOptions)
             .limit(limit)
             .skip(skip)
-            .sort(sortOptions);
 
         res.send({
             products,
