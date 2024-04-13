@@ -4,12 +4,12 @@ import ProductCard from "./ProductCard/ProductCard";
 
 const ShopList = ({ productItems }) => {
   useEffect(() => {}, [productItems]);
-  if (productItems.length === 0) {
+  if (productItems?.length === 0) {
     return <h1 className="not-found">Product Not Found !!</h1>;
   }
   return (
-    <Row className="justify-content-center">
-      {productItems.map((productItem) => {
+    <div className="justify-content-center grid grid-cols-4">
+      {productItems?.map((productItem) => {
         return (
           <ProductCard
             key={productItem.id}
@@ -18,7 +18,7 @@ const ShopList = ({ productItems }) => {
           />
         );
       })}
-    </Row>
+    </div>
   );
 };
 export default memo(ShopList);

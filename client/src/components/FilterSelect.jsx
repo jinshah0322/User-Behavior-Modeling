@@ -1,13 +1,9 @@
 import Select from 'react-select';
-import { products } from '../utils/products';
-
-const options = [
-    { value: "sofa", label: "Sofa" },
-    { value: "chair", label: "Chair" },
-    { value: "watch", label: "Watch" },
-    { value: "mobile", label: "Mobile" },
-    { value: "wireless", label: "Wireless" },
-];
+import {   
+    fetchCategoriesAsync,
+  } from "../app/features/category/categorySlice";
+  import { useSelector, useDispatch } from "react-redux";
+  import { useEffect } from "react";
 
 const customStyles = {
     control: (provided) => ({
@@ -35,12 +31,25 @@ const customStyles = {
     }),
 };
 
-const FilterSelect = ({setFilterList}) => {
+const FilterSelect = ({setFilterList,products}) => {
+    console.log(products);
+    const categoryList = useSelector((state) => state.category.categoryList);
+    console.log(categoryList);
+    const options = categoryList.map((item) => ({
+        value: item.id,
+        label: item.name,
+    }));
+
+    const dispatch = useDispatch();    
     const handleChange = (selectedOption)=> {
-        setFilterList(products.filter(item => item.category ===selectedOption.value))
+        console.log(selectedOption.value);
+        setFilterList(products.filter(item => item.category.toLowerCase() ===selectedOption.value))
     }
+    useEffect(() => {
+        dispatch(fetchCategoriesAsync());
+      }, [dispatch]);
     return (
-    <Select
+        <Select
     options={options}
     defaultValue={{ value: "", label: "Filter By Category" }}
     styles={customStyles}

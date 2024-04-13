@@ -17,7 +17,7 @@ const ProductCard = ({ title, productItem }) => {
     toast.success("Product has been added to cart!");
   };
   return (
-    <Col md={3} sm={5} xs={10} className="product mtop">
+    <Col className="product mtop">
       {title === "Big Discount" ? (
         <span className="discount">{productItem.discount}% Off</span>
       ) : null}
@@ -28,7 +28,7 @@ const ProductCard = ({ title, productItem }) => {
         alt=""
       />    
       <div className="product-details">
-        <div className="flex w-full justify-between items-center">
+        <div className="flex w-[full] justify-between items-center">
         <h3 className="title_product" onClick={() => handelClick()}>{productItem.title}</h3>
         <div className="rate flex items-center">
   {/* Full stars */}

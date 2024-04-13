@@ -5,12 +5,28 @@ import { Fragment, useState } from "react";
 import { products } from "../utils/products";
 import ShopList from "../components/ShopList";
 import useWindowScrollToTop from "../hooks/useWindowScrollToTop";
+import {useEffect} from "react";
+import axios from "axios";
 
 const Shop = () => {
-  const [filterList, setFilterList] = useState(
-    products.filter((item) => item.category === "sofa")
-  );
-  useWindowScrollToTop();
+  const [productItems, setProductItems] = useState();
+  const [filterList, setFilterList] = useState();
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/v1/product`);
+      const data = await response
+      setProductItems(data?.data?.products);
+      setFilterList(data?.data?.products);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
 
   return (
     <Fragment>
@@ -18,10 +34,10 @@ const Shop = () => {
         <Container className="filter-bar-contianer">
           <Row className="justify-content-center">
             <Col md={4}>
-              <FilterSelect setFilterList={setFilterList} />
+              <FilterSelect setFilterList={setFilterList} products={productItems} />
             </Col>
             <Col md={8}>
-              <SearchBar setFilterList={setFilterList} />
+              <SearchBar setFilterList={setProductItems} />
             </Col>
           </Row>
         </Container>

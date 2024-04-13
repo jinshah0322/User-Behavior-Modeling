@@ -88,3 +88,17 @@ exports.addRating = async (req,res)=>{
         res.send({ msg: error.message, success: false, status: 500 });
     }
 }
+
+exports.productsByCategory = async (req,res)=>{
+    try{
+        const {category} = req.params
+        const products = await Product.find({category:category}).limit(4)
+        if(!products){
+            return res.send({msg:"No products found",success:false,status:404})
+        }
+        res.send({products,success:true,status:200})
+    }
+    catch(error){
+        res.send({msg:error.message,success:false,status:500})
+    }
+}
