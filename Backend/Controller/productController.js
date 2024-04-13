@@ -5,9 +5,9 @@ const mongoose = require("mongoose")
 
 exports.createProduct = async (req, res) => {
     try {
-        const currentCategory = await Category.findOne({name:req.body.category.toLowerCase()})
-        const  {title,description,price,brand,quantity,image,category} = req.body
-        const body = {title,description,price,category:currentCategory._id,brand,quantity,image}
+        const currentCategory = await Category.findOne({ name: req.body.category.toLowerCase() })
+        const { title, description, price, brand, quantity, image, category } = req.body
+        const body = { title, description, price, category: currentCategory._id, brand, quantity, image }
         const product = await Product.create(body)
         await product.save()
         res.send({ msg: "Product created successfully", product, success: true, status: 200 })
@@ -30,7 +30,7 @@ exports.getProductByID = async (req, res) => {
         const product = await Product.findById(req.params.id)
         const category = await Category.findById(product.category)
         const categoryName = category?.name?.charAt(0).toUpperCase() + category?.name?.slice(1)
-        for(let i=0;i<product.ratings.length;i++){
+        for (let i = 0; i < product.ratings.length; i++) {
             const user = await User.findById(product.ratings[i].postedby)
             product.ratings[i].name = user?.name
         }
@@ -45,9 +45,9 @@ exports.getProductByID = async (req, res) => {
 
 exports.updateProductById = async (req, res) => {
     try {
-        const {id,title,description,price,category,brand,quantity,sold} = req.body
-        var categoryID = await Category.findOne({name:category.toLowerCase()})
-        const updateProduct = {id,title,description,price,category:categoryID._id,brand,quantity,sold}
+        const { id, title, description, price, category, brand, quantity, sold } = req.body
+        var categoryID = await Category.findOne({ name: category.toLowerCase() })
+        const updateProduct = { id, title, description, price, category: categoryID._id, brand, quantity, sold }
         const product = await Product.findByIdAndUpdate(req.params.id, updateProduct, { new: true });
         if (!product) {
             return res.send({ msg: 'Product not found', success: false, status: 404 });
@@ -64,19 +64,19 @@ exports.deleteProductById = async (req, res) => {
         if (!product) {
             return res.send({ msg: 'Product not found', success: false, status: 404 });
         }
-        res.send({msg:"Product deleted successfully",success:true,status:200})
+        res.send({ msg: "Product deleted successfully", success: true, status: 200 })
     } catch (error) {
         res.send({ msg: error.message, success: false, status: 500 });
     }
 };
 
-exports.addRating = async (req,res)=>{
-    try{
+exports.addRating = async (req, res) => {
+    try {
         const { productId } = req.params;
         const { star, comment, userId } = req.body;
         const product = await Product.findById(productId);
         if (!product) {
-            return res.send({ msg: 'Product not found',success:false,status:404 });
+            return res.send({ msg: 'Product not found', success: false, status: 404 });
         }
         product?.ratings?.push({ star, comment, postedby: userId });
         const totalRatings = product?.ratings?.length;
@@ -84,28 +84,28 @@ exports.addRating = async (req,res)=>{
         const newTotalRating = sumRatings / totalRatings;
         product.totalrating = newTotalRating?.toFixed(2)
         await product.save()
-        res.send({msg:"Rating added successfully",success:true,status:200})
+        res.send({ msg: "Rating added successfully", success: true, status: 200 })
     } catch (error) {
         res.send({ msg: error.message, success: false, status: 500 });
     }
 }
 
-exports.productsByCategory = async (req,res)=>{
-    try{
-        const {category} = req.params
-        const products = await Product.find({category:category}).limit(4)
-        if(!products){
-            return res.send({msg:"No products found",success:false,status:404})
+exports.productsByCategory = async (req, res) => {
+    try {
+        const { category } = req.params
+        const products = await Product.find({ category: category }).limit(4)
+        if (!products) {
+            return res.send({ msg: "No products found", success: false, status: 404 })
         }
-        res.send({products,success:true,status:200})
+        res.send({ products, success: true, status: 200 })
     }
-    catch(error){
-        res.send({msg:error.message,success:false,status:500})
+    catch (error) {
+        res.send({ msg: error.message, success: false, status: 500 })
     }
 }
 
 exports.fetchProducts = async (req, res) => {
-    const { search, category } = req.body;
+    const { search, category, skip , limit } = req.body;
     try {
         let filter = {};
         if (search) {
@@ -114,9 +114,18 @@ exports.fetchProducts = async (req, res) => {
         if (category) {
             filter.category = new mongoose.Types.ObjectId(category);
         }
-        const products = await Product.find(filter);
-        console.log(filter);
-        res.send({ products, success: true, status: 200 });
+
+        const totalProducts = await Product.countDocuments(filter);
+        const products = await Product.find(filter)
+            .limit(limit)
+            .skip(skip);
+
+        res.send({
+            products,
+            totalProducts,
+            success: true,
+            status: 200
+        });
     } catch (error) {
         res.status(500).send({ message: error.message, success: false, status: 500 });
     }
