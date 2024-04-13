@@ -4,12 +4,7 @@ const sendEmail = require("../helper/sendEmail")
 
 exports.getAllUsers = async(req,res)=>{
     const users = await User.find()
-    isAdmin = req.session.user.isAdmin
-    if(isAdmin){
-        res.send({ users, count: users.length, success: true })
-    } else{
-        res.send({ msg: "You are not authorized to access", success: false, status: 401 })
-    }
+    res.send({ users, count: users.length, success: true })
 }
 
 exports.registerUser = async (req, res) => {
