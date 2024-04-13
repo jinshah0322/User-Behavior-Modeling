@@ -6,7 +6,7 @@ const GetProduct = () => {
   const dispatch = useDispatch();
   const { productList, loading, error } = useSelector(state => state.product);
   const categoryList = useSelector(state => state.category.categoryList);
-
+  
   useEffect(() => {
     dispatch(fetchProductsAsync());
   }, [dispatch]);
@@ -48,7 +48,7 @@ const GetProduct = () => {
                   <td className="px-4 py-2">{index+1}</td>
                   <td className="px-4 py-2">{product.title}</td>
                   <td className="px-4 py-2">{product.price}</td>
-                  <td className="px-4 py-2">{getCategoryName(product.category)}</td> {/* Display category name */}
+                  <td className="px-4 py-2">{getCategoryName(product.categoryId)}</td>
                   <td className="px-4 py-2">{product.description}</td>
                   <td className="px-4 py-2">{product.brand}</td>
                 </tr>

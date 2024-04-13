@@ -41,12 +41,27 @@ const AddProduct = () => {
         category: formData.category,
         brand: formData.brand,
         quantity: parseInt(formData.quantity),
-        image: base64String
+        image: base64String,
       };
       dispatch(addProductAsync(formDataToSend));
     };
     reader.readAsDataURL(formData.image);
   };
+
+  React.useEffect(() => {
+    if (!loading && !error) {
+      setFormData({
+        title: "",
+        description: "",
+        price: "",
+        category: "",
+        brand: "",
+        quantity: "",
+        image: null,
+      });
+    }
+  }, [loading, error]);
+
   return (
     <div className="container mx-auto">
       <div className="bg-white-200 p-4 rounded-lg ">
