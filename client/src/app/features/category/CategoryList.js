@@ -90,7 +90,7 @@ const CategoryList = () => {
     // setdelLoading(false);
     if(newCategory?.name === "") return toast.error("Category name is required");
     try{
-        const res = await axios.put(`http://localhost:5000/api/v1/category/${selectedId}`,  { name: newCategory?.name } );
+        const res = await axios.put(`${process.env.REACT_APP_SERVERURL}/category/${selectedId}`,  { name: newCategory?.name } );
         console.log(res)
         if(res?.data?.status === 200){
             toast.success(res?.data?.msg);

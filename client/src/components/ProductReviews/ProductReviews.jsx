@@ -36,7 +36,7 @@ const ProductReviews = ({ selectedProduct ,fetchData}) => {
       return;
     }
     try{
-      const response = await axios.post(`http://localhost:5000/api/v1/product/${id}/ratings`,{
+      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/product/${id}/ratings`,{
         star: rating,
         comment: review,
         userId: userId,

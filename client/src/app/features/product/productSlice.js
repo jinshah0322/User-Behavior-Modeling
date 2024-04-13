@@ -8,7 +8,7 @@ export const addProductAsync = createAsyncThunk(
   'product/addProductAsync',
   async (productData) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/product", productData);
+      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/product`, productData);
       console.log(response)
       toast.success("Product added successfully!");
       return response.data; // Return the new product data if needed
@@ -24,7 +24,7 @@ export const deleteProductAsync = createAsyncThunk(
   'product/deleteProductAsync',
   async (productId, { dispatch }) => {
     try {
-      await axios.delete(`http://localhost:5000/api/v1/product/${productId}`);
+      await axios.delete(`${process.env.REACT_APP_SERVERURL}/product/${productId}`);
       toast.warning("Product deleted successfully!");
       return productId; // Return the deleted product id if needed
     } catch (error) {
@@ -39,7 +39,7 @@ export const updateProductAsync = createAsyncThunk(
   'product/updateProductAsync',
   async ({ productId, productData }, { dispatch }) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/v1/product/${productId}`, productData);
+      const response = await axios.put(`${process.env.REACT_APP_SERVERURL}/product/${productId}`, productData);
       toast.success("Product updated successfully!");
       return response.data; // Return the updated product data if needed
     } catch (error) {
@@ -54,7 +54,7 @@ export const fetchProductsAsync = createAsyncThunk(
     async () => {
       try {
         console.log("Fetching products...");
-        const response = await axios.get("http://localhost:5000/api/v1/product");
+        const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/product`);
         console.log("Products fetched successfully:", response.data.products);
         return response.data.products; // Return the fetched products array
       } catch (error) {

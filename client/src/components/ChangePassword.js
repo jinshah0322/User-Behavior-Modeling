@@ -21,7 +21,7 @@ export default function ChangePassword() {
     const id = localStorage.getItem("id");
     
     try{
-        const response = await axios.post(`http://localhost:5000/api/v1/user/changepassword`, {_id:id,oldPassword:FormData.oldPassword,newPassword:FormData.newPassword});
+        const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/user/changepassword`, {_id:id,oldPassword:FormData.oldPassword,newPassword:FormData.newPassword});
         const data = await response;
         if(data?.data?.success === true){
           setFormData({

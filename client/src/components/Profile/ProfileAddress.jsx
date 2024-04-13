@@ -43,7 +43,7 @@ const ProfileAddress = () => {
     const fetchData = async () => {
 
         try {
-            const response = await axios.get(`http://localhost:5000/api/v1/user/profile/${id}`);
+            const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/user/profile/${id}`);
             setFormData({
                 streetAddress: response.data.user.streetAddress,
                 city: response.data.user.city,
@@ -83,7 +83,7 @@ const ProfileAddress = () => {
 
         try {
             setIsEdited(true)
-            const response = await axios.put(`http://localhost:5000/api/v1/user/editprofile/${id}`, formData);
+            const response = await axios.put(`${process.env.REACT_APP_SERVERURL}/user/editprofile/${id}`, formData);
             console.log(response);
             if (response?.data?.status === 200) {
                 fetchData()
