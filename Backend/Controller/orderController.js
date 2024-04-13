@@ -47,7 +47,7 @@ exports.createOrder = async (req, res) => {
                 res.status(200).send({
                     success: true,
                     msg: 'Order Created',
-                    order_id: razorpayOrder.order_id,
+                    order_id: razorpayOrder.id,
                     amount,
                     key_id: process.env.RAZORPAY_ID_KEY,
                     // product_name: req.body.name,
