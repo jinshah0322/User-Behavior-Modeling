@@ -16,7 +16,7 @@ const Home = () => {
     const [sport,setSport] = useState([]);
     const getElectronicProdcuts = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/v1/product/category/6606e04023ff446d9816a853`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/product/category/6606e04023ff446d9816a853`);
         const data = await response
         setElectronics(data?.data?.products);
       } catch (error) {
@@ -25,7 +25,7 @@ const Home = () => {
     };
     const getClothingProdcuts = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/v1/product/category/6606e04a23ff446d9816a85a`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/product/category/6606e04a23ff446d9816a85a`);
         const data = await response
         setClothing(data?.data?.products);
       } catch (error) {
@@ -34,7 +34,7 @@ const Home = () => {
     };
     const getBooksProdcuts = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/v1/product/category/6606e04d23ff446d9816a862`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/product/category/6606e04d23ff446d9816a862`);
         const data = await response
         setBooks(data?.data?.products);
       } catch (error) {
@@ -43,7 +43,7 @@ const Home = () => {
     };
     const getSportsProdcuts = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/v1/product/category/6606e05123ff446d9816a86b`);
+        const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/product/category/6606e05123ff446d9816a86b`);
         const data = await response
         setSport(data?.data?.products);
       } catch (error) {
