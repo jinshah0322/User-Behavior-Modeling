@@ -1,28 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateProductAsync , fetchProductsAsync } from "./productSlice";
+import { updateProductAsync, fetchProductsAsync } from "./productSlice";
 import UpdateModal from "./UpdateModel";
+import { Pagination } from "antd";
 
 const UpdateProduct = () => {
   const dispatch = useDispatch();
   const productList = useSelector((state) => state.product.productList);
   const categoryList = useSelector((state) => state.category.categoryList);
-
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [pagination, setPagination] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [skip, setSkip] = useState(0);
+  const limit = 10;
 
   const openModal = (product) => {
     setSelectedProduct(product);
   };
 
+  const handlePaginationChange = (page) => {
+    setPagination(page);
+  };
+
+  const displayProducts = productList.slice(skip, skip + limit);
+
   const closeModal = () => {
     setSelectedProduct(null);
   };
-  console.log(categoryList)
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     const updatedProduct = {
-      id: selectedProduct._id, // Use _id instead of id if your product objects have an _id field
+      id: selectedProduct._id, 
       title: e.target.product.value,
       price: e.target.price.value,
       category: e.target.category.value,
@@ -33,14 +42,24 @@ const UpdateProduct = () => {
     try {
       const response = await dispatch(updateProductAsync({ productId: selectedProduct._id, productData: updatedProduct }));
       console.log(response);
-      const res =  dispatch(fetchProductsAsync());
+      const res = dispatch(fetchProductsAsync());
       console.log(res)
       closeModal();
     } catch (error) {
       console.error("Error updating product:", error);
     }
   };
-  
+
+  useEffect(() => {
+    dispatch(fetchProductsAsync()).then(() => {
+      setTotalCount(productList.length);
+    });
+  }, [dispatch, productList.length]);
+
+  useEffect(() => {
+    setSkip((pagination - 1) * limit);
+  }, [pagination, limit]);
+
   return (
     <div>
       {productList && productList.length > 0 ? (
@@ -62,15 +81,19 @@ const UpdateProduct = () => {
               </tr>
             </thead>
             <tbody>
-              {productList.map((product, index) => (
+              {displayProducts.map((product, index) => (
                 <tr key={index} className="text-gray-700">
-                  <td className="px-4 py-2">{index+1}</td>
+                  <td className="px-4 py-2">{skip + index + 1}</td>
                   <td className="px-4 py-2">{product.title}</td>
                   <td className="px-4 py-2">{product.price}</td>
                   <td className="px-4 py-2">
                     {categoryList.find(cat => cat.id === product.category)?.name}
                   </td>
-                  <td className="px-4 py-2 truncate max-w-[20px]">{product.description}</td>
+                  {/* <td className="px-4 py-2 truncate max-w-[100px]">{product.description}</td> */}
+                  <td className="px-4 py-2 max-w-xs overflow-hidden whitespace-nowrap overflow-ellipsis">
+  {product.description}
+</td>
+
                   <td className="px-4 py-2">{product.brand}</td>
                   <td className="px-4 py-2">{product.quantity}</td>
                   <td className="px-4 py-2">{product.sold}</td>
@@ -94,6 +117,16 @@ const UpdateProduct = () => {
             <p className="text-4xl text-gray-700 font-bold mb-4">Oops!</p>
             <p className="text-lg text-red-600">No records found.</p>
           </div>
+        </div>
+      )}
+      {productList && productList.length > 0 && (
+        <div className="flex justify-center mt-4">
+          <Pagination
+            current={pagination}
+            total={totalCount}
+            pageSize={limit}
+            onChange={handlePaginationChange}
+          />
         </div>
       )}
       {selectedProduct && (
