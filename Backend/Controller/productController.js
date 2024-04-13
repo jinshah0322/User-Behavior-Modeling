@@ -112,7 +112,11 @@ exports.fetchProducts = async (req, res) => {
             filter.title = { $regex: search, $options: "i" };
         }
         if (category) {
-            filter.category = new mongoose.Types.ObjectId(category);
+            if(category !== "all"){
+                filter.category = new mongoose.Types.ObjectId(category);
+            } else{
+                delete filter.category;
+            }
         }
 
         const totalProducts = await Product.countDocuments(filter);
