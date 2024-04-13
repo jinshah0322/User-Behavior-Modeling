@@ -1,12 +1,9 @@
 const Cart = require('../models/cartModel');
 const Product = require('../models/productModel');
-const mongoose = require('mongoose');
 
 exports.addCart = async (req, res) => {
     try {
-        var { userId, productId, quantity } = req.body;
-        userId = new mongoose.Types.ObjectId(userId);
-        productId = new mongoose.Types.ObjectId(productId);
+        const { userId, productId, quantity } = req.body;
         let cart = await Cart.findOne({ userId });
         const product = await Product.findById(productId);
         if (!product) {
