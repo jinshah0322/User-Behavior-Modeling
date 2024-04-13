@@ -2,12 +2,13 @@ import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import { useCustomEffect } from '../../hooks/useCustomEffect';
+import { useEffect } from 'react';
 
 const PaymentPage = () => {
     const { cartList, total } = useSelector((state) => state.cart);
     const id = localStorage.getItem("id");
     
-    useCustomEffect(() => {
+    useEffect(() => {
         const fetchOrder = async () => {
             try {
                 const items = cartList.map((item) => ({
