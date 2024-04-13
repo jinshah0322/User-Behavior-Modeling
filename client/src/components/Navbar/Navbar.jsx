@@ -7,7 +7,7 @@ import { IoMdLogOut } from "react-icons/io";
 import { FaUser } from "react-icons/fa6";
 
 const NavBar = () => {
-  const { cartList } = useSelector((state) => state.cart);
+  const { totalItems } = useSelector((state) => state.cart);
   const [expand, setExpand] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
   const id = localStorage.getItem("id");
@@ -69,7 +69,7 @@ const NavBar = () => {
               aria-label="Go to Cart Page"
               to="/cart"
               className="cart"
-              data-num={cartList.length}
+              data-num={totalItems}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +120,7 @@ const NavBar = () => {
                 aria-label="Go to Cart Page"
                 to="/cart"
                 className="cart"
-                data-num={cartList.length}
+                data-num={totalItems}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
