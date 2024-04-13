@@ -8,7 +8,7 @@ const ShopList = ({ productItems }) => {
     return <h1 className="not-found">Product Not Found !!</h1>;
   }
   return (
-    <div className="justify-content-center grid grid-cols-4">
+    <div className="justify-content-center grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2">
       {productItems?.map((productItem) => {
         return (
           <ProductCard

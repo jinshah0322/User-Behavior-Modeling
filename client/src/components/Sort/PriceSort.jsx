@@ -11,7 +11,7 @@ const customStyles = {
         borderRadius: "5px",
         border: "none",
         boxShadow: "none",
-        width: "200px",
+        // width: "200px",
         height: "40px",
     }),
     option: (provided, state) => ({

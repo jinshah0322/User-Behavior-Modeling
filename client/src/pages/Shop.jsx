@@ -53,12 +53,12 @@ const Shop = () => {
     <Fragment>
       <section className="filter-bar mt-12">
         <Container className="filter-bar-contianer">
-          <div className="justify-center items-center grid grid-cols-2">
-            <div className="flex items-center gap-12">
+          <div className="justify-center items-center grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-8">
+            <div className="grid grid-cols-2 gap-2 lg:w-[70%]">
               <FilterSelect setCategoryFilter={setCategoryFilter} defaultValue={defaultValue}/>
               <PriceSort setSortOrder={setSortOrder} />
             </div>
-            <div>
+            <div className="lg:w-[50%] lg:ml-auto">
               <SearchBar setSearchItem={setSearchItem} />
             </div>            
           </div>
