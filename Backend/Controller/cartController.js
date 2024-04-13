@@ -1,32 +1,40 @@
 const Cart = require('../models/cartModel');
+const Product = require('../models/productModel');
 
 exports.addCart = async (req, res) => {
     try {
         const { userId, productId, quantity } = req.body;
-        console.log(req.body)
         let cart = await Cart.findOne({ userId });
-
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.send({ message: 'Product not found', success: false, status: 404 });
+        }
+        if (quantity > product.quantity) {
+            return res.send({ message: 'Not enough quantity available',quantity:product.quantity, success: false, status: 400 });
+        }
         if (!cart) {
             cart = new Cart({ userId, items: [{ productId, quantity }] });
-            await cart.save();
         } else {
-            const itemIndex = cart.items.findIndex(item => item.productId === productId);
-
-            if (itemIndex !== -1) {
-                cart.items[itemIndex].quantity += quantity;
-            } else {
-                cart.items.push({ productId, quantity });
+            for (const item of cart.items) {
+                if (item.productId.toString() === productId) {
+                    if (item.quantity + quantity > product.quantity) {
+                        return res.send({ message: 'Not enough quantity available',quantity:product.quantity, success: false, status: 400 });
+                    }
+                    item.quantity += quantity;
+                    await cart.save();
+                    return res.send({ msg: 'Item added to cart successfully', success: true, status: 200 });
+                }
             }
-
-            await cart.save();
+            cart.items.push({ productId, quantity });
         }
-
+        await cart.save();
         res.send({ msg: 'Item added to cart successfully', success: true, status: 200 });
     } catch (error) {
         console.error(error);
         res.send({ message: 'Internal server error', success: false, status: 500 });
     }
-}
+};
+
 
 exports.getCart = async (req, res) => {
     try {
