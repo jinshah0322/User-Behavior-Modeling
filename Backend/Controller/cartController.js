@@ -1,5 +1,4 @@
-// userid,totalProducts,productarray:productid,quantity
-const Cart = require('../models/cart');
+const Cart = require('../models/cartModel');
 
 exports.addCart = async (req, res) => {
     try {
