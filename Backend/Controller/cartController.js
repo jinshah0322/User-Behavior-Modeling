@@ -22,13 +22,13 @@ exports.addCart = async (req, res) => {
                     }
                     item.quantity += quantity;
                     await cart.save();
-                    return res.send({ msg: 'Item added to cart successfully', success: true, status: 200 });
+                    return res.send({ msg: 'Item added to cart successfully', success: true, status: 200, cart });
                 }
             }
             cart.items.push({ productId, quantity });
         }
         await cart.save();
-        res.send({ msg: 'Item added to cart successfully', success: true, status: 200 });
+        res.send({ msg: 'Item added to cart successfully', success: true, status: 200, cart });
     } catch (error) {
         console.error(error);
         res.send({ message: 'Internal server error', success: false, status: 500 });
