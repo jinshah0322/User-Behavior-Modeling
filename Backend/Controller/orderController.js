@@ -16,8 +16,6 @@ exports.createOrder = async (req, res) => {
         if(!address){
             address = user.address;
         }
-        
-        console.log(req.body);
         const amount = totalAmount * 100;
         const options = {
             amount,
@@ -32,7 +30,6 @@ exports.createOrder = async (req, res) => {
             }
 
             if (razorpayOrder.status === 'created') {
-                console.log(razorpayOrder);
                     const order = new Order({
                         orderId:razorpayOrder.id,
                         userId,
@@ -71,7 +68,6 @@ exports.createOrder = async (req, res) => {
 exports.getAllOrders = async (req, res) => {
     try {
         const orders = await Order.find().populate('userId', 'username email').populate('items.productId', 'name price');
-
         res.status(200).json({ orders });
     } catch (error) {
         console.error(error);
