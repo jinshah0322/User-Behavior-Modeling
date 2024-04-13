@@ -9,6 +9,7 @@ const category = require("./routes/categoryRoutes")
 const product = require("./routes/productRoutes")
 const admin = require("./routes/adminRoutes")
 const cart = require("./routes/cartRoutes")
+const order = require("./routes/orderRoutes")
 
 const app = express()
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -21,6 +22,7 @@ app.use("/api/v1/user",user)
 app.use("/api/v1/category",category)
 app.use("/api/v1/product",product)
 app.use("/api/v1/cart",cart)
+app.use("/api/v1/order",order)
 app.use("/api/v1/admin",admin)
 
 const port = process.env.PORT
