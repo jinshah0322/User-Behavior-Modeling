@@ -105,7 +105,7 @@ exports.productsByCategory = async (req, res) => {
 }
 
 exports.fetchProducts = async (req, res) => {
-    const { search, category, skip , limit } = req.body;
+    const { search, category, skip , limit, sort } = req.body;
     try {
         let filter = {};
         if (search) {
@@ -119,8 +119,14 @@ exports.fetchProducts = async (req, res) => {
             }
         }
 
+        const sortOptions = {};
+        if (sort) {
+            sortOptions.price = sort === true ? 1 : -1; // Ascending if true, descending if false
+        }
+
         const totalProducts = await Product.countDocuments(filter);
         const products = await Product.find(filter)
+            .sort(sortOptions)
             .limit(limit)
             .skip(skip);
 
