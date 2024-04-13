@@ -1,6 +1,7 @@
 const Product = require("../models/productModel")
 const Category = require("../models/categoryModel")
 const User = require("../models/userModel")
+const mongoose = require("mongoose")
 
 exports.createProduct = async (req, res) => {
     try {
@@ -102,3 +103,21 @@ exports.productsByCategory = async (req,res)=>{
         res.send({msg:error.message,success:false,status:500})
     }
 }
+
+exports.fetchProducts = async (req, res) => {
+    const { search, category } = req.body;
+    try {
+        let filter = {};
+        if (search) {
+            filter.title = { $regex: search, $options: "i" };
+        }
+        if (category) {
+            filter.category = new mongoose.Types.ObjectId(category);
+        }
+        const products = await Product.find(filter);
+        console.log(filter);
+        res.send({ products, success: true, status: 200 });
+    } catch (error) {
+        res.status(500).send({ message: error.message, success: false, status: 500 });
+    }
+};
