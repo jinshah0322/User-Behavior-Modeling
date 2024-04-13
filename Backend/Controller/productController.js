@@ -126,9 +126,9 @@ exports.fetchProducts = async (req, res) => {
 
         const totalProducts = await Product.countDocuments(filter);
         const products = await Product.find(filter)
-            .sort(sortOptions)
             .limit(limit)
-            .skip(skip);
+            .skip(skip)
+            .sort(sortOptions);
 
         res.send({
             products,
