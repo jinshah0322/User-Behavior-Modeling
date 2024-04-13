@@ -26,10 +26,7 @@ const ProductCard = ({ title, productItem }) => {
         onClick={() => handelClick()}
         src={productItem.image || "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png"}
         alt=""
-      />
-      <div className="product-like">
-        <ion-icon name="heart-outline"></ion-icon>
-      </div>
+      />    
       <div className="product-details">
         <div className="flex w-full justify-between items-center">
         <h3 className="title_product" onClick={() => handelClick()}>{productItem.title}</h3>

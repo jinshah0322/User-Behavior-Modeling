@@ -13,7 +13,7 @@ const Home = () => {
     const [products,setProducts] = useState([]);
     const getProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/v1/product");
+        const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/product`);
         const data = await response
         setProducts(data?.data?.products);
       } catch (error) {

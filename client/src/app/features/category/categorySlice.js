@@ -8,7 +8,7 @@ export const addCategoryAsync = createAsyncThunk(
   'category/addCategoryAsync',
   async (categoryData, { dispatch }) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/category", categoryData);
+      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/category`, categoryData);
       if(response?.data?.status === 200){
       toast.success("Category added successfully!");
       fetchCategoriesAsync()
@@ -29,7 +29,7 @@ export const deleteCategoryAsync = createAsyncThunk(
   'category/deleteCategoryAsync',
   async (categoryName, { dispatch }) => {
     try {
-      const res = await axios.delete("http://localhost:5000/api/v1/category", { data: { name: categoryName } });
+      const res = await axios.delete(`${process.env.REACT_APP_SERVERURL}/category`, { data: { name: categoryName } });
       console.log(res)
       if(res?.data?.status === 200){
 
@@ -51,7 +51,7 @@ export const updateCategoryAsync = createAsyncThunk(
   'category/updateCategoryAsync',
   async (categoryName,id, { dispatch }) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/v1/category/${id}`,  { name: categoryName } );
+      const res = await axios.put(`${process.env.REACT_APP_SERVERURL}/category/${id}`,  { name: categoryName } );
       console.log(res)
       if(res?.data?.status === 200){
 
@@ -74,7 +74,7 @@ export const fetchCategoriesAsync = createAsyncThunk(
   'category/fetchCategoriesAsync',
   async (_, { dispatch }) => {
     try {
-      const response = await axios.get("http://localhost:5000/api/v1/category");
+      const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/category`);
       return response.data.categories; // Return the fetched categories array
     } catch (error) {
       toast.error(`Error fetching categories: ${error.message}`);
@@ -89,7 +89,7 @@ export const fetchProductCategory = createAsyncThunk(
     try {
       console.log("cllaa")
       console.log(categoryList)
-      const response = await axios.post(`http://localhost:5000/api/v1/admin`,{category:categoryList});
+      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/admin`,{category:categoryList});
       return response.data.category; // Return the fetched categories array
     } catch (error) {
       toast.error(`Error fetching categories: ${error.message}`);

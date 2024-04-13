@@ -90,7 +90,7 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/v1/user/register`,
+        `${process.env.REACT_APP_SERVERURL}/user/register`,
         formData
       );
       const data = await response;

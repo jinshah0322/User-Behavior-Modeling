@@ -15,7 +15,7 @@ const Product = () => {
   const [category, setCategory] = useState();
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/product/${id}`);
+      const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/product/${id}`);
       const data = await response
       setSelectedProduct(data?.data?.product);
       setCategory(data?.data?.categoryName);

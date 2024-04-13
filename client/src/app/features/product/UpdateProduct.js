@@ -31,9 +31,11 @@ const UpdateProduct = () => {
       quantity: e.target.quantity.value,
     };
     try {
-      await dispatch(updateProductAsync({ productId: selectedProduct._id, productData: updatedProduct }));
+      const response = await dispatch(updateProductAsync({ productId: selectedProduct._id, productData: updatedProduct }));
+      console.log(response);
+      const res =  dispatch(fetchProductsAsync());
+      console.log(res)
       closeModal();
-      dispatch(fetchProductsAsync());
     } catch (error) {
       console.error("Error updating product:", error);
     }

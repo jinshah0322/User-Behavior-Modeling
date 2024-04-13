@@ -10,7 +10,7 @@ const ForgetPassword = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/v1/user/forgetpassword`,
+        `${process.env.REACT_APP_SERVERURL}/user/forgetpassword`,
         {"email": formData.email }
       );
       const data = await response;

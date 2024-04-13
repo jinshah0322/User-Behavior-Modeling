@@ -20,7 +20,7 @@ export default function Login() {
     }
  
       try {
-        const response = await axios.post(`http://localhost:5000/api/v1/user/login`, FormData);
+        const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/user/login`, FormData);
         const data = await response;
         console.log(data);
         if(data?.data?.success === true){
