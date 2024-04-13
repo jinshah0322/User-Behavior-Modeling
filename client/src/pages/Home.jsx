@@ -67,21 +67,25 @@ const Home = () => {
         title="Electronics"
         bgColor="#f6f9fc"
         productItems={electronics}
+        id="6606e04023ff446d9816a853"
       />
       <Section
         title="Clothing"
         bgColor="#f6f9fc"
         productItems={clothing}
+        id="6606e04a23ff446d9816a85a"
       />
       <Section
         title="Books"
         bgColor="#f6f9fc"
         productItems={books}
+        id="6606e04d23ff446d9816a862"
       />
       <Section
         title="Sports"
         bgColor="#f6f9fc"
         productItems={sport}
+        id="6606e05123ff446d9816a86b"
       />
       {/* <Section
         title="New Arrivals"
