@@ -68,7 +68,7 @@ const UpdateProduct = () => {
                   <td className="px-4 py-2">
                     {categoryList.find(cat => cat.id === product.category)?.name}
                   </td>
-                  <td className="px-4 py-2">{product.description}</td>
+                  <td className="px-4 py-2 truncate max-w-[20px]">{product.description}</td>
                   <td className="px-4 py-2">{product.brand}</td>
                   <td className="px-4 py-2">{product.quantity}</td>
                   <td className="px-4 py-2">{product.sold}</td>

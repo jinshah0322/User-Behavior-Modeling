@@ -4,7 +4,10 @@ const User = require("../models/userModel")
 
 exports.createProduct = async (req, res) => {
     try {
-        const product = await Product.create(req.body)
+        const currentCategory = await Category.findOne({name:req.body.category.toLowerCase()})
+        const  {title,description,price,brand,quantity,image,category} = req.body
+        const body = {title,description,price,category:currentCategory._id,brand,quantity,image}
+        const product = await Product.create(body)
         await product.save()
         res.send({ msg: "Product created successfully", product, success: true, status: 200 })
     } catch (error) {
@@ -25,7 +28,7 @@ exports.getProductByID = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id)
         const category = await Category.findById(product.category)
-        const categoryName = category.name.charAt(0).toUpperCase() + category.name.slice(1)
+        const categoryName = category?.name?.charAt(0).toUpperCase() + category?.name?.slice(1)
         for(let i=0;i<product.ratings.length;i++){
             const user = await User.findById(product.ratings[i].postedby)
             product.ratings[i].name = user?.name
@@ -74,11 +77,11 @@ exports.addRating = async (req,res)=>{
         if (!product) {
             return res.send({ msg: 'Product not found',success:false,status:404 });
         }
-        product.ratings.push({ star, comment, postedby: userId });
-        const totalRatings = product.ratings.length;
-        const sumRatings = product.ratings.reduce((total, rating) => total + rating.star, 0);
+        product?.ratings?.push({ star, comment, postedby: userId });
+        const totalRatings = product?.ratings?.length;
+        const sumRatings = product?.ratings?.reduce((total, rating) => total + rating.star, 0);
         const newTotalRating = sumRatings / totalRatings;
-        product.totalrating = newTotalRating.toFixed(2)
+        product.totalrating = newTotalRating?.toFixed(2)
         await product.save()
         res.send({msg:"Rating added successfully",success:true,status:200})
     } catch (error) {

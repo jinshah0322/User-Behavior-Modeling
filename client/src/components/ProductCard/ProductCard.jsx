@@ -24,7 +24,7 @@ const ProductCard = ({ title, productItem }) => {
       <img
         loading="lazy"
         onClick={() => handelClick()}
-        src={productItem.imgUrl || "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png"}
+        src={productItem.image || "https://clarionhealthcare.com/wp-content/uploads/2020/12/default-fallback-image.png"}
         alt=""
       />
       <div className="product-like">
@@ -53,7 +53,7 @@ const ProductCard = ({ title, productItem }) => {
 
        
         <div className="mt-2 flex w-full justify-between items-center">
-          <h4>${productItem.price}</h4>        
+          <h4>₹ {productItem.price}</h4>        
         <div>
           {productItem?.quantity > 0 ? (
             <span className="in-stock">In Stock</span>

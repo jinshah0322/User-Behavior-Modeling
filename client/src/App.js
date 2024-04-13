@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import NavBar from "./components/Navbar/NavBar";
+import NavBar from "./components/Navbar/Navbar.jsx"
 import Loader from "./components/Loader/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,6 +12,8 @@ import ForgetPassword from "./components/ForgetPassword";
 import ChangePassword from "./components/ChangePassword";
 import "./app.css"
 import Dashboard from "./pages/Dashboard";
+import ProfilePage from "./components/Profile/ProfilePage.jsx";
+import ProfileAddress from "./components/Profile/ProfileAddress.jsx";
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -32,7 +34,7 @@ function App() {
           pauseOnHover
           theme="light"
         />
-        {/* {path !== "/login" && path !== "/register" && path !== "/forgotpassword" ?<NavBar />:""} */}
+        {path !== "/login" && path !== "/register" && path !== "/forgotpassword" ?<NavBar />:""}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Signup />} />
@@ -43,6 +45,8 @@ function App() {
           <Route path="/shop/:id" element={<Product />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/user" element={<ProfilePage />} />
+          <Route path="/profile/address" element={<ProfileAddress />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
   

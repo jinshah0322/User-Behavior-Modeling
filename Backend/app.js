@@ -10,9 +10,10 @@ const product = require("./routes/productRoutes")
 const admin = require("./routes/adminRoutes")
 
 const app = express()
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({secret:process.env.EXPRESS_SESSION_SECRET}))
 
 app.use("/api/v1/user",user)
