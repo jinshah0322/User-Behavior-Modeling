@@ -124,7 +124,6 @@ exports.fetchProducts = async (req, res) => {
             if(sort === "asc") sortOptions.price = 1;
             else sortOptions.price = -1;
         }
-        console.log(sortOptions);
 
         const totalProducts = await Product.countDocuments(filter);
         const products = await Product.find(filter)
