@@ -8,17 +8,18 @@ export const deleteAccountAsync = createAsyncThunk(
   'user/deleteAccountAsync',
   async (userId) => { 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/user/deleteaccount`, { userId });
+      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/user/deleteaccount/${userId}`);
       return response.data;
     } catch (error) {
+      toast.error("Failed to delete user. Please try again later.");
       throw error; // Throw error for proper rejection handling
     }
   }
 );
 
 // Update the API endpoint names to match your backend routes
-const blockUserEndpoint = `${process.env.REACT_APP_SERVERURL}/blockuser`;
-const unblockUserEndpoint = `${process.env.REACT_APP_SERVERURL}/unblockuser`;
+const blockUserEndpoint = `${process.env.REACT_APP_SERVERURL}/user/blockuser`;
+const unblockUserEndpoint = `${process.env.REACT_APP_SERVERURL}/user/unblockuser`;
 
 export const blockUserAsync = createAsyncThunk(
   'user/blockUserAsync',

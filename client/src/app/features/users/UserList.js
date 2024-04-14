@@ -24,7 +24,7 @@ const UserList = () => {
         dispatch(fetchUsersAsync()); // Fetch users again after deletion
       })
       .catch((error) => {
-        // Handle error if deletion fails
+        console.error("Error deleting user:", error);
       });
   };
 
@@ -76,7 +76,7 @@ const UserList = () => {
                     ) : (
                       <button
                         onClick={() => handleBlockUser(user._id)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md mr-2"
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md mr-2"
                       >
                         Block
                       </button>
