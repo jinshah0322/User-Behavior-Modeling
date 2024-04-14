@@ -31,6 +31,7 @@ const UpdateProduct = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+  
     const updatedProduct = {
       id: selectedProduct._id,
       title: e.target.product.value,
@@ -39,23 +40,39 @@ const UpdateProduct = () => {
       description: e.target.des.value,
       brand: e.target.company.value,
       quantity: e.target.quantity.value,
-      image: e.target.image.files[0], // Get the selected image file
     };
-    try {
-      const response = await dispatch(
-        updateProductAsync({
+  
+    const file = e.target.image.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        updatedProduct.image = base64String;
+  
+        dispatch(updateProductAsync({
           productId: selectedProduct._id,
           productData: updatedProduct,
-        })
-      );
-      console.log(response);
-      const res = dispatch(fetchProductsAsync());
-      console.log(res);
-      closeModal();
-    } catch (error) {
-      console.error("Error updating product:", error);
+        })).then(() => {
+          dispatch(fetchProductsAsync());
+          closeModal();
+        }).catch((error) => {
+          console.error("Error updating product:", error);
+        });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      dispatch(updateProductAsync({
+        productId: selectedProduct._id,
+        productData: updatedProduct,
+      })).then(() => {
+        dispatch(fetchProductsAsync());
+        closeModal();
+      }).catch((error) => {
+        console.error("Error updating product:", error);
+      });
     }
   };
+  
   
   useEffect(() => {
     dispatch(fetchProductsAsync()).then(() => {
