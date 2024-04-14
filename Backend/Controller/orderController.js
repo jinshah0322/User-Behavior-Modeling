@@ -4,9 +4,6 @@ const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
 const crypto = require('crypto');
 
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
-
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_ID_KEY,
     key_secret: process.env.RAZORPAY_SECRET_KEY,
@@ -142,39 +139,6 @@ exports.getOrderDetailsByOrderId = async (req, res) => {
             totalAmount: order.totalAmount,
             items: itemsWithSubtotal
         };
-        const doc = new PDFDocument();
-        const pdfPath = `order_${orderId}.pdf`;
-        doc.pipe(fs.createWriteStream(pdfPath));
-
-        // Add order details to PDF
-        doc.fontSize(16).text(`Order ID: ${orderId}`);
-        doc.moveDown();
-        doc.fontSize(12).text(`Order Date: ${order.createdAt}`);
-        doc.moveDown();
-        doc.fontSize(12).text(`Total Amount: ${order.totalAmount}`);
-        doc.moveDown();
-
-        // Add item details to PDF
-        doc.fontSize(14).text('Items:');
-        doc.moveDown();
-        itemsWithSubtotal.forEach(item => {
-            doc.text(`${item.title} - Price: ${item.price}, Quantity: ${item.quantity}, Subtotal: ${item.subtotal}`);
-            doc.moveDown();
-        });
-
-        // End PDF
-        doc.end();
-
-        // Send PDF as downloadable attachment
-        res.download(pdfPath, `Order_${orderId}.pdf`, err => {
-            if (err) {
-                console.error(err);
-                res.status(500).json({ msg: 'Failed to download PDF', success: false, status: 500 });
-            } else {
-                // Delete the generated PDF file after it's sent
-                fs.unlinkSync(pdfPath);
-            }
-        });
 
         res.json({ order: orderWithSubtotal, success: true, status: 200 });
     } catch (error) {
