@@ -14,7 +14,6 @@ exports.createOrder = async (req, res) => {
     try {
         let { userId, address, items, totalAmount } = req.body;
         const user = await User.findOne({ _id: userId });
-        
         const amount = totalAmount * 100;
         const options = {
             amount,
@@ -32,7 +31,6 @@ exports.createOrder = async (req, res) => {
                     const order = new Order({
                         orderId:razorpayOrder.id,
                         userId,
-                        // paymentId:razorpayOrder.id,
                         method:razorpayOrder.method,
                         address,
                         items,
@@ -46,8 +44,6 @@ exports.createOrder = async (req, res) => {
                     order_id: razorpayOrder.id,
                     amount,
                     key_id: process.env.RAZORPAY_ID_KEY,
-                    // product_name: req.body.name,
-                    // description: req.body.description,
                     contact: user.phonenumber,
                     name: user.name,
                     email: user.email
@@ -67,6 +63,7 @@ exports.paymentVerification = async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
         const order = await Order.findOne({orderId:razorpay_order_id }); 
+        console.log(order);
         if (!order) {
             return res.json({ msg: 'Order not found', success: false, status: 404});
         }
@@ -91,28 +88,10 @@ exports.paymentVerification = async (req, res) => {
         res.status(500).json({ msg: 'Internal server error' });
     }
 }
-exports.getAllOrder = async (req, res) => {
-    try {
-        const orders = await Order.find({ paymentStatus: 'Paid' });
-
-        const formattedOrders = orders.map(order => ({
-            orderId: order._id,
-            paymentId: order.paymentId,
-            totalAmount: order.totalAmount,
-            orderDate: order.createdAt
-        }));
-
-        res.json({ orders: formattedOrders, success: true, status: 200 });
-    } catch (error) {
-        console.error(error);
-        res.json({ msg: 'Internal server error', success: false, status: 500 });
-    }
-};
 
 exports.getAllOrder = async (req, res) => {
     try {
         const orders = await Order.find({ paymentStatus: 'Paid' });
-
         const formattedOrders = orders.map(order => ({
             orderId: order._id,
             paymentId: order.paymentId,
