@@ -77,7 +77,7 @@ exports.getAllOrders = async (req, res) => {
 exports.paymentVerification = async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
-        const order = await Order.findOne({ razorpay_order_id }); 
+        const order = await Order.findOne({orderId:razorpay_order_id }); 
         if (!order) {
             return res.json({ msg: 'Order not found', success: false, status: 404});
         }
