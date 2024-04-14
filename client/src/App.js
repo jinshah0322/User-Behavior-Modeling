@@ -14,7 +14,9 @@ import "./app.css"
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./components/Profile/ProfilePage.jsx";
 import ProfileAddress from "./components/Profile/ProfileAddress.jsx";
-import PaymentVerification from "./components/Cart/PaymenrVerification.jsx";
+import UserPrivateRoute from "./Layout/User/UserPrivateLayout.jsx"
+import UserPublicRoute from "./Layout/User/UserPublicLayout.jsx"
+import AdminPrivateRoute from "./Layout/Admin/AdminPrivateRoute.jsx"
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -35,24 +37,22 @@ function App() {
           pauseOnHover
           theme="light"
         />
-        {path !== "/login" && path !== "/register" && path !== "/forgotpassword" ?
+        {/* {path !== "/login" && path !== "/register" && path !== "/forgotpassword" ?
            <NavBar />
-         :""} 
+         :""}  */}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" exact element={<UserPublicRoute component={Home}/>} />
           <Route path="/register" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgotpassword" element={<ForgetPassword />} />
           <Route path="/changepassword" element={<ChangePassword />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/shop/:id" element={<Product />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/user" element={<ProfilePage />} />
-          <Route path="/profile/address" element={<ProfileAddress />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/order/paymentVerification" element={<PaymentVerification />} />
-          
+          <Route path="/shop" exact element={<UserPrivateRoute component={Shop}/>} />
+          <Route path="/shop/:id" exact element={<UserPrivateRoute component={Product}/>} />
+          <Route path="/cart" exact element={<UserPrivateRoute component={Cart}/>} />
+          <Route path="/profile" exact element={<UserPrivateRoute component={Profile}/>} />
+          <Route path="/profile/user" exact element={<UserPrivateRoute component={ProfilePage}/>} />
+          <Route path="/profile/address" exact element={<UserPrivateRoute component={ProfileAddress}/>} />
+          <Route path="/dashboard" exact element={<AdminPrivateRoute component={Dashboard}/>} />          
         </Routes>
   
       </Router>

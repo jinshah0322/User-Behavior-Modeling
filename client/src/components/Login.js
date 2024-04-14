@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { FaShoppingBag } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {toast,Toaster} from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
 import axios from 'axios';
 
 export default function Login() {
@@ -12,44 +12,49 @@ export default function Login() {
     password: "",
   });
 
-  const handleLogin = async() =>
-  {
-    if(!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(FormData.email))){
+  const handleLogin = async () => {
+    if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(FormData.email))) {
       toast.error('Invalid Email');
       return;
     }
- 
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/user/login`, FormData);
-        const data = await response;
-        console.log(data);
-        if(data?.data?.success === true){
-          setFormData({
-            email: "",
-            password: "",
-          });
-          localStorage.setItem("id", data?.data?.user?._id);
-          localStorage.setItem("name", data?.data?.name);
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/user/login`, FormData);
+      const data = await response;
+      console.log(data);
+      if (data?.data?.success === true) {
+        setFormData({
+          email: "",
+          password: "",
+        });
+        localStorage.setItem("id", data?.data?.user?._id);
+        localStorage.setItem("name", data?.data?.name);
+        localStorage.setItem("isAdmin", data?.data?.user?.isAdmin);
+        if (data?.data?.user?.isAdmin) {
+          navigate("/dashboard");
+        }
+        else {
           navigate("/");
-        }     
-        else{
-          toast.error(data?.data?.msg);
-        }  
-      } catch (error) {
-        console.log(error);
-        navigate("/login");
+        }
       }
-    
+      else {
+        toast.error(data?.data?.msg);
+      }
+    } catch (error) {
+      console.log(error);
+      navigate("/login");
     }
-  
-  
+
+  }
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...FormData, [name]: value });
   };
 
-  useEffect(()=>{
-    if(localStorage.getItem("id")){
+  useEffect(() => {
+    if (localStorage.getItem("id")) {
       navigate("/");
     }
   })
@@ -88,7 +93,7 @@ export default function Login() {
                   autoComplete="email"
                   className="pl-2  border-gray-100 block outline-none w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
-     
+
               </div>
             </div>
 
@@ -117,7 +122,7 @@ export default function Login() {
                   autoComplete="current-password"
                   onChange={handleChange}
                   className="pl-2 outline-none block w-full  border-gray-100 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />                
+                />
               </div>
             </div>
 
