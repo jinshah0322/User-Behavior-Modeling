@@ -3,6 +3,7 @@ const Order = require('../models/orderModel');
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
 const crypto = require('crypto');
+const Product = require('../models/productModel');
 
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_ID_KEY,
@@ -14,7 +15,6 @@ exports.createOrder = async (req, res) => {
     try {
         let { userId, address, items, totalAmount } = req.body;
         const user = await User.findOne({ _id: userId });
-        
         const amount = totalAmount * 100;
         const options = {
             amount,
@@ -32,7 +32,6 @@ exports.createOrder = async (req, res) => {
                     const order = new Order({
                         orderId:razorpayOrder.id,
                         userId,
-                        // paymentId:razorpayOrder.id,
                         method:razorpayOrder.method,
                         address,
                         items,
@@ -46,8 +45,6 @@ exports.createOrder = async (req, res) => {
                     order_id: razorpayOrder.id,
                     amount,
                     key_id: process.env.RAZORPAY_ID_KEY,
-                    // product_name: req.body.name,
-                    // description: req.body.description,
                     contact: user.phonenumber,
                     name: user.name,
                     email: user.email
@@ -77,7 +74,17 @@ exports.paymentVerification = async (req, res) => {
         if (generatedSignature === razorpay_signature) {
             order.paymentId = razorpay_payment_id;
             order.paymentStatus = 'Paid';
-            await order.save();
+            await order.save(); 
+
+            for (const item of order.items) {
+                const product = await Product.findById(item.productId);
+                if (product) {
+                    product.quantity -= item.quantity;
+                    product.sold += item.quantity;
+                    await product.save();
+                }
+            }
+
             const userId = order.userId;
             await Order.deleteMany({ userId: userId, paymentStatus: 'Pending' });
             await Cart.deleteMany({ userId: userId });
@@ -91,6 +98,23 @@ exports.paymentVerification = async (req, res) => {
         res.status(500).json({ msg: 'Internal server error' });
     }
 }
+
+exports.getAllOrder = async (req, res) => {
+    try {
+        const orders = await Order.find({ paymentStatus: 'Paid' });
+        const formattedOrders = orders.map(order => ({
+            orderId: order._id,
+            paymentId: order.paymentId,
+            totalAmount: order.totalAmount,
+            orderDate: order.createdAt
+        }));
+
+        res.json({ orders: formattedOrders, success: true, status: 200 });
+    } catch (error) {
+        console.error(error);
+        res.json({ msg: 'Internal server error', success: false, status: 500 });
+    }
+};
 
 exports.getOrderByUserId = async (req, res) => {
     try {

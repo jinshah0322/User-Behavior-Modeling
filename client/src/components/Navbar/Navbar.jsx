@@ -11,20 +11,11 @@ const NavBar = () => {
   const [expand, setExpand] = useState(false);
   const [isFixed, setIsFixed] = useState(false);
   const id = localStorage.getItem("id");
-  // fixed Header
-  function scrollHandler() {
-    if (window.scrollY >= 100) {
-      setIsFixed(true);
-    } else if (window.scrollY <= 50) {
-      setIsFixed(false);
-    }
-  }
 
   const logout = () => {
     localStorage.removeItem("id");
     window.location.href = "/login";
   }
-  window.addEventListener("scroll", scrollHandler);
   // useEffect(()=> {
   //   if(CartItem.length ===0) {
   //     const storedCart = localStorage.getItem("cartItem");
@@ -35,7 +26,7 @@ const NavBar = () => {
     <Navbar
       fixed="top"
       expand="md"
-      className={isFixed ? "navbar fixed" : "navbar"}
+      className="navbar fixed"
     >
       <Container className="navbar-container">
         <Navbar.Brand>
