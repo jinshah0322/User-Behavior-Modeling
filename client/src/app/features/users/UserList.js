@@ -1,4 +1,4 @@
-import React, { useEffect , useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchUsersAsync,
@@ -7,6 +7,7 @@ import {
   deleteAccountAsync,
 } from "./userSlice";
 import { Pagination } from "antd";
+import Loader from "../../../components/Loader/Loader";
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ const UserList = () => {
         console.error("Error deleting user:", error);
       });
   };
-  
+
   const handlePaginationChange = (page) => {
     setPagination(page);
     setSkip((page - 1) * limit);
@@ -60,8 +61,8 @@ const UserList = () => {
   return (
     <div>
       {loading ? (
-        <div className="flex justify-center items-center">
-          <p className="text-lg text-gray-700">Loading...</p>
+        <div className="flex justify-center items-center h-screen">
+           <Loader />
         </div>
       ) : error ? (
         <div className="flex justify-center items-center">
@@ -98,14 +99,14 @@ const UserList = () => {
                     {user.isBlocked ? (
                       <button
                         onClick={() => handleUnblockUser(user._id)}
-                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md mr-2"
+                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md mr-2 w-20" 
                       >
                         Unblock
                       </button>
                     ) : (
                       <button
                         onClick={() => handleBlockUser(user._id)}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md mr-2"
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-md mr-2 w-20" 
                       >
                         Block
                       </button>
