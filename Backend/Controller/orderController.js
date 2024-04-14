@@ -112,8 +112,37 @@ exports.getOrderByUserId = async (req, res) => {
     }
 };
 
+exports.getOrderDetailsByOrderId = async (req, res) => {
+    try {
+        const orderId = req.params.id;
+        const order = await Order.findOne({ _id: orderId }).populate({
+            path: 'items.productId',
+            select: 'title price'
+        });
+        if (!order) {
+            return res.json({ msg: 'Order not found', success: false, status: 404 });
+        }
 
+        const itemsWithSubtotal = order.items.map(item => ({
+            productId: item.productId._id,
+            title: item.productId.title,
+            price: item.productId.price,
+            quantity: item.quantity,
+            subtotal: item.quantity * item.productId.price
+        }));
 
+        const orderWithSubtotal = {
+            address: order.address,
+            paymentId: order.paymentId,
+            orderDate: order.createdAt,
+            totalItems: order.items.length,
+            totalAmount: order.totalAmount,
+            items: itemsWithSubtotal
+        };
 
-
-// subtotal, productid, price
+        res.json({ order: orderWithSubtotal, success: true, status: 200 });
+    } catch (error) {
+        console.error(error);
+        res.json({ msg: 'Internal server error', success: false, status: 500 });
+    }
+}
