@@ -1,6 +1,7 @@
 const Razorpay = require('razorpay');
 const Order = require('../models/orderModel');
 const User = require('../models/userModel');
+const Cart = require('../models/cartModel');
 
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_ID_KEY,
@@ -13,9 +14,6 @@ exports.createOrder = async (req, res) => {
         let { userId, address, items, totalAmount } = req.body;
         const user = await User.findOne({ _id: userId });
         
-        if(!address){
-            address = user.address;
-        }
         const amount = totalAmount * 100;
         const options = {
             amount,
@@ -74,3 +72,32 @@ exports.getAllOrders = async (req, res) => {
         res.status(500).json({ msg: 'Internal server error' });
     }
 };
+
+exports.paymentVerification = async (req, res) => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        const order = await Order.findOne({ razorpay_order_id }); 
+        if (!order) {
+            return res.json({ msg: 'Order not found', success: false, status: 404});
+        }
+        const generatedSignature = crypto.createHmac('sha256',
+            process.env.RAZORPAY_SECRET_KEY)
+            .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+            .digest('hex'); 
+        if (generatedSignature === razorpay_signature) {
+            order.paymentId = razorpay_payment_id;
+            order.paymentStatus = 'Paid';
+            await order.save();
+            const userId = order.userId;
+            await Order.deleteMany({ userId: userId, paymentStatus: 'Pending' });
+            await Cart.deleteMany({ userId: userId });
+            res.json({ msg: 'Payment successful', success: true, status: 200 });
+        } else {
+            res.json({ msg: 'Payment verification failed', success: false, status: 400});
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Internal server error' });
+    }
+}

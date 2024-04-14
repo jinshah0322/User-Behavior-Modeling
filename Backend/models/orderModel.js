@@ -10,6 +10,7 @@ var orderSchema = new mongoose.Schema({
     },
     paymentId: {
         type: String,
+        default: null,
     },  
     method:{
         type: String,
@@ -30,6 +31,10 @@ var orderSchema = new mongoose.Schema({
     ],
     totalAmount: {
         type: Number,
+    },
+    paymentStatus: {
+        type: String,
+        default: "Pending",
     }
 },{timestamps: true});
 
