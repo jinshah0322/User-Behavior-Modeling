@@ -111,9 +111,10 @@ const PaymentPage = ({setCurrent}) => {
                     key: response.data.key_id,
                     amount: response.data.amount,
                     currency: "INR",
-                    name: response.data.product_name,
-                    description: response.data.description,
-                    callback_url: `/order/paymentVerification`,
+                    name: "Quickmart",
+                    "image": "",
+                    "order_id": response.data.order_id,
+                    callback_url: `${process.env.REACT_APP_SERVERURL}/order/paymentVerification`,
                     prefill: {
                         contact: response.data.contact,
                         name: response.data.name,
