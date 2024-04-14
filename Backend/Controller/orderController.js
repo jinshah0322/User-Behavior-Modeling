@@ -63,17 +63,6 @@ exports.createOrder = async (req, res) => {
     }
 };
 
-
-exports.getAllOrders = async (req, res) => {
-    try {
-        const orders = await Order.find().populate('userId', 'username email').populate('items.productId', 'name price');
-        res.status(200).json({ orders });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ msg: 'Internal server error' });
-    }
-};
-
 exports.paymentVerification = async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
@@ -102,3 +91,29 @@ exports.paymentVerification = async (req, res) => {
         res.status(500).json({ msg: 'Internal server error' });
     }
 }
+
+exports.getOrderByUserId = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const orders = await Order.find({ userId: userId, paymentStatus: 'Paid' });
+
+        // Format the orders array to include the desired fields
+        const formattedOrders = orders.map(order => ({
+            orderId: order._id,
+            paymentId: order.paymentId,
+            totalAmount: order.totalAmount,
+            orderDate: order.createdAt
+        }));
+
+        res.json({ orders: formattedOrders, success: true, status: 200 });
+    } catch (error) {
+        console.error(error);
+        res.json({ msg: 'Internal server error', success: false, status: 500 });
+    }
+};
+
+
+
+
+
+// subtotal, productid, price
