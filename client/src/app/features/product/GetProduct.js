@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductsAsync } from "./productSlice";
 import { Pagination } from "antd";
+import Loader from "../../../components/Loader/Loader";
 
 const GetProduct = () => {
   const dispatch = useDispatch();
@@ -35,9 +36,9 @@ const GetProduct = () => {
 
   return (
     <div>
-      {loading ? (
-        <div className="flex justify-center items-center">
-          <p className="text-lg text-gray-700">Loading...</p>
+     {loading ? (
+        <div className="flex justify-center items-center h-screen">
+           <Loader />
         </div>
       ) : error ? (
         <div className="flex justify-center items-center">

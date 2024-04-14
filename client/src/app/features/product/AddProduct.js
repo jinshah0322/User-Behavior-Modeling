@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addProductAsync } from "./productSlice";
+import Loader from "../../../components/Loader/Loader";
 
 const AddProduct = () => {
   const [formData, setFormData] = useState({
@@ -141,7 +142,19 @@ const AddProduct = () => {
             className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
             disabled={loading}
           >
-            {loading ? "Adding..." : "Add Product"}
+            {loading ? (
+              <div className="flex justify-center items-center h-screen">
+                <Loader />
+              </div>
+            ) : (
+              <button
+                type="submit"
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+                disabled={loading}
+              >
+                {loading ? "Adding..." : "Add Product"}
+              </button>
+            )}
           </button>
         </form>
       </div>
