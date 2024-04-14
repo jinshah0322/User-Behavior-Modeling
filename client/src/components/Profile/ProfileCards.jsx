@@ -19,7 +19,8 @@ const items = [
     {
         icon: <FaBoxOpen className='text-[50px] text-[#ff9800]' />,
         title: 'Orders',
-        description: 'Browse your Past Orders'
+        description: 'Browse your Past Orders',
+        link:"/profile/orders"
     },
 ]
 const name = localStorage.getItem('name');

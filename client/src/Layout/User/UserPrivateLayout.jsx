@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout } from "antd";
-import Navbar from "../../components/Navbar/Navbar";
 import { Navigate } from "react-router-dom";
+import NavBar from "../../components/Navbar/Navbar";
 const { Content } = Layout;
 
 const UserPrivateRoute = ({ component: Component, ...rest }) => {
@@ -11,7 +11,8 @@ const UserPrivateRoute = ({ component: Component, ...rest }) => {
     }
     return (
         <div>
-            <Navbar />
+            <NavBar />
+            
             <div style={{ padding: "0" }}>
                 <Component />
             </div>
