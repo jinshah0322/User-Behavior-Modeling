@@ -85,7 +85,7 @@ const ProfilePage = () => {
     }, []);
 
     return (
-        <div className="container mx-auto px-4 py-12">
+        <div className="container mx-auto px-4 py-4">
             <Toaster />
             <div className='flex w-full justify-between'>
             <h1 className="text-3xl font-bold mb-6">Profile</h1>
@@ -100,7 +100,7 @@ const ProfilePage = () => {
                       type="text"
                       name="name"
                       id="name"
-                      className="w-full border px-3 py-1 outline-none mt-1 w-[300px] rounded-md"
+                      className="w-full border px-3 py-1 outline-none mt-1 lg:w-[400px] w-[270px] rounded-md"
                       placeholder="Enter your name"
                       value={formData?.name}
                       onChange={handleChange}

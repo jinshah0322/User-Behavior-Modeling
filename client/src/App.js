@@ -14,9 +14,11 @@ import "./app.css"
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./components/Profile/ProfilePage.jsx";
 import ProfileAddress from "./components/Profile/ProfileAddress.jsx";
+import ProfileOrder from "./components/Profile/ProfileOrder.jsx";
 import UserPrivateRoute from "./Layout/User/UserPrivateLayout.jsx"
 import UserPublicRoute from "./Layout/User/UserPublicLayout.jsx"
 import AdminPrivateRoute from "./Layout/Admin/AdminPrivateRoute.jsx"
+import OrderById from "./app/Order/OrderById.jsx";
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -52,6 +54,8 @@ function App() {
           <Route path="/profile" exact element={<UserPrivateRoute component={Profile}/>} />
           <Route path="/profile/user" exact element={<UserPrivateRoute component={ProfilePage}/>} />
           <Route path="/profile/address" exact element={<UserPrivateRoute component={ProfileAddress}/>} />
+          <Route path="/profile/orders" exact element={<UserPrivateRoute component={ProfileOrder}/>} />
+          <Route path="/profile/orders/:id" exact element={<UserPrivateRoute component={OrderById}/>} />
           <Route path="/dashboard" exact element={<AdminPrivateRoute component={Dashboard}/>} />          
         </Routes>
   
