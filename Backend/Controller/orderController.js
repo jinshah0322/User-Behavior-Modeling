@@ -137,6 +137,7 @@ exports.getOrderDetailsByOrderId = async (req, res) => {
             paymentId: order.paymentId,
             orderDate: order.createdAt,
             totalItems: order.items.length,
+            totalAmount: order.totalAmount,
             items: itemsWithSubtotal
         };
 
