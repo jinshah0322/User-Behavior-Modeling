@@ -161,9 +161,10 @@ exports.changePassword = async(req,res)=>{
 
 exports.deleteaccount = async(req,res)=>{
     try{
-        const userId = req.session.user._id
-        const name = req.session.user.name
-        const email = req.session.user.email
+        const user = await User.findOne({_id:req.params.id})
+        const userId = user._id
+        const name = user.name
+        const email = user.email
         const html = `
                     <h2>Delete Account </h2>
                     <p>Dear ${name},</p>
@@ -251,16 +252,11 @@ exports.editProfile = async(req,res)=>{
 
 exports.blockUser = async (req,res)=>{
     try{
-        isAdmin = req.session.user.isAdmin
-        if(isAdmin){
-            const user = await User.findByIdAndUpdate(req.params.id,{isBlocked:true},{new:true,runValidators:true})
-            if(!user){
-                res.send({msg:"User not found",success:false,status:404})
-            }
-            res.send({msg:`User with id: ${req.params.id} blocked successfully`,success:true,status:200})
-        } else{
-            res.send({ msg: "You are not authorized to access", success: false, status: 401 })
+        const user = await User.findByIdAndUpdate(req.params.id,{isBlocked:true},{new:true,runValidators:true})
+        if(!user){
+            res.send({msg:"User not found",success:false,status:404})
         }
+        res.send({msg:`User with id: ${req.params.id} blocked successfully`,success:true,status:200})
     } catch(error){
         console.log(error.message);
     }
@@ -268,16 +264,11 @@ exports.blockUser = async (req,res)=>{
 
 exports.unblockUser = async (req,res)=>{
     try{
-        isAdmin = req.session.user.isAdmin
-        if(isAdmin){
-            const user = await User.findByIdAndUpdate(req.params.id,{isBlocked:false},{new:true,runValidators:true})
-            if(!user){
-                res.send({msg:"User not found",success:false,status:404})   
-            }
-            res.status(200).send({msg:`User with id: ${req.params.id} unblocked successfully`,success:true})
-        } else{
-            res.send({ msg: "You are not authorized to access", success: false, status: 401 })
+        const user = await User.findByIdAndUpdate(req.params.id,{isBlocked:false},{new:true,runValidators:true})
+        if(!user){
+            res.send({msg:"User not found",success:false,status:404})   
         }
+        res.status(200).send({msg:`User with id: ${req.params.id} unblocked successfully`,success:true})
     } catch(error){
         console.log(error.message);
     }
