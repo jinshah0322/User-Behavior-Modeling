@@ -2,6 +2,7 @@ const Razorpay = require('razorpay');
 const Order = require('../models/orderModel');
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
+const crypto = require('crypto');
 
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_ID_KEY,
