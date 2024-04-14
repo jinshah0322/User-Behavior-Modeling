@@ -6,7 +6,6 @@ import Loader from "./components/Loader/Loader";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Signup from "./components/Signup";
-import { store } from "./app/store";
 import Login from "./components/Login";
 import Profile from "./pages/Profile";
 import ForgetPassword from "./components/ForgetPassword";
@@ -15,7 +14,6 @@ import "./app.css"
 import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./components/Profile/ProfilePage.jsx";
 import ProfileAddress from "./components/Profile/ProfileAddress.jsx";
-import { Provider } from "react-redux";
 import PaymentVerification from "./components/Cart/PaymenrVerification.jsx";
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
@@ -38,11 +36,8 @@ function App() {
           theme="light"
         />
         {path !== "/login" && path !== "/register" && path !== "/forgotpassword" ?
-         <Provider store={store}>
-
            <NavBar />
-         </Provider>
-        :""}
+         :""} 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Signup />} />

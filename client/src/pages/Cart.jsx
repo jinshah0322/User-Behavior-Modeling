@@ -64,8 +64,8 @@ const Cart = () => {
       {current === 2 &&
         <PaymentPage setCurrent={setCurrent} />
       }
-    </>:<div>
-      <h1 className="no-items min-h-[76vh] product w-full flex justify-center items-center">No Items are add in Cart</h1>
+    </>:<div className="no-items min-h-[76vh] product w-full flex justify-center items-center">
+      <h1>Cart is empty</h1>
     </div>
     }
     </>

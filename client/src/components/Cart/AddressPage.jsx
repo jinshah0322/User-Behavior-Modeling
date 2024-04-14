@@ -81,22 +81,23 @@ const AddressPage = ({ setCurrent, setIsPayment }) => {
                         <span className="font-semibold">City:</span> {user?.city}<br />
                         <span className="font-semibold">State:</span> {user?.state}<br />
                         <span className="font-semibold">Country:</span> {user?.country}<br />
-                        <span className="font-semibold">Postal Code:</span> {user?.postalcode}
+                        <span className="font-semibold">Postal Code:</span> {user?.postalcode}<br />
+                        {address_local && <button onClick={() => fetchData()} disabled={isVisible} className='text-blue-500 py-2 hover:underline'>
+                            Use default Address
+                        </button>}
                     </p>
-                    {address_local && <button onClick={() => fetchData()} disabled={isVisible}>
-                        Use default Address
-                    </button>}
+
                     <div className='gap-3 grid grid-cols-2'>
-<a href='#address'>
-                        <button
-                            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50"
-                            onClick={() => setIsVisible(true)}
-                        >
-                            Change Address
-                        </button>
+                        <a href='#address'>
+                            <button
+                                className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50"
+                                onClick={() => setIsVisible(true)}
+                            >
+                                Change Address
+                            </button>
                         </a>
                         <button
-                            className={`${isVisible?"bg-gray-200":"bg-blue-500"}  text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50`}
+                            className={`${isVisible ? "bg-gray-200" : "bg-blue-500"}  text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50`}
                             onClick={handleNextPage}
                             disabled={isVisible}
                         >
