@@ -3,7 +3,7 @@ const Order = require('../models/orderModel');
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
 const crypto = require('crypto');
-const Product = require('../models/Product');
+const Product = require('../models/productModel');
 
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_ID_KEY,
