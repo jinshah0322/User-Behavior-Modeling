@@ -1,22 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import CartItem from "../components/Cart/CartItem";
 import { Steps } from 'antd';
 import AddressPage from '../components/Cart/AddressPage';
 import PaymentPage from '../components/Cart/PaymentPage';
-
+import {useDispatch,useSelector} from 'react-redux';
+import { getCart } from '../app/features/cart/cartSlice';
 const Cart = () => {
   const [current, setCurrent] = useState(0);
   const [isAddress, setIsAddress] = useState(false);
   const [isPayment, setIsPayment] = useState(false);
-
+  const dispatch = useDispatch();
+  const { cartList, total } = useSelector((state) => state.cart);
+  const [loading, setLoading] = useState(false);
   const onChange = (value) => {
-
+    
     console.log('onChange:', value);
     setCurrent(value);
   };
-
-  return (
-    <>
+  useEffect(() => {
+    setLoading(true);
+    window.scrollTo(0, 0);
+    const userId = localStorage.getItem("id");
+    if (userId) {
+        dispatch(getCart(userId));
+    }
+    setLoading(false);
+}, []);
+  return (<>
+    {cartList?.length>0?<>
       <Steps
         type="navigation"
         size="small"
@@ -44,7 +55,7 @@ const Cart = () => {
       />
       {current === 0 &&
         <div>
-          <CartItem setCurrent={setCurrent} setIsAddress={setIsAddress} />
+          <CartItem setCurrent={setCurrent} setIsAddress={setIsAddress} cartList={cartList}/>
         </div>}
       {current === 1 &&
         <div>
@@ -53,6 +64,10 @@ const Cart = () => {
       {current === 2 &&
         <PaymentPage setCurrent={setCurrent} />
       }
+    </>:<div>
+      <h1 className="no-items min-h-[76vh] product w-full flex justify-center items-center">No Items are add in Cart</h1>
+    </div>
+    }
     </>
   );
 };

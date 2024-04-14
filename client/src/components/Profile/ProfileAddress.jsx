@@ -14,9 +14,6 @@ const ProfileAddress = () => {
         state: '',
         country: '',
         postalcode: '',
-
-
-
     });
     const [formDataone, setFormDataone] = useState({
         streetAddress: '',
