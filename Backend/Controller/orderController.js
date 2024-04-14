@@ -3,6 +3,7 @@ const Order = require('../models/orderModel');
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
 const crypto = require('crypto');
+const Product = require('../models/Product');
 
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_ID_KEY,
@@ -63,7 +64,6 @@ exports.paymentVerification = async (req, res) => {
     try {
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
         const order = await Order.findOne({orderId:razorpay_order_id }); 
-        console.log(order);
         if (!order) {
             return res.json({ msg: 'Order not found', success: false, status: 404});
         }
@@ -74,7 +74,17 @@ exports.paymentVerification = async (req, res) => {
         if (generatedSignature === razorpay_signature) {
             order.paymentId = razorpay_payment_id;
             order.paymentStatus = 'Paid';
-            await order.save();
+            await order.save(); 
+
+            for (const item of order.items) {
+                const product = await Product.findById(item.productId);
+                if (product) {
+                    product.quantity -= item.quantity;
+                    product.sold += item.quantity;
+                    await product.save();
+                }
+            }
+
             const userId = order.userId;
             await Order.deleteMany({ userId: userId, paymentStatus: 'Pending' });
             await Cart.deleteMany({ userId: userId });
