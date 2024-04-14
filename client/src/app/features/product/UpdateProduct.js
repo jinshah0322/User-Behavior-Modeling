@@ -12,7 +12,7 @@ const UpdateProduct = () => {
   const [pagination, setPagination] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
-  const limit = 10;
+  const limit = 8;
 
   const openModal = (product) => {
     setSelectedProduct(product);
@@ -31,7 +31,7 @@ const UpdateProduct = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     const updatedProduct = {
-      id: selectedProduct._id, 
+      id: selectedProduct._id,
       title: e.target.product.value,
       price: e.target.price.value,
       category: e.target.category.value,
@@ -40,10 +40,15 @@ const UpdateProduct = () => {
       quantity: e.target.quantity.value,
     };
     try {
-      const response = await dispatch(updateProductAsync({ productId: selectedProduct._id, productData: updatedProduct }));
+      const response = await dispatch(
+        updateProductAsync({
+          productId: selectedProduct._id,
+          productData: updatedProduct,
+        })
+      );
       console.log(response);
       const res = dispatch(fetchProductsAsync());
-      console.log(res)
+      console.log(res);
       closeModal();
     } catch (error) {
       console.error("Error updating product:", error);
@@ -87,13 +92,14 @@ const UpdateProduct = () => {
                   <td className="px-4 py-2">{product.title}</td>
                   <td className="px-4 py-2">{product.price}</td>
                   <td className="px-4 py-2">
-                    {categoryList.find(cat => cat.id === product.category)?.name}
+                    {
+                      categoryList.find((cat) => cat.id === product.category)
+                        ?.name
+                    }
                   </td>
-                  {/* <td className="px-4 py-2 truncate max-w-[100px]">{product.description}</td> */}
                   <td className="px-4 py-2 max-w-xs overflow-hidden whitespace-nowrap overflow-ellipsis">
-  {product.description}
-</td>
-
+                    {product.description}
+                  </td>
                   <td className="px-4 py-2">{product.brand}</td>
                   <td className="px-4 py-2">{product.quantity}</td>
                   <td className="px-4 py-2">{product.sold}</td>

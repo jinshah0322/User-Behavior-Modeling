@@ -6,6 +6,8 @@ import AddProduct from "../app/features/product/AddProduct";
 import UpdateProduct from "../app/features/product/UpdateProduct";
 import GetProduct from "../app/features/product/GetProduct";
 import DeleteProduct from "../app/features/product/DeleteProduct";
+import UserList from "../app/features/users/UserList";
+
 const Dashboard = () => {
   const [selectedLink, setSelectedLink] = useState("LandingPage");
 
@@ -30,6 +32,14 @@ const Dashboard = () => {
               onClick={() => handleLinkClick("Category")}
             >
               Category
+            </li>
+            <li
+              className={`cursor-pointer px-6 py-2 ${
+                selectedLink === "users" && "bg-gray-200"
+              }`}
+              onClick={() => handleLinkClick("users")}
+            >
+              Users
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
@@ -86,6 +96,9 @@ const Dashboard = () => {
           )}
           {selectedLink === "delete" && (
             <DeleteProduct className="bg-blue-200" /> 
+          )}
+          {selectedLink === "users" && (
+            <UserList className="bg-blue-200" /> 
           )}
         </div>
       </main>
