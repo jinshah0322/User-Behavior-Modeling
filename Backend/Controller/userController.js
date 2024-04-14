@@ -1,6 +1,7 @@
 const User = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const sendEmail = require("../helper/sendEmail")
+const { response } = require("express")
 
 exports.getAllUsers = async(req,res)=>{
     const users = await User.find()
