@@ -4,13 +4,29 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 // Define your async thunk for blocking a user
+export const deleteAccountAsync = createAsyncThunk(
+  'user/deleteAccountAsync',
+  async (userId) => { 
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/user/deleteaccount`, { userId });
+      return response.data;
+    } catch (error) {
+      throw error; // Throw error for proper rejection handling
+    }
+  }
+);
+
+// Update the API endpoint names to match your backend routes
+const blockUserEndpoint = `${process.env.REACT_APP_SERVERURL}/blockuser`;
+const unblockUserEndpoint = `${process.env.REACT_APP_SERVERURL}/unblockuser`;
+
 export const blockUserAsync = createAsyncThunk(
   'user/blockUserAsync',
   async (userId) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_SERVERURL}/user/block/${userId}`);
+      const response = await axios.patch(`${blockUserEndpoint}/${userId}`);
       toast.success(`User with id: ${userId} blocked successfully!`);
-      return response.data; // Return the blocked user data if needed
+      return response.data;
     } catch (error) {
       toast.error(`Error blocking user: ${error.message}`);
       throw error;
@@ -18,14 +34,13 @@ export const blockUserAsync = createAsyncThunk(
   }
 );
 
-// Define your async thunk for unblocking a user
 export const unblockUserAsync = createAsyncThunk(
   'user/unblockUserAsync',
   async (userId) => {
     try {
-      const response = await axios.put(`${process.env.REACT_APP_SERVERURL}/user/unblock/${userId}`);
+      const response = await axios.patch(`${unblockUserEndpoint}/${userId}`);
       toast.success(`User with id: ${userId} unblocked successfully!`);
-      return response.data; // Return the unblocked user data if needed
+      return response.data;
     } catch (error) {
       toast.error(`Error unblocking user: ${error.message}`);
       throw error;
@@ -48,24 +63,6 @@ export const fetchUsersAsync = createAsyncThunk(
     }
   }
 );
-
-// Define your async thunk for deleting a user account
-export const deleteAccountAsync = createAsyncThunk(
-  'user/deleteAccountAsync',
-  async (_, { getState }) => {
-    try {
-      const userId = getState().auth.userId; // Assuming auth slice contains user info
-      const response = await axios.delete(`${process.env.REACT_APP_SERVERURL}/user/deleteaccount/${userId}`);
-      // Dispatch success action if deletion is successful
-      return response.data;
-    } catch (error) {
-      // Dispatch error action if deletion fails
-      throw error;
-    }
-  }
-);
-
-
 
 const initialState = {
   userList: [],
