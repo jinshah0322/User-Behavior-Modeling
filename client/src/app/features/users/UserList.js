@@ -1,32 +1,61 @@
-import React, { useEffect } from "react";
+import React, { useEffect , useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUsersAsync, blockUserAsync, unblockUserAsync, deleteAccountAsync } from "./userSlice";
+import {
+  fetchUsersAsync,
+  blockUserAsync,
+  unblockUserAsync,
+  deleteAccountAsync,
+} from "./userSlice";
+import { Pagination } from "antd";
 
 const UserList = () => {
   const dispatch = useDispatch();
-  const { loading, error, userList } = useSelector((state) => state.users); 
-
-  useEffect(() => {
-    dispatch(fetchUsersAsync());
-  }, [dispatch]);
+  const { loading, error, userList } = useSelector((state) => state.users);
+  const [pagination, setPagination] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [skip, setSkip] = useState(0);
+  const limit = 12;
+  const displayProducts = userList.slice(skip, skip + limit);
 
   const handleBlockUser = (userId) => {
-    dispatch(blockUserAsync(userId));
+    dispatch(blockUserAsync(userId))
+      .then(() => {
+        dispatch(fetchUsersAsync());
+      })
+      .catch((error) => {
+        console.error("Error blocking user:", error);
+      });
   };
 
   const handleUnblockUser = (userId) => {
-    dispatch(unblockUserAsync(userId));
+    dispatch(unblockUserAsync(userId))
+      .then(() => {
+        dispatch(fetchUsersAsync());
+      })
+      .catch((error) => {
+        console.error("Error unblocking user:", error);
+      });
   };
-  
+
   const handleDeleteUser = (userId) => {
     dispatch(deleteAccountAsync(userId))
       .then(() => {
-        dispatch(fetchUsersAsync()); // Fetch users again after deletion
+        dispatch(fetchUsersAsync());
       })
       .catch((error) => {
         console.error("Error deleting user:", error);
       });
   };
+  
+  const handlePaginationChange = (page) => {
+    setPagination(page);
+    setSkip((page - 1) * limit);
+  };
+
+  useEffect(() => {
+    dispatch(fetchUsersAsync());
+    setTotalCount(userList.length);
+  }, [dispatch]);
 
   return (
     <div>
@@ -38,7 +67,7 @@ const UserList = () => {
         <div className="flex justify-center items-center">
           <p className="text-lg text-red-600">{error}</p>
         </div>
-      ) : userList.length > 0 ? (
+      ) : displayProducts.length > 0 ? (
         <>
           <h2 className="mt-4 text-xl font-semibold">User List</h2>
 
@@ -86,6 +115,13 @@ const UserList = () => {
               ))}
             </tbody>
           </table>
+          <Pagination
+            current={pagination}
+            total={totalCount}
+            pageSize={limit}
+            onChange={handlePaginationChange}
+            className="mt-4 flex justify-center"
+          />
         </>
       ) : (
         <div className="flex justify-center items-center">
