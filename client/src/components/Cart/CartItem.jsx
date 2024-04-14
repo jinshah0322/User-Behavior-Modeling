@@ -50,7 +50,7 @@ const CartItem = ({ setCurrent, setIsAddress, cartList }) => {
         <section className="cart-items">
             <h1 className="text-2xl font-semibold py-4 mt-2 mb-6 ml-12">{cartList.length} {cartList.length > 1 ? "Items" : "Item"} in your cart </h1>
             <div className="lg:flex gap-16">
-                <section className="w-[70%] grid-cols-1 lg:grid lg:grid-cols-1 md:grid-cols-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:w-[90%]">
+                <section className="w-[70%] lg:grid lg:grid-cols-1 md:grid-cols-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:w-[90%]">
                     {
                         cartList?.map((item, index) => {
                             return (
@@ -64,7 +64,7 @@ const CartItem = ({ setCurrent, setIsAddress, cartList }) => {
                                                 <h1 className="text-xl font-semibold overflow-hidden whitespace-nowrap overflow-ellipsis">{item?.title}</h1>
                                                 <p className="text-gray-500">Price: ₹ {item?.price}</p>
                                             </div>
-                                            <div className="lg:ml-8 lg:grid lg:grid-cols-3 grid items-center justify-center lg:max-w-full max-w-[190px] sm:max-w-[190px] ml-3 p-3">
+                                            <div className="lg:ml-8 lg:flex items-center justify-center lg:max-w-full max-w-[190px] sm:max-w-[190px] ml-3 p-3">
                                                 <div className={`flex items-center justify-center lg:mb-0 mb-3 border px-4 py-2 ${loading ? "bg-gray-200" : ""}`}>
                                                     <button onClick={() => handleDecreaseQty(item?._id, -1)} className="text-xl" disabled={loading}><RxMinus /></button>
                                                     <p className="px-4 text-lg">{item?.quantity}</p>
@@ -81,7 +81,7 @@ const CartItem = ({ setCurrent, setIsAddress, cartList }) => {
 
                     }
                 </section>
-                <section className="border lg:w-[32%] mt-2 mr-8">
+                <section className="border lg:w-[23%] mt-2 mr-8">
                     <h1 className="text-2xl font-semibold py-4 mt-2 ml-12">Cart Summary</h1>
                     <div className="border-b mx-12 mb-2">
                         {
