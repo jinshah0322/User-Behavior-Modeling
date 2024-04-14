@@ -13,7 +13,7 @@ const UserPrivateRoute = ({ component: Component, ...rest }) => {
         <div>
             <NavBar />
             
-            <div style={{ padding: "0" }}>
+            <div style={{ padding: "0",marginTop:"16vh" }}>
                 <Component />
             </div>
         </div>
