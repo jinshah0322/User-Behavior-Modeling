@@ -4,9 +4,6 @@ const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
 const crypto = require('crypto');
 
-const PDFDocument = require('pdfkit');
-const fs = require('fs');
-
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_ID_KEY,
     key_secret: process.env.RAZORPAY_SECRET_KEY,
@@ -142,6 +139,7 @@ exports.getOrderDetailsByOrderId = async (req, res) => {
             totalAmount: order.totalAmount,
             items: itemsWithSubtotal
         };
+
         res.json({ order: orderWithSubtotal, success: true, status: 200 });
     } catch (error) {
         console.error(error);
