@@ -91,6 +91,23 @@ exports.paymentVerification = async (req, res) => {
         res.status(500).json({ msg: 'Internal server error' });
     }
 }
+exports.getAllOrder = async (req, res) => {
+    try {
+        const orders = await Order.find({ paymentStatus: 'Paid' });
+
+        const formattedOrders = orders.map(order => ({
+            orderId: order._id,
+            paymentId: order.paymentId,
+            totalAmount: order.totalAmount,
+            orderDate: order.createdAt
+        }));
+
+        res.json({ orders: formattedOrders, success: true, status: 200 });
+    } catch (error) {
+        console.error(error);
+        res.json({ msg: 'Internal server error', success: false, status: 500 });
+    }
+};
 
 exports.getOrderByUserId = async (req, res) => {
     try {
