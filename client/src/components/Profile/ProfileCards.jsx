@@ -27,7 +27,7 @@ const name = localStorage.getItem('name');
 const ProfileCard = () => {
     return (
         <div>
-            <div className='p-12 flex items-center'>
+            <div className='px-12 pt-6 flex items-center'>
                 <i className='font-thin text-3xl'>Hello, </i>
                 <span className='font-bold text-3xl ml-2'>{name}</span>
             </div>

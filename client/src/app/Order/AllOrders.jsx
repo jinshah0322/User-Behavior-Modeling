@@ -54,8 +54,8 @@ const AllOrders = () => {
     }, [])
 
     return (
-        <div className='lg:px-36 px-4 pt-10'>
-            <h1 className='py-4 font-semibold text-xl'>ALL ORDERS</h1>
+        <div className='lg:px-36 px-4'>
+            {orders?.length>0?<><h1 className='py-4 font-semibold text-xl'>ALL ORDERS</h1>
             <div className='overflow-auto'>
                 <Table dataSource={orders} columns={columns}
                     pagination={{
@@ -64,7 +64,9 @@ const AllOrders = () => {
                     onChange={(page) => handlePagination(page.current)
                     }
                 />
-            </div>
+            </div></>:<div className='w-full flex items-center justify-center min-h-[70vh]'>
+                <h1 className='text-xl font-semibold'>No Orders Found</h1>
+                </div>}
         </div>
     );
 }
