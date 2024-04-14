@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-import { addToCart } from "../../app/features/cart/cartSlice";
+import { createCart } from "../../app/features/cart/cartSlice";
 import "./product-details.css";
 
 const ProductDetails = ({ selectedProduct,category }) => {
@@ -13,8 +13,10 @@ const ProductDetails = ({ selectedProduct,category }) => {
     setQuantity(e.target.value);
   };
   const handelAdd = (selectedProduct, quantity) => {
-    dispatch(addToCart({ product: selectedProduct, num: quantity }));
-    toast.success("Product has been added to cart!");
+    console.log(selectedProduct._id);
+    console.log(quantity);
+    const userId = localStorage.getItem("id");
+    dispatch(createCart({ productId: selectedProduct._id, quantity: quantity, userId: userId, message: "Added Product to Cart Successfully" }));
   };
 
   const increase = () => {

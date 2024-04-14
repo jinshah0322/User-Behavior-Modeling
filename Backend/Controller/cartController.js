@@ -6,34 +6,49 @@ exports.addCart = async (req, res) => {
         const { userId, productId, quantity } = req.body;
         let cart = await Cart.findOne({ userId });
         const product = await Product.findById(productId);
+        
         if (!product) {
             return res.send({ message: 'Product not found', success: false, status: 404 });
         }
+
         if (quantity > product.quantity) {
-            return res.send({ message: 'Not enough quantity available',quantity:product.quantity, success: false, status: 400 });
+            return res.send({ message: 'Not enough quantity available', quantity: product.quantity, success: false, status: 400 });
         }
+
         if (!cart) {
             cart = new Cart({ userId, items: [{ productId, quantity }] });
         } else {
-            for (const item of cart.items) {
-                if (item.productId.toString() === productId) {
-                    if (item.quantity + quantity > product.quantity) {
-                        return res.send({ message: 'Not enough quantity available',quantity:product.quantity, success: false, status: 400 });
-                    }
-                    item.quantity += quantity;
-                    await cart.save();
-                    return res.send({ msg: 'Item added to cart successfully', success: true, status: 200, cart });
+            let itemIndex = -1;
+            for (let i = 0; i < cart.items.length; i++) {
+                if (cart.items[i].productId.toString() === productId) {
+                    itemIndex = i;
+                    break;
                 }
             }
-            cart.items.push({ productId, quantity });
+
+            if (itemIndex !== -1) {
+                // Update quantity
+                cart.items[itemIndex].quantity += quantity;
+
+                // Delete item if quantity is less than or equal to 0
+                if (cart.items[itemIndex].quantity <= 0) {
+                    cart.items.splice(itemIndex, 1);
+                }
+            } else {
+                // Add new item to cart
+                cart.items.push({ productId, quantity });
+            }
         }
+        
         await cart.save();
+        
         res.send({ msg: 'Item added to cart successfully', success: true, status: 200, cart });
     } catch (error) {
         console.error(error);
         res.send({ message: 'Internal server error', success: false, status: 500 });
     }
 };
+
 
 
 exports.getCart = async (req, res) => {
