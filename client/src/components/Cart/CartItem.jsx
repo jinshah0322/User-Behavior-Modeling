@@ -47,7 +47,7 @@ const CartItem = ({ setCurrent, setIsAddress, cartList }) => {
 
 
     return (
-        <section className="cart-items">
+        <section className="cart-items min-h-[90vh]">
             <h1 className="text-2xl font-semibold py-4 mt-2 mb-6 ml-12">{cartList.length} {cartList.length > 1 ? "Items" : "Item"} in your cart </h1>
             <div className="lg:flex gap-16">
                 <section className="w-[70%] lg:grid lg:grid-cols-1 md:grid-cols-3 sm:grid sm:grid-cols-2 sm:gap-4 sm:w-[90%]">
@@ -81,7 +81,7 @@ const CartItem = ({ setCurrent, setIsAddress, cartList }) => {
 
                     }
                 </section>
-                <section className="border lg:w-[23%] mt-2 mr-8">
+                <section className="border lg:w-[23%] mt-2 mx-8 mt-12 lg:mt-0 lg:mx-0">
                     <h1 className="text-2xl font-semibold py-4 mt-2 ml-12">Cart Summary</h1>
                     <div className="border-b mx-12 mb-2">
                         {

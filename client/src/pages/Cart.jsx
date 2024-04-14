@@ -31,10 +31,10 @@ const Cart = () => {
       <Steps
         type="navigation"
         size="small"
-        style={{ width: "50%", display: "flex", justifyContent: "center", alignItems: "center", margin: "2% 25%" }}
+        // style={{ width: "50%", display: "flex", justifyContent: "center", alignItems: "center", margin: "2% 25%" }}        
         current={current}
         onChange={onChange}
-        className="site-navigation-steps"
+        className="site-navigation-steps my-4"
         items={[
           {
             title: 'CART',
