@@ -16,6 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import ProfilePage from "./components/Profile/ProfilePage.jsx";
 import ProfileAddress from "./components/Profile/ProfileAddress.jsx";
 import { Provider } from "react-redux";
+import PaymentVerification from "./components/Cart/PaymenrVerification.jsx";
 const Home = lazy(() => import("./pages/Home"));
 const Shop = lazy(() => import("./pages/Shop"));
 const Cart = lazy(() => import("./pages/Cart"));
@@ -55,6 +56,8 @@ function App() {
           <Route path="/profile/user" element={<ProfilePage />} />
           <Route path="/profile/address" element={<ProfileAddress />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/order/paymentVerification" element={<PaymentVerification />} />
+          
         </Routes>
   
       </Router>
