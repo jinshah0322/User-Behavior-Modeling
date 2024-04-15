@@ -69,7 +69,7 @@ export default function Login() {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm content-center">
           <div className="flex justify-center text-[2rem] items-center text-gray-900 ">
             <FaShoppingBag className="text-black text-3xl mr-2" />
-            Quick Mart
+            <Link to="/" >Quick Mart</Link>
           </div>
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
