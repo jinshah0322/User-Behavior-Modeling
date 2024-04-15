@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { createCart } from "../../app/features/cart/cartSlice";
 import "./product-details.css";
 
-const ProductDetails = ({ selectedProduct,category }) => {
+const ProductDetails = ({ selectedProduct, category }) => {
   const dispatch = useDispatch();
 
   let [quantity, setQuantity] = useState(0);
@@ -13,6 +13,14 @@ const ProductDetails = ({ selectedProduct,category }) => {
     setQuantity(e.target.value);
   };
   const handelAdd = (selectedProduct, quantity) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("Please Login to Add Product to Cart");
+      const timer = setTimeout(() => {
+        window.location.href = "/login";
+      }, 1400);
+      return () => clearTimeout(timer);
+    }
     console.log(selectedProduct._id);
     console.log(quantity);
     const userId = localStorage.getItem("id");
@@ -47,7 +55,7 @@ const ProductDetails = ({ selectedProduct,category }) => {
             </div>
             {/* <p>{selectedProduct?.shortDesc}</p> */}
             <div className="border p-2 border-black w-28 my-4 flex items-center justify-center">
-              <button className="px-1" onClick = {decrease}>-</button>
+              <button className="px-1" onClick={decrease}>-</button>
               <span className="px-4">{quantity}</span>
               <button className="px-1" onClick={increase}>+</button>
             </div>
@@ -55,12 +63,12 @@ const ProductDetails = ({ selectedProduct,category }) => {
             <button
               aria-label="Add"
               type="submit"
-              className={`${quantity === 0 ? "bg-gray-200 text-white" : "bg-gray-800"} text-white rounded-sm px-4 py-2`} 
+              className={`${quantity === 0 ? "bg-gray-200 text-white" : "bg-gray-800"} text-white rounded-sm px-4 py-2`}
               disabled={quantity === 0}
               onClick={() => handelAdd(selectedProduct, quantity)}
             >
               Add To Cart
-            </button>          
+            </button>
           </div>
         </div>
       </Container>

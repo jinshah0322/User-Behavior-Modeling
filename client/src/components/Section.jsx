@@ -10,7 +10,7 @@ const Section = ({ title, bgColor, productItems,id }) => {
           <h1 className="font-semibold text-2xl">{title}</h1>        
           <Link to={`/shop?category=${id}`}><p className="font-semibold text-md text-blue-500 hover:cursor-pointer">View more</p></Link>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 items-center justify-center gap-10">
+        {productItems?.length>0?<div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-2 items-center justify-center gap-10">
           {productItems?.map((productItem) => {
             return (
               <ProductCard
@@ -20,7 +20,7 @@ const Section = ({ title, bgColor, productItems,id }) => {
               />
             );
           })}
-        </div>
+        </div>:<p className="text-center text-lg min-h-[20vh] flex items-center justify-center">No Products Found</p>}
 
       </Container>
     </section>

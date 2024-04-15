@@ -48,8 +48,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/forgotpassword" element={<ForgetPassword />} />
           <Route path="/changepassword" element={<ChangePassword />} />
-          <Route path="/shop" exact element={<UserPrivateRoute component={Shop}/>} />
-          <Route path="/shop/:id" exact element={<UserPrivateRoute component={Product}/>} />
+          <Route path="/shop" exact element={<UserPublicRoute component={Shop}/>} />
+          <Route path="/shop/:id" exact element={<UserPublicRoute component={Product}/>} />
           <Route path="/cart" exact element={<UserPrivateRoute component={Cart}/>} />
           <Route path="/profile" exact element={<UserPrivateRoute component={Profile}/>} />
           <Route path="/profile/user" exact element={<UserPrivateRoute component={ProfilePage}/>} />
