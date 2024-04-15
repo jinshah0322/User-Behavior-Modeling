@@ -4,6 +4,13 @@ import { useSelector } from "react-redux";
 const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
   
   const categoryList = useSelector((state) => state.category.categoryList);
+  const [image, setImage] = React.useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+  };
+
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div className="bg-white max-h-[400px] p-8 rounded shadow-lg w-1/2">
@@ -114,6 +121,19 @@ const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
               ))}
             </select>
           </div>
+          <div className="mb-4">
+          <label htmlFor="image" className="block text-sm font-semibold mb-1">
+            Image
+          </label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            onChange={handleImageChange}
+            accept="image/*"
+            className="block w-full px-4 py-2 border rounded"
+          />
+        </div>
           <div className="flex justify-end">
             <button
               type="submit"

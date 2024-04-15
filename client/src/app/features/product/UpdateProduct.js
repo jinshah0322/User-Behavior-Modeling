@@ -3,10 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateProductAsync, fetchProductsAsync } from "./productSlice";
 import UpdateModal from "./UpdateModel";
 import { Pagination } from "antd";
+import Loader from "../../../components/Loader/Loader";
 
 const UpdateProduct = () => {
   const dispatch = useDispatch();
-  const productList = useSelector((state) => state.product.productList);
+  const { productList, loading } = useSelector((state) => state.product);
   const categoryList = useSelector((state) => state.category.categoryList);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [pagination, setPagination] = useState(1);
@@ -30,6 +31,7 @@ const UpdateProduct = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+  
     const updatedProduct = {
       id: selectedProduct._id,
       title: e.target.product.value,
@@ -39,22 +41,39 @@ const UpdateProduct = () => {
       brand: e.target.company.value,
       quantity: e.target.quantity.value,
     };
-    try {
-      const response = await dispatch(
-        updateProductAsync({
+  
+    const file = e.target.image.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        updatedProduct.image = base64String;
+  
+        dispatch(updateProductAsync({
           productId: selectedProduct._id,
           productData: updatedProduct,
-        })
-      );
-      console.log(response);
-      const res = dispatch(fetchProductsAsync());
-      console.log(res);
-      closeModal();
-    } catch (error) {
-      console.error("Error updating product:", error);
+        })).then(() => {
+          dispatch(fetchProductsAsync());
+          closeModal();
+        }).catch((error) => {
+          console.error("Error updating product:", error);
+        });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      dispatch(updateProductAsync({
+        productId: selectedProduct._id,
+        productData: updatedProduct,
+      })).then(() => {
+        dispatch(fetchProductsAsync());
+        closeModal();
+      }).catch((error) => {
+        console.error("Error updating product:", error);
+      });
     }
   };
-
+  
+  
   useEffect(() => {
     dispatch(fetchProductsAsync()).then(() => {
       setTotalCount(productList.length);
@@ -67,7 +86,11 @@ const UpdateProduct = () => {
 
   return (
     <div>
-      {productList && productList.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-screen">
+          <Loader />
+        </div>
+      ) : productList && productList.length > 0 ? (
         <>
           <h2 className="mt-4 text-xl font-semibold">Product Table</h2>
           <table className="w-full mt-4 bg-white shadow-md rounded-lg overflow-hidden">

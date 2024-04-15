@@ -10,11 +10,11 @@ import {
 import { toast } from "react-toastify";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "../../../components/Loader/Loader";
+
 
 const CategoryList = () => {
   const categoryList = useSelector((state) => state.category.categoryList);
-
-  console.log(categoryList);
   const [loading,setLoading] = useState(false);
   const [newCategory, setnewCategory] = useState({ name: '' });
   const [selectedId, setSelectedId] = useState();
@@ -158,13 +158,18 @@ const CategoryList = () => {
             disabled={loading} // Disable button while loading
           >
             {loading ? "Adding..." : "Add Category"}
+            
           </button>
           {error && <p className="text-red-500 mt-2">{error}</p>}
         </form>
       </div>
       <h2 className="mt-4 text-xl font-semibold">Category Table</h2>
 
-      {categoryList?.length > 0 ? (
+      {loading ? (
+        <div className="flex justify-center items-center h-screen">
+          <Loader />
+        </div>
+      ) : categoryList?.length > 0 ? (
         <>
           <table className="w-full mt-4 bg-white shadow-md rounded-lg overflow-hidden">
             <thead className="bg-gray-800 text-white">
