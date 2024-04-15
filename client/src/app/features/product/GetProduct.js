@@ -15,7 +15,7 @@ const GetProduct = () => {
   // Function to get category name from category ID
   const getCategoryName = (categoryId) => {
     const category = categoryList.find(
-      (category) => category._id === categoryId
+      (category) => category.id === categoryId
     );
     return category ? category.name : "Unknown Category";
   };
@@ -65,7 +65,7 @@ const GetProduct = () => {
                   <td className="px-4 py-2">{product.title}</td>
                   <td className="px-4 py-2">{product.price}</td>
                   <td className="px-4 py-2">
-                    {getCategoryName(product.categoryId)}
+                    {product?.category && getCategoryName(product.category)}
                   </td>
                   <td className="px-4 py-2 max-w-xs overflow-hidden whitespace-nowrap overflow-ellipsis">
                     {product.description}
