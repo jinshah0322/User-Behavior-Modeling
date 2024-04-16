@@ -115,7 +115,7 @@ const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
               className="block w-full px-4 py-2 border rounded"
             >
               {categoryList.map((category) => (
-                <option key={category._id} value={category._id}>
+                <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
               ))}
