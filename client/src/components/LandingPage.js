@@ -22,7 +22,7 @@ const LandingPage = () => {
       <div className="bg-white p-8 rounded-md shadow-md">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">Admin Dashboard</h1>
         <p className="text-lg text-center text-gray-600 mb-8">Welcome back, Admin!</p>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           <div className="p-6 bg-blue-200 rounded-lg text-center">
             <h2 className="text-2xl font-semibold mb-4 text-purple-800">Users</h2>
             <p className="text-lg text-blue-700">You have {userCount} users</p>

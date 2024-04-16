@@ -62,7 +62,7 @@ const UserList = () => {
     <div>
       {loading ? (
         <div className="flex justify-center items-center h-screen">
-           <Loader />
+          <Loader />
         </div>
       ) : error ? (
         <div className="flex justify-center items-center">
@@ -89,24 +89,24 @@ const UserList = () => {
                   <td className="px-4 py-2">{user.name}</td>
                   <td className="px-4 py-2">{user.email}</td>
                   <td className="px-4 py-2">{user.phonenumber}</td>
-                  <td className="px-4 py-2">
+                  <td className="px-4 py-2 flex flex-wrap justify-start items-center">
                     <button
                       onClick={() => handleDeleteUser(user._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md mr-2"
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md mr-2 mb-2 md:mb-0"
                     >
                       Delete
                     </button>
                     {user.isBlocked ? (
                       <button
                         onClick={() => handleUnblockUser(user._id)}
-                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md mr-2 w-20" 
+                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md mr-2 mb-2 md:mb-0 w-20"
                       >
                         Unblock
                       </button>
                     ) : (
                       <button
                         onClick={() => handleBlockUser(user._id)}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-md mr-2 w-20" 
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-md mr-2 mb-2 md:mb-0 w-20"
                       >
                         Block
                       </button>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from 'react-hot-toast';
 import axios from 'axios';
-import { Input} from 'antd';
+import { Input } from 'antd';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,6 +12,7 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false); 
 
   const handleLogin = async () => {
     if (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(FormData.email))) {
@@ -20,6 +21,7 @@ export default function Login() {
     }
 
     try {
+      setLoading(true); 
       const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/user/login`, FormData);
       const data = await response;
       console.log(data);
@@ -44,10 +46,11 @@ export default function Login() {
     } catch (error) {
       console.log(error);
       navigate("/login");
+    } finally {
+      setLoading(false); 
     }
 
   }
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,8 +62,6 @@ export default function Login() {
       navigate("/");
     }
   })
-
-
 
   return (
     <>
@@ -94,7 +95,6 @@ export default function Login() {
                   autoComplete="email"
                   className="pl-2  border-gray-100 block outline-none w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
-
               </div>
             </div>
 
@@ -116,24 +116,14 @@ export default function Login() {
                 </div>
               </div>
               <div className="mt-2">
-                {/* <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  onChange={handleChange}
-                  className="pl-2 outline-none block w-full  border-gray-100 rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                /> */}
-                  <Input.Password 
+                <Input.Password
                   id="password"
                   name="password"
                   type="password"
                   autoComplete="current-password"
                   onChange={handleChange}
                   className="py-2"
-                
-                  />
-
+                />
               </div>
             </div>
 
@@ -142,8 +132,9 @@ export default function Login() {
                 type="button"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 onClick={handleLogin}
+                disabled={loading} 
               >
-                Sign in
+                {loading ? "Logging in..." : "Sign in"}
               </button>
             </div>
           </form>

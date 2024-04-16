@@ -7,32 +7,45 @@ import UpdateProduct from "../app/features/product/UpdateProduct";
 import GetProduct from "../app/features/product/GetProduct";
 import DeleteProduct from "../app/features/product/DeleteProduct";
 import UserList from "../app/features/users/UserList";
-import { IoMdLogOut } from "react-icons/io";
+import { IoMdLogOut, IoMdMenu } from "react-icons/io";
+
 const Dashboard = () => {
   const [selectedLink, setSelectedLink] = useState("LandingPage");
+  const [sidebarOpen, setSidebarOpen] = useState(false); 
 
   const handleLinkClick = (link) => {
-    setSelectedLink(link === "Quickmart" ? "LandingPage" : link);
+    setSelectedLink(link);
+    if (window.innerWidth < 768) {
+      setSidebarOpen(false); 
+    }
   };
 
   const handleLogout = () => {
     localStorage.clear();
-    window.location.href = '/login';
-  }
+    window.location.href = "/login";
+  };
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <aside className="w-64 bg-white border-r border-gray-200">
+    <div className="flex flex-col md:flex-row h-screen overflow-hidden">
+      <aside
+        className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out transform ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 md:w-64 md:relative md:block`}
+      >
         <div className="flex items-center justify-center h-16 bg-gray-100 border-b border-gray-200">
           <Link
             to="/dashboard"
             className="text-2xl font-bold text-gray-900 no-underline"
-            onClick={() => handleLinkClick("Quickmart")}
+            onClick={() => handleLinkClick("LandingPage")}
           >
             Quickmart
           </Link>
         </div>
-        <div className="overflow-y-auto">
+        <div className="md:overflow-y-auto">
           <ul className="py-4">
             <li
               className={`cursor-pointer px-6 py-2 ${
@@ -44,47 +57,47 @@ const Dashboard = () => {
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
-                selectedLink === "users" && "bg-gray-200"
+                selectedLink === "Users" && "bg-gray-200"
               }`}
-              onClick={() => handleLinkClick("users")}
+              onClick={() => handleLinkClick("Users")}
             >
               Users
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
-                selectedLink === "create" && "bg-gray-200"
+                selectedLink === "AddProduct" && "bg-gray-200"
               }`}
-              onClick={() => handleLinkClick("create")}
+              onClick={() => handleLinkClick("AddProduct")}
             >
               Add New Product
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
-                selectedLink === "get" && "bg-gray-200"
+                selectedLink === "GetProduct" && "bg-gray-200"
               }`}
-              onClick={() => handleLinkClick("get")}
+              onClick={() => handleLinkClick("GetProduct")}
             >
               Get All Product
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
-                selectedLink === "update" && "bg-gray-200"
+                selectedLink === "UpdateProduct" && "bg-gray-200"
               }`}
-              onClick={() => handleLinkClick("update")}
+              onClick={() => handleLinkClick("UpdateProduct")}
             >
               Update Product Details
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
-                selectedLink === "delete" && "bg-gray-200"
+                selectedLink === "DeleteProduct" && "bg-gray-200"
               }`}
-              onClick={() => handleLinkClick("delete")}
+              onClick={() => handleLinkClick("DeleteProduct")}
             >
               Delete Product
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
-                selectedLink === "logout" && "bg-gray-200"
+                selectedLink === "Logout" && "bg-gray-200"
               }`}
               onClick={handleLogout}
             >
@@ -97,6 +110,14 @@ const Dashboard = () => {
         </div>
       </aside>
 
+      {/* Mobile sidebar toggle button */}
+      <button
+        className="md:hidden fixed top-0 left-0 z-50 p-4"
+        onClick={toggleSidebar}
+      >
+        <IoMdMenu className="w-8 h-8" />
+      </button>
+
       <main className="flex-1 overflow-y-auto">
         <div className="p-4">
           {selectedLink === "LandingPage" && (
@@ -105,19 +126,23 @@ const Dashboard = () => {
           {selectedLink === "Category" && (
             <CategoryList className="bg-blue-200" />
           )}
-          {selectedLink === "create" && <AddProduct className="bg-blue-200" />}
-          {selectedLink === "update" && (
+          {selectedLink === "AddProduct" && (
+            <AddProduct className="bg-blue-200" />
+          )}
+          {selectedLink === "UpdateProduct" && (
             <UpdateProduct className="bg-blue-200" />
           )}
-          {selectedLink === "get" && <GetProduct className="bg-blue-200" />}
-          {selectedLink === "delete" && (
+          {selectedLink === "GetProduct" && (
+            <GetProduct className="bg-blue-200" />
+          )}
+          {selectedLink === "DeleteProduct" && (
             <DeleteProduct className="bg-blue-200" />
           )}
-          {selectedLink === "users" && <UserList className="bg-blue-200" />}
+          {selectedLink === "Users" && <UserList className="bg-blue-200" />}
         </div>
       </main>
     </div>
   );
 };
 
-export default Dashboard
+export default Dashboard;
