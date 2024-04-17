@@ -4,15 +4,12 @@ import {
   addCategoryAsync,
   deleteCategoryAsync,
   fetchCategoriesAsync,
-  fetchProductCategory,
-  updateCategoryAsync
 } from "./categorySlice";
 import { toast } from "react-toastify";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../components/Loader/Loader";
-import { render } from "react-dom";
-import { Table,Input } from "antd";
+
 
 const CategoryList = () => {
   const categoryList = useSelector((state) => state.category.categoryList);
@@ -21,24 +18,18 @@ const CategoryList = () => {
   const [selectedId, setSelectedId] = useState();
   const [isEdit, setIsEdit] = useState(false);
   const [delLoading,setdelLoading] = useState(false);
-  const [page,setPage] = useState(1);
   const error = useSelector((state) => state.category.error);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     category: "",
   });
-
   const [formErrors, setFormErrors] = useState({
     category: false,
     description: false,
   });
-
   useEffect(() => {
     dispatch(fetchCategoriesAsync());
   }, [dispatch]);
-  // useEffect(()=>{
-  //   categoryList && dispatch(fetchProductCategory(categoryList));
-  // },[categoryList])
 
   const handleAddCategory = async (event) => {
     event.preventDefault();
@@ -75,13 +66,11 @@ const CategoryList = () => {
     }
   };
   
-
   const handleDeleteCategory = (categoryName) => {
     setdelLoading(true);
     dispatch(deleteCategoryAsync(categoryName)); // Pass category name instead of ID
     setdelLoading(false);
   };
-
   const handleUpdatedCategory = async () => {
     // console.log("called",newCategory?.name,selectedId)
     // setdelLoading(true);
@@ -101,7 +90,6 @@ const CategoryList = () => {
             toast.error(res?.data?.msg || "Oops! Something went wrong");
             setIsEdit("");
           }
-
     }
     catch(e){
       console.log(e)
@@ -115,7 +103,6 @@ const CategoryList = () => {
     // dispatch(deleteCategoryAsync(categoryName)); // Pass category name instead of ID
     setdelLoading(false);
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -124,80 +111,12 @@ const CategoryList = () => {
       [name]: false,
     }));
   };
-
   const handleUpdate = (e) => {
     e.preventDefault();
     console.log(e.target.value)
     const newName = e.target.value;
     setnewCategory({ ...newCategory, name: newName });
   };
-
-const columns = [
-  {
-    title: 'Id',
-    key: 'id',
-    render: (text, record, index) => (
-        <span>
-            {index + 1 + ((page - 1) * 5)}
-        </span>
-    )
-},
-{
-  title: 'Category',
-  dataIndex: 'name',
-  render: (text) => {
-    return isEdit !== text ? (
-      text
-    ) : (
-      <Input value={newCategory.name} onChange={handleUpdate} />
-    );
-  },
-},
-
-{
-  title: 'Products',
-  dataIndex: 'totalProducts',
-  key: 'totalProducts',
-},{
-  title: 'Action',
-  dataIndex: 'action',
-  key: 'action',
-  render: (text, record) => {
-    return (
-      <div>
-        {isEdit !== record?.name?<>
-        <button
-          onClick={() => handleUpdateCategory(record?.name,record?.id)} // Pass category name
-          className="mr-3 bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-green-600"
-          // disabled={delLoading} // Disable button while loading
-        >
-          Update
-          {/* {delLoading ? "Deleting..." : "Delete"} */}
-        </button>
-        <button
-          onClick={() => handleDeleteCategory(record.name)} // Pass category name
-          className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-red-600"
-          disabled={delLoading} // Disable button while loading
-        >
-          {delLoading ? "Deleting..." : "Delete"}
-        </button>
-        </>:<>
-        <button type="button" onClick={handleUpdatedCategory}
-        disabled={record?.name === newCategory?.name}
-                          className="mr-3 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded focus:outline-none focus:bg-green-600"
-
-        >Save</button>
-        <button type="button" onClick={()=>setIsEdit("")}
-                          className="mr-3 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-red-600"
-
-        >Cancel</button>
-        </>}
-      </div>
-    );
-  },
-}
-]
-
   return (
     <div className="container mx-auto">
       <div className="bg-white-200 p-4 rounded-lg ">
@@ -231,18 +150,61 @@ const columns = [
         </form>
       </div>
       <h2 className="mt-4 text-xl font-semibold">Category Table</h2>
-
       {loading ? (
         <div className="flex justify-center items-center h-screen">
           <Loader />
         </div>
       ) : categoryList?.length > 0 ? (
         <>
-         <Table dataSource={categoryList} columns={columns} pagination={{
-            defaultPageSize: 5,
-         }}
-         onChange={(page) => setPage(page.current)}
-         />
+          <table className="w-full mt-4 bg-white shadow-md rounded-lg overflow-hidden">
+            <thead className="bg-gray-800 text-white">
+              <tr>
+                <th className="px-4 py-2 text-left	">#</th>
+                <th className="px-4 py-2 text-left	">Category</th>
+                <th className="px-4 py-2 text-left	">Products</th>
+                <th className="px-4 py-2 text-left	">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {categoryList?.map((category,index) => (
+                <tr key={category._id} className="text-gray-700">
+                  <td className="px-4 py-2">{index+1}</td>
+                  <td className="px-4 py-2 capitalize">{isEdit !== category?.name ?category?.name:<input value={newCategory?.name} onChange={handleUpdate }/>}</td>
+                  {/* <td className="px-4 py-2">{category.description}</td> */}
+                  <td className="px-4 py-2">{category?.totalProducts}</td>
+                  <td className="px-4 py-2">
+                    {category?.name === isEdit?<>
+                    <button type="button" onClick={handleUpdatedCategory}
+                    disabled={category?.name === newCategory?.name}
+                                          className="mr-3 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded focus:outline-none focus:bg-green-600"
+
+                    >Save</button>
+                    <button type="button" onClick={()=>setIsEdit("")}
+                                          className="mr-3 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-red-600"
+
+                    >Cancel</button>
+                    </>:<>
+                    <button
+                      onClick={() => handleUpdateCategory(category?.name,category?.id)} // Pass category name
+                      className="mr-3 bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-green-600"
+                      // disabled={delLoading} // Disable button while loading
+                    >
+                      Update
+                      {/* {delLoading ? "Deleting..." : "Delete"} */}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCategory(category.name)} // Pass category name
+                      className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-red-600"
+                      disabled={delLoading} // Disable button while loading
+                    >
+                      {delLoading ? "Deleting..." : "Delete"}
+                    </button>
+                    </>}
+                  </td>                 
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </>
       ) : (
         <div className="flex justify-center items-center ">
@@ -255,5 +217,4 @@ const columns = [
     </div>
   );
 };
-
 export default CategoryList;

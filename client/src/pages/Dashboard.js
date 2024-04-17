@@ -8,6 +8,7 @@ import GetProduct from "../app/features/product/GetProduct";
 import DeleteProduct from "../app/features/product/DeleteProduct";
 import UserList from "../app/features/users/UserList";
 import { IoMdLogOut, IoMdMenu } from "react-icons/io";
+import AllordersAdmin from "../app/features/adminorder/AllOrdersAdmin"
 
 const Dashboard = () => {
   const [selectedLink, setSelectedLink] = useState("LandingPage");
@@ -62,6 +63,14 @@ const Dashboard = () => {
               onClick={() => handleLinkClick("Users")}
             >
               Users
+            </li>
+            <li
+              className={`cursor-pointer px-6 py-2 ${
+                selectedLink === "Orders" && "bg-gray-200"
+              }`}
+              onClick={() => handleLinkClick("Orders")}
+            >
+              Orders
             </li>
             <li
               className={`cursor-pointer px-6 py-2 ${
@@ -126,6 +135,9 @@ const Dashboard = () => {
           {selectedLink === "Category" && (
             <CategoryList className="bg-blue-200" />
           )}
+          {selectedLink === "Orders" && (
+            <AllordersAdmin className="bg-blue-200" />
+          )}
           {selectedLink === "AddProduct" && (
             <AddProduct className="bg-blue-200" />
           )}
@@ -146,3 +158,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

@@ -62,7 +62,7 @@ const GetProduct = () => {
             <tbody>
               {displayProducts.map((product, index) => (
                 <tr key={index} className="text-gray-700">
-                  <td className="px-4 py-2">{index + 1}</td>
+                  <td className="px-4 py-2">{skip + index + 1}</td>
                   <td className="px-4 py-2">{product.title}</td>
                   <td className="px-4 py-2">{product.price}</td>
                   <td className="px-4 py-2">

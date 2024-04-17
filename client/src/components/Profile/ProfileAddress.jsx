@@ -3,12 +3,15 @@ import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { Country, State, City } from "country-state-city";
 import { Link } from "react-router-dom";
+import Loader from "../Loader/Loader"; 
+
 const ProfileAddress = () => {
   // const {Select} = Layout;
   const id = localStorage.getItem("id");
   const [stateSelected, setIsStateSelected] = useState(true);
   const [citySelected, setIsCitySelected] = useState(true);
   const [isEdited, setIsEdited] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); 
   const [formData, setFormData] = useState({
     streetAddress: "",
     city: "",
@@ -39,6 +42,7 @@ const ProfileAddress = () => {
   };
   const fetchData = async () => {
     try {
+      setIsLoading(true)
       const response = await axios.get(
         `${process.env.REACT_APP_SERVERURL}/user/profile/${id}`
       );
@@ -56,8 +60,11 @@ const ProfileAddress = () => {
         country: response.data.user.country,
         postalcode: response.data.user.postalcode,
       });
+      setIsLoading(false)
     } catch (error) {
       console.log(error);
+      setIsLoading(false)
+
     }
   };
 
@@ -90,6 +97,7 @@ const ProfileAddress = () => {
     }
 
     try {
+      setIsLoading(true)
       setIsEdited(true);
       const response = await axios.put(
         `${process.env.REACT_APP_SERVERURL}/user/editprofile/${id}`,
@@ -102,9 +110,11 @@ const ProfileAddress = () => {
       } else {
         toast.error(response?.data?.msg);
       }
+      setIsLoading(false); 
       // window.location.href = "/profile";
     } catch (error) {
       console.log(error);
+      setIsLoading(false); 
     }
   };
 
@@ -133,7 +143,11 @@ const ProfileAddress = () => {
           <h1 className="text-3xl font-bold mb-6">Your Address</h1>
         </Link>
       </div>
-      {formData ? (
+      {isLoading ? ( 
+        <div className="flex justify-center items-center h-screen">
+          <Loader />
+        </div>
+      ) : formData ? (
         <div className="w-full">
           <div className="bg-white rounded px-8 pt-6 pb-8 mb-4 grid items-center justify-center w-full">
             {/* <h2 className="text-xl font-bold mb-4">Address Information</h2> */}

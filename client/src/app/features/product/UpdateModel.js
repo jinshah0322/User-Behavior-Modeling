@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 
 const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
   const categoryList = useSelector((state) => state.category.categoryList);
-  const [setImage] = React.useState(null);
+  const [image, setImage] = React.useState(null);
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

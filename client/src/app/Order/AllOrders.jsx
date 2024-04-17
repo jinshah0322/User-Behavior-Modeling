@@ -39,15 +39,15 @@ const AllOrders = () => {
 
   return (
     <div className="lg:px-36 px-4">
+      <Link to="/profile">
+        <h1 className="py-4 font-semibold text-xl">ALL ORDERS</h1>
+      </Link>
       {loading ? (
         <div className="flex justify-center items-center min-h-[70vh]">
           <Loader />
         </div>
       ) : orders.length > 0 ? (
         <>
-          <Link to="/profile">
-            <h1 className="py-4 font-semibold text-xl">ALL ORDERS</h1>
-          </Link>
           <div className="py-4">
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-300 rounded-lg">
