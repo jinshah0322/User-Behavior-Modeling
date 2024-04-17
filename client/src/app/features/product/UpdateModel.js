@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
-  
   const categoryList = useSelector((state) => state.category.categoryList);
   const [image, setImage] = React.useState(null);
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -13,9 +13,9 @@ const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
-      <div className="bg-white max-h-[400px] p-8 rounded shadow-lg w-1/2">
+      <div className="bg-white max-h-[80vh] p-8 rounded shadow-lg w-full sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]">
         <h2 className="text-xl font-bold mb-4">Update Product</h2>
-        <form onSubmit={handleUpdate} className="max-h-[300px] overflow-auto">
+        <form onSubmit={handleUpdate} className="max-h-[60vh] overflow-auto">
           <div className="mb-4">
             <label
               htmlFor="product"
@@ -34,10 +34,7 @@ const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="price"
-              className="block text-sm font-semibold mb-1"
-            >
+            <label htmlFor="price" className="block text-sm font-semibold mb-1">
               Price
             </label>
             <input
@@ -51,10 +48,7 @@ const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
             />
           </div>
           <div className="mb-4">
-            <label
-              htmlFor="des"
-              className="block text-sm font-semibold mb-1"
-            >
+            <label htmlFor="des" className="block text-sm font-semibold mb-1">
               Description
             </label>
             <textarea
@@ -99,7 +93,6 @@ const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
               className="block w-full px-4 py-2 border rounded"
             />
           </div>
-          {/* Category field */}
           <div className="mb-4">
             <label
               htmlFor="category"
@@ -122,31 +115,51 @@ const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
             </select>
           </div>
           <div className="mb-4">
-          <label htmlFor="image" className="block text-sm font-semibold mb-1">
-            Image
-          </label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            onChange={handleImageChange}
-            accept="image/*"
-            className="block w-full px-4 py-2 border rounded"
-          />
-        </div>
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Save
-            </button>
-            <button
-              onClick={closeModal}
-              className="ml-4 bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
-            >
-              Cancel
-            </button>
+            <label htmlFor="image" className="block text-sm font-semibold mb-1">
+              Image
+            </label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/*"
+              className="block w-full px-4 py-2 border rounded"
+            />
+          </div>
+          <div className="flex justify-end space-y-2 sm:space-y-0 sm:space-x-4">
+            {/* Mobile View Buttons */}
+            <div className="sm:hidden flex">
+              <button
+                type="submit"
+                onClick={closeModal}
+                className="flex-grow bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+              >
+                Save
+              </button>
+              <button
+                onClick={closeModal}
+                className="flex-grow bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Cancel
+              </button>
+            </div>
+
+            {/* Desktop View Buttons */}
+            <div className="hidden sm:flex sm:items-center">
+              <button
+                type="submit"
+                className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Save
+              </button>
+              <button
+                onClick={closeModal}
+                className="w-full bg-gray-400 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded ml-4"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </form>
       </div>

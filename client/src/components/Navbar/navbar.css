@@ -14,6 +14,28 @@
   top: 0;
 }
 
+/* Profile navigation */
+.profile-nav {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.profile-nav button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.profile-nav button:hover {
+  opacity: 0.8;
+}
+
+.profile-nav svg {
+  font-size: 25px;
+  color: black;
+}
+
 .navbar-container {
   display: flex;
   justify-content: space-between !important;

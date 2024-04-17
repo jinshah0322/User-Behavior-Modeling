@@ -5,29 +5,23 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { IoMdLogOut } from "react-icons/io";
 import { FaUser } from "react-icons/fa6";
+import Profilenav from "../Avatar/Profilenav";
 
 const NavBar = () => {
   const { totalItems } = useSelector((state) => state.cart);
   const [expand, setExpand] = useState(false);
-  const [isFixed, setIsFixed] = useState(false);
   const id = localStorage.getItem("id");
+  const name = localStorage.getItem("name");
 
   const logout = () => {
     localStorage.removeItem("id");
+    localStorage.removeItem("name");
+
     window.location.href = "/login";
-  }
-  // useEffect(()=> {
-  //   if(CartItem.length ===0) {
-  //     const storedCart = localStorage.getItem("cartItem");
-  //     setCartItem(JSON.parse(storedCart));
-  //   }
-  // },[])
+  };
+
   return (
-    <Navbar
-      fixed="top"
-      expand="md"
-      className="navbar fixed"
-    >
+    <Navbar fixed="top" expand="md" className="navbar fixed">
       <Container className="navbar-container">
         <Navbar.Brand>
           <Link
@@ -44,18 +38,24 @@ const NavBar = () => {
         {/* Media cart and toggle */}
         <div className="d-flex">
           <div className="media-cart">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="black"
-              className="nav-icon"
+            <Link
+              to="/profile"
+              onClick={() => setExpand(false)}
+              className="profile-nav px-2 d-flex align-items-center"
             >
-              <path
-                fillRule="evenodd"
-                d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
-                clipRule="evenodd"
-              />
-            </svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="black"
+                className="nav-icon"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </Link>
             <Link
               aria-label="Go to Cart Page"
               to="/cart"
@@ -123,35 +123,46 @@ const NavBar = () => {
                 </svg>
               </Link>
             </Nav.Item>
-            <Nav.Item>
-             { id?<Link to="/profile"><button
-                className="items-center justify-center flex my-2"
-              >
-               <FaUser />
 
-              </button></Link>:<Link
-                aria-label="Go to Login Page"
-                className="navbar-link"
-                to="/login"
-                onClick={() => setExpand(false)}
-              />
-              }
-            </Nav.Item>
-            <Nav.Item>
-             { id?<button
-                onClick={logout}
-                className="items-center justify-center flex my-2"
-              >
-               <IoMdLogOut />
+            {!id && (
+              <Nav.Item>
+                <Link
+                  aria-label="Go to Login Page"
+                  className="navbar-link"
+                  to="/login"
+                  onClick={() => setExpand(false)}
+                >
+                  <span className="nav-link-label">Login</span>
+                </Link>
+              </Nav.Item>
+            )}
+            {name && (
+              <div className="d-flex align-items-center">
+                {/* Display Profilenav in the web view */}
+                <div className="d-none d-md-flex">
+                  <Link
+                    to="/profile"
+                    onClick={() => setExpand(false)}
+                    className="profile-nav px-2 d-flex align-items-center"
+                  >
+                    <Profilenav username={name} />
+                  </Link>
+                </div>
+              </div>
+            )}
 
-              </button>:<Link
-                aria-label="Go to Login Page"
-                className="navbar-link"
-                to="/login"
-                onClick={() => setExpand(false)}
-              />
-              }
-            </Nav.Item>
+            {id && (
+              <>
+                <Nav.Item>
+                  <button
+                    onClick={logout}
+                    className="items-center justify-center flex my-2"
+                  >
+                    <IoMdLogOut className="text-2xl" />
+                  </button>
+                </Nav.Item>
+              </>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
