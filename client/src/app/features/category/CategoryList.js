@@ -10,14 +10,13 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../components/Loader/Loader";
 
-
 const CategoryList = () => {
   const categoryList = useSelector((state) => state.category.categoryList);
-  const [loading,setLoading] = useState(false);
-  const [newCategory, setnewCategory] = useState({ name: '' });
+  const [loading, setLoading] = useState(false);
+  const [newCategory, setnewCategory] = useState({ name: "" });
   const [selectedId, setSelectedId] = useState();
   const [isEdit, setIsEdit] = useState(false);
-  const [delLoading,setdelLoading] = useState(false);
+  const [delLoading, setdelLoading] = useState(false);
   const error = useSelector((state) => state.category.error);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
@@ -35,9 +34,9 @@ const CategoryList = () => {
     event.preventDefault();
     const hasEmptyField = Object.values(formData).some(
       (value) => value.trim() === ""
-      );
-      setLoading(true);
-  
+    );
+    setLoading(true);
+
     if (hasEmptyField) {
       setFormErrors((prevErrors) => {
         const newErrors = { ...prevErrors };
@@ -53,7 +52,6 @@ const CategoryList = () => {
             name: formData.category,
           })
         );
-        // Fetch categories after adding a new category
         dispatch(fetchCategoriesAsync());
         setFormData({
           category: "",
@@ -65,42 +63,38 @@ const CategoryList = () => {
       }
     }
   };
-  
+
   const handleDeleteCategory = (categoryName) => {
     setdelLoading(true);
-    dispatch(deleteCategoryAsync(categoryName)); // Pass category name instead of ID
+    dispatch(deleteCategoryAsync(categoryName)); 
     setdelLoading(false);
   };
   const handleUpdatedCategory = async () => {
-    // console.log("called",newCategory?.name,selectedId)
-    // setdelLoading(true);
-    // const res = await dispatch(updateCategoryAsync(newCategory?.name,selectedId)); // Pass category name instead of ID
-    // console.log(res)
-    // setdelLoading(false);
-    if(newCategory?.name === "") return toast.error("Category name is required");
-    try{
-        const res = await axios.put(`${process.env.REACT_APP_SERVERURL}/category/${selectedId}`,  { name: newCategory?.name } );
-        console.log(res)
-        if(res?.data?.status === 200){
-            toast.success(res?.data?.msg);
-            dispatch(fetchCategoriesAsync());
-            setIsEdit("");
-          }
-          else{
-            toast.error(res?.data?.msg || "Oops! Something went wrong");
-            setIsEdit("");
-          }
-    }
-    catch(e){
-      console.log(e)
+    if (newCategory?.name === "")
+      return toast.error("Category name is required");
+    try {
+      const res = await axios.put(
+        `${process.env.REACT_APP_SERVERURL}/category/${selectedId}`,
+        { name: newCategory?.name }
+      );
+      console.log(res);
+      if (res?.data?.status === 200) {
+        toast.success(res?.data?.msg);
+        dispatch(fetchCategoriesAsync());
+        setIsEdit("");
+      } else {
+        toast.error(res?.data?.msg || "Oops! Something went wrong");
+        setIsEdit("");
+      }
+    } catch (e) {
+      console.log(e);
     }
   };
-  const handleUpdateCategory = (categoryName,categoryId) => {
-    setSelectedId(categoryId)
+  const handleUpdateCategory = (categoryName, categoryId) => {
+    setSelectedId(categoryId);
     setIsEdit(categoryName);
     setnewCategory({ ...newCategory, name: categoryName });
     setdelLoading(true);
-    // dispatch(deleteCategoryAsync(categoryName)); // Pass category name instead of ID
     setdelLoading(false);
   };
   const handleChange = (e) => {
@@ -113,7 +107,7 @@ const CategoryList = () => {
   };
   const handleUpdate = (e) => {
     e.preventDefault();
-    console.log(e.target.value)
+    console.log(e.target.value);
     const newName = e.target.value;
     setnewCategory({ ...newCategory, name: newName });
   };
@@ -137,14 +131,13 @@ const CategoryList = () => {
           />
           {formErrors.category && (
             <p className="text-red-500">Category is required.</p>
-          )}          
+          )}
           <button
             onClick={handleAddCategory}
             className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-            disabled={loading} // Disable button while loading
+            disabled={loading}
           >
             {loading ? "Adding..." : "Add Category"}
-            
           </button>
           {error && <p className="text-red-500 mt-2">{error}</p>}
         </form>
@@ -166,41 +159,63 @@ const CategoryList = () => {
               </tr>
             </thead>
             <tbody>
-              {categoryList?.map((category,index) => (
+              {categoryList?.map((category, index) => (
                 <tr key={category._id} className="text-gray-700">
-                  <td className="px-4 py-2">{index+1}</td>
-                  <td className="px-4 py-2 capitalize">{isEdit !== category?.name ?category?.name:<input value={newCategory?.name} onChange={handleUpdate }/>}</td>
-                  {/* <td className="px-4 py-2">{category.description}</td> */}
+                  <td className="px-4 py-2">{index + 1}</td>
+                  <td className="px-4 py-2 capitalize">
+                    {isEdit !== category?.name ? (
+                      category?.name
+                    ) : (
+                      <input
+                        value={newCategory?.name}
+                        onChange={handleUpdate}
+                      />
+                    )}
+                  </td>
                   <td className="px-4 py-2">{category?.totalProducts}</td>
                   <td className="px-4 py-2">
-                    {category?.name === isEdit?<>
-                    <button type="button" onClick={handleUpdatedCategory}
-                    disabled={category?.name === newCategory?.name}
-                                          className="mr-3 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded focus:outline-none focus:bg-green-600"
-
-                    >Save</button>
-                    <button type="button" onClick={()=>setIsEdit("")}
-                                          className="mr-3 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-red-600"
-
-                    >Cancel</button>
-                    </>:<>
-                    <button
-                      onClick={() => handleUpdateCategory(category?.name,category?.id)} // Pass category name
-                      className="mr-3 bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-green-600"
-                      // disabled={delLoading} // Disable button while loading
-                    >
-                      Update
-                      {/* {delLoading ? "Deleting..." : "Delete"} */}
-                    </button>
-                    <button
-                      onClick={() => handleDeleteCategory(category.name)} // Pass category name
-                      className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-red-600"
-                      disabled={delLoading} // Disable button while loading
-                    >
-                      {delLoading ? "Deleting..." : "Delete"}
-                    </button>
-                    </>}
-                  </td>                 
+                    {category?.name === isEdit ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={handleUpdatedCategory}
+                          disabled={category?.name === newCategory?.name}
+                          className="mr-3 mb-2 md:mb-0 md:mr-3 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded focus:outline-none focus:bg-green-600"
+                          style={{ width: "6rem" }}
+                        >
+                          Save
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsEdit("")}
+                          className="mr-3 mb-2 md:mb-0 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-red-600"
+                          style={{ width: "6rem" }} 
+                        >
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() =>
+                            handleUpdateCategory(category?.name, category?.id)
+                          }
+                          className="mr-3 mb-2 md:mb-0 md:mr-3 bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-green-600"
+                          style={{ width: "6rem" }}
+                        >
+                          Update
+                        </button>
+                        <button
+                          onClick={() => handleDeleteCategory(category.name)}
+                          className="mb-2 md:mb-0 bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded focus:outline-none focus:bg-red-600"
+                          disabled={delLoading}
+                          style={{ width: "6rem" }}
+                        >
+                          {delLoading ? "Deleting..." : "Delete"}
+                        </button>
+                      </>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
