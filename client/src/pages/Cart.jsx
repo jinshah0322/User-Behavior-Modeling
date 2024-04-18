@@ -21,7 +21,6 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     window.scrollTo(0, 0);
     const userId = localStorage.getItem("id");
     if (userId) {
