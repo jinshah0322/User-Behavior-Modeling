@@ -24,17 +24,18 @@ const LandingPage = () => {
       setOrders(response.data.orders.length);
     } catch (error) {
       console.error("Error fetching orders:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  // Fetch categories and products data when the component mounts
   useEffect(() => {
-    dispatch(fetchCategoriesAsync());
-    dispatch(fetchProductsAsync());
-    dispatch(fetchUsersAsync());
-    fetchOrders();
+    Promise.all([
+      dispatch(fetchCategoriesAsync()),
+      dispatch(fetchProductsAsync()),
+      dispatch(fetchUsersAsync()),
+      fetchOrders(), 
+    ]).then(() => {
+      setLoading(false);
+    });
   }, [dispatch]);
 
   return (

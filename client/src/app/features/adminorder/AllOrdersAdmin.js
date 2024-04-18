@@ -8,10 +8,9 @@ const AllOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Display 10 items per page
+  const itemsPerPage = 10; 
   const [error, setError] = useState("");
 
-  // Function to fetch orders from API
   const fetchOrders = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_SERVERURL}/order`);
@@ -24,23 +23,18 @@ const AllOrders = () => {
     }
   };
 
-  // Function to handle page change
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  // Fetch orders on component mount
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = currentPage * itemsPerPage;
+  const currentPageOrders = orders.slice(startIndex, endIndex);
+
   useEffect(() => {
     fetchOrders();
   }, []);
-
-  // Calculate start and end indexes for current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = currentPage * itemsPerPage;
-
-  // Get current page orders
-  const currentPageOrders = orders.slice(startIndex, endIndex);
-
+  
   return (
     <div>
       {loading ? (
@@ -70,7 +64,7 @@ const AllOrders = () => {
                   <td className="px-4 py-2">{startIndex + index + 1}</td>
                   <td className="px-4 py-2">
                     {" "}
-                    <Link to={`/orders/orderDetails/${order.orderId}`}>
+                    <Link to={`/dashboard/order/orderDetails/${order.orderId}`}>
                       {order.orderId}
                     </Link>
                   </td>
