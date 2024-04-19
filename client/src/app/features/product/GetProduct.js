@@ -11,7 +11,7 @@ const GetProduct = () => {
   const [pagination, setPagination] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
-  const limit = 12;
+  const limit = 10;
 
   // Function to get category name from category ID
   const getCategoryName = (categoryId) => {

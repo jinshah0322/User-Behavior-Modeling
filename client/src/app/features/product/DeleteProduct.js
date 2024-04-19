@@ -11,7 +11,7 @@ const DeleteProduct = () => {
   const [pagination, setPagination] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
-  const limit = 7;
+  const limit = 10;
 
   useEffect(() => {
     dispatch(fetchProductsAsync()).then(() => {

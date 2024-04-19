@@ -15,7 +15,7 @@ const UserList = () => {
   const [pagination, setPagination] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
-  const limit = 12;
+  const limit = 10;
   const displayProducts = userList.slice(skip, skip + limit);
 
   const handleBlockUser = (userId) => {
@@ -93,20 +93,23 @@ const UserList = () => {
                     <button
                       onClick={() => handleDeleteUser(user._id)}
                       className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md mr-2 mb-2 md:mb-0"
+                      style={{ width: "100px", height: "40px" }} // Set fixed width and height
                     >
                       Delete
                     </button>
                     {user.isBlocked ? (
                       <button
                         onClick={() => handleUnblockUser(user._id)}
-                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-md mr-2 mb-2 md:mb-0 w-20"
+                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md mr-2 mb-2 md:mb-0"
+                        style={{ width: "100px", height: "40px" }}
                       >
                         Unblock
                       </button>
                     ) : (
                       <button
                         onClick={() => handleBlockUser(user._id)}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-md mr-2 mb-2 md:mb-0 w-20"
+                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md mr-2 mb-2 md:mb-0"
+                        style={{ width: "100px", height: "40px" }}
                       >
                         Block
                       </button>

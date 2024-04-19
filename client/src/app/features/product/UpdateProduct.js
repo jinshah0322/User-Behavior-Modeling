@@ -13,7 +13,7 @@ const UpdateProduct = () => {
   const [pagination, setPagination] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
-  const limit = 8;
+  const limit = 10;
 
   const openModal = (product) => {
     setSelectedProduct(product);
