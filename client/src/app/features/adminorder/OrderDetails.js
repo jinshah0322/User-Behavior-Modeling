@@ -80,9 +80,16 @@ const OrderDetails = () => {
         </div>
       ) : (
         <div>
-          <Link to="/dashboard/order">
-            <h1 className="py-4 font-semibold text-xl">ALL ORDERS</h1>
-          </Link>
+          <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item fs-3">
+                    <Link to="/dashboard/order">Orders</Link>
+                  </li>
+                  <li class="breadcrumb-item active fs-3" aria-current="page">
+                  #{id}
+                  </li>
+                </ol>
+              </nav>
           <div className="w-full rounded-md border px-6 py-4" ref={componentRef}>
             <p className="border-b font-bold py-3 text-xl text-blue-500">
               Order #{id}

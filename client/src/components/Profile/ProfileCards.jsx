@@ -2,6 +2,7 @@ import React from 'react';
 import { FaBoxOpen } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 import { HiLocationMarker } from "react-icons/hi";
+import { RiLockPasswordFill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
 const items = [
     {
@@ -22,6 +23,12 @@ const items = [
         description: 'Browse your Past Orders',
         link:"/profile/orders"
     },
+    {
+        icon: <RiLockPasswordFill className='text-[50px]' />,
+        title: 'Change Password',
+        description: 'Update password with one click',
+        link:"/profile/changepassword"
+    }
 ]
 const name = localStorage.getItem('name');
 const ProfileCard = () => {
