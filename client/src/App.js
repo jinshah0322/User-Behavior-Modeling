@@ -56,7 +56,6 @@ function App() {
           <Route path="/register" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgotpassword" element={<ForgetPassword />} />
-          <Route path="/changepassword" element={<ChangePassword />} />
           <Route path="/shop" exact element={<UserPublicRoute component={Shop}/>} />
           <Route path="/shop/:id" exact element={<UserPublicRoute component={Product}/>} />
           <Route path="/cart" exact element={<UserPrivateRoute component={Cart}/>} />
@@ -64,6 +63,7 @@ function App() {
           <Route path="/profile/user" exact element={<UserPrivateRoute component={ProfilePage}/>} />
           <Route path="/profile/address" exact element={<UserPrivateRoute component={ProfileAddress}/>} />
           <Route path="/profile/orders" exact element={<UserPrivateRoute component={ProfileOrder}/>} />
+          <Route path="/profile/changepassword" exact element={<UserPrivateRoute component={ChangePassword}/>} />
           <Route path="/profile/orders/:id" exact element={<UserPrivateRoute component={OrderById}/>} />
           <Route path="/dashboard/*" element={<AdminPrivateRoute component={Dashboard} />}>
             <Route path="landingpage" element={<AdminPrivateRoute component={LandingPage} />} />
@@ -83,3 +83,4 @@ function App() {
 }
 
 export default App;
+

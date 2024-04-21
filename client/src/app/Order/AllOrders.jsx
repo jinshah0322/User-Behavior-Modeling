@@ -39,9 +39,6 @@ const AllOrders = () => {
 
   return (
     <div className="lg:px-36 px-4">
-      <Link to="/profile">
-        <h1 className="py-4 font-semibold text-xl">ALL ORDERS</h1>
-      </Link>
       {loading ? (
         <div className="flex justify-center items-center min-h-[70vh]">
           <Loader />
@@ -50,13 +47,23 @@ const AllOrders = () => {
         <>
           <div className="py-4">
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse border border-gray-300 rounded-lg">
-                <thead>
-                  <tr className="bg-gray-800 text-white">
-                    <th className="px-4 py-2">Id</th>
-                    <th className="px-4 py-2">Order Id</th>
-                    <th className="px-4 py-2">Order Date</th>
-                    <th className="px-4 py-2">Total Amount</th>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item fs-3">
+                    <Link to="/profile">Profile</Link>
+                  </li>
+                  <li class="breadcrumb-item active fs-3" aria-current="page">
+                    All Orders
+                  </li>
+                </ol>
+              </nav>
+              <table className="w-full mt-4 bg-white shadow-md rounded-lg overflow-hidden">
+                <thead className="bg-gray-800 text-white">
+                  <tr>
+                    <th className="px-4 py-2 text-left">#</th>
+                    <th className="px-4 py-2 text-left">Order Id</th>
+                    <th className="px-4 py-2 text-left">Order Date</th>
+                    <th className="px-4 py-2 text-left">Total Amount</th>
                   </tr>
                 </thead>
                 <tbody>

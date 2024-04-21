@@ -1,8 +1,12 @@
-
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {toast,Toaster} from 'react-hot-toast';
-import axios from 'axios';
+import { toast, Toaster } from "react-hot-toast";
+import axios from "axios";
+import { Input } from "antd";
+
 export default function ChangePassword() {
+  const [loding, setLoding] = useState(false);
+  const navigate = useNavigate();
   const [FormData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
@@ -15,27 +19,44 @@ export default function ChangePassword() {
     });
   };
 
-    
   const handleSubmit = async (e) => {
     e.preventDefault();
     const id = localStorage.getItem("id");
-    
-    try{
-        const response = await axios.post(`${process.env.REACT_APP_SERVERURL}/user/changepassword`, {_id:id,oldPassword:FormData.oldPassword,newPassword:FormData.newPassword});
-        const data = await response;
-        if(data?.data?.success === true){
-          setFormData({
-            oldPassword: "",
-            newPassword: "",
-          });
-          toast.success(data?.data?.message);
-        }
-        else{
-          toast.error(data?.data?.message);
-        }
-        console.log(data);
+    if (
+      !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/.test(
+        FormData.newPassword
+      )
+    ) {
+      toast.error("Weak Password");
+      return;
     }
-    catch(error){
+    try {
+      setLoding(true);
+      const response = await axios.post(
+        `${process.env.REACT_APP_SERVERURL}/user/changepassword`,
+        {
+          _id: id,
+          oldPassword: FormData.oldPassword,
+          newPassword: FormData.newPassword,
+        }
+      );
+      const data = await response;
+      if (data?.data?.success === true) {
+        setFormData({
+          oldPassword: "",
+          newPassword: "",
+        });
+        setLoding(false);
+        toast.success(data?.data?.message);
+        setTimeout(() => {
+          navigate("/profile");
+        }, 2000); 
+      } else {
+        toast.error(data?.data?.message);
+        setLoding(false);
+      }
+      console.log(data);
+    } catch (error) {
       console.log(error);
     }
   };
@@ -44,39 +65,46 @@ export default function ChangePassword() {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <Toaster />
+        <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item fs-3">
+                    <Link to="/profile">Profile</Link>
+                  </li>
+                  <li class="breadcrumb-item active fs-3" aria-current="page">
+                  Change Password
+                  </li>
+                </ol>
+              </nav>
         <div className="sm:mx-auto sm:w-full sm:max-w-sm content-center">
-         
+ 
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Change Password
+            <Link to="/profile">Change Password</Link>
           </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmit}>
-           
             <div>
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
-                 Old Password
+                  Old Password
                 </label>
               </div>
               <div className="mt-2">
-                <input
+                <Input.Password
                   id="oldPassword"
                   name="password"
-                  value={FormData.oldPassword}
-                  onChange={handleChange}
                   type="password"
-                  autoComplete="current-password"
-                  className="pl-2 outline-none block border border-gray-100 w-full rounded-md py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  value={FormData.oldPassword}
+                  autoComplete="old-password"
+                  onChange={handleChange}
+                  className="py-2"
                 />
-               
               </div>
             </div>
-
             <div>
               <label
                 htmlFor="confirm-password"
@@ -84,15 +112,17 @@ export default function ChangePassword() {
               >
                 New password
               </label>
-              <input
-                type="password"
-                name="newPassword"
-                value={FormData.newPassword}
-                onChange={handleChange}
-                id="newPassword"
-                className="pl-2 block outline-none border border-gray-100 w-full rounded-md py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-           
+              <div className="mt-2">
+                <Input.Password
+                  id="newPassword"
+                  name="newPassword"
+                  type="password"
+                  value={FormData.newPassword}
+                  autoComplete="old-password"
+                  onChange={handleChange}
+                  className="py-2"
+                />
+              </div>
             </div>
 
             <div>
@@ -101,7 +131,7 @@ export default function ChangePassword() {
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 onClick={handleSubmit}
               >
-                Change Password
+                {loding ? "Updating password...." : "Change Password"}
               </button>
             </div>
           </form>

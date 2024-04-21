@@ -104,9 +104,16 @@ const ProfilePage = () => {
     <div className="container mx-auto px-4 py-4">
       <Toaster />
       <div className="flex w-full justify-between">
-        <Link to="/profile">
-          <h1 className="text-3xl font-bold mb-6">Profile</h1>
-        </Link>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item fs-3">
+              <Link to="/profile">Profile</Link>
+            </li>
+            <li class="breadcrumb-item active fs-3" aria-current="page">
+              User Details
+            </li>
+          </ol>
+        </nav>
       </div>
       {isLoading ? ( 
         <div className="flex justify-center items-center h-screen">

@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import { Country, State, City } from "country-state-city";
 import { Link } from "react-router-dom";
-import Loader from "../Loader/Loader"; 
+import Loader from "../Loader/Loader";
 
 const ProfileAddress = () => {
   // const {Select} = Layout;
@@ -11,7 +11,7 @@ const ProfileAddress = () => {
   const [stateSelected, setIsStateSelected] = useState(true);
   const [citySelected, setIsCitySelected] = useState(true);
   const [isEdited, setIsEdited] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     streetAddress: "",
     city: "",
@@ -42,7 +42,7 @@ const ProfileAddress = () => {
   };
   const fetchData = async () => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       const response = await axios.get(
         `${process.env.REACT_APP_SERVERURL}/user/profile/${id}`
       );
@@ -60,11 +60,10 @@ const ProfileAddress = () => {
         country: response.data.user.country,
         postalcode: response.data.user.postalcode,
       });
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
-      setIsLoading(false)
-
+      setIsLoading(false);
     }
   };
 
@@ -97,7 +96,7 @@ const ProfileAddress = () => {
     }
 
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       setIsEdited(true);
       const response = await axios.put(
         `${process.env.REACT_APP_SERVERURL}/user/editprofile/${id}`,
@@ -110,11 +109,11 @@ const ProfileAddress = () => {
       } else {
         toast.error(response?.data?.msg);
       }
-      setIsLoading(false); 
+      setIsLoading(false);
       // window.location.href = "/profile";
     } catch (error) {
       console.log(error);
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -139,11 +138,18 @@ const ProfileAddress = () => {
     <div className="container mx-auto px-4 py-4">
       <Toaster />
       <div className="flex w-full justify-between">
-        <Link to="/profile">
-          <h1 className="text-3xl font-bold mb-6">Your Address</h1>
-        </Link>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item fs-3">
+              <Link to="/profile">Profile</Link>
+            </li>
+            <li class="breadcrumb-item active fs-3" aria-current="page">
+              Your Address
+            </li>
+          </ol>
+        </nav>
       </div>
-      {isLoading ? ( 
+      {isLoading ? (
         <div className="flex justify-center items-center h-screen">
           <Loader />
         </div>
