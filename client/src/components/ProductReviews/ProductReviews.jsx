@@ -19,8 +19,14 @@ const ProductReviews = ({ selectedProduct, fetchData }) => {
     setRating(0);
   };
 
-  const handleShowModal = () => setShowModal(true);
-
+  const handleShowModal = () => {
+    if (userId) {
+      setShowModal(true);
+    } else {
+      toast.error("Please login to add review");
+    }
+  };
+  
   const handleReviewChange = (e) => {
     setReview(e.target.value);
   };

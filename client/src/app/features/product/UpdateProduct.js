@@ -4,6 +4,7 @@ import { updateProductAsync, fetchProductsAsync } from "./productSlice";
 import UpdateModal from "./UpdateModel";
 import { Pagination } from "antd";
 import Loader from "../../../components/Loader/Loader";
+import { fetchCategoriesAsync } from "../category/categorySlice";
 
 const UpdateProduct = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const UpdateProduct = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
   const limit = 10;
-
+  const [image , setImage] = useState("")
   const openModal = (product) => {
     setSelectedProduct(product);
   };
@@ -31,7 +32,7 @@ const UpdateProduct = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-  
+
     const updatedProduct = {
       id: selectedProduct._id,
       title: e.target.product.value,
@@ -41,14 +42,14 @@ const UpdateProduct = () => {
       brand: e.target.company.value,
       quantity: e.target.quantity.value,
     };
-  
+
     const file = e.target.image.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result;
         updatedProduct.image = base64String;
-  
+
         dispatch(updateProductAsync({
           productId: selectedProduct._id,
           productData: updatedProduct,
@@ -72,9 +73,14 @@ const UpdateProduct = () => {
       });
     }
   };
-  
-  
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+  };
+
   useEffect(() => {
+    dispatch(fetchCategoriesAsync());
     dispatch(fetchProductsAsync()).then(() => {
       setTotalCount(productList.length);
     });
@@ -164,10 +170,11 @@ const UpdateProduct = () => {
           closeModal={closeModal}
           handleUpdate={handleUpdate}
           categoryList={categoryList}
+          handleImageChange={handleImageChange}
         />
       )}
     </div>
   );
 };
 
-export default UpdateProduct;
+export default UpdateProduct
