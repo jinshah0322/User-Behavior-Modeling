@@ -1,16 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
+const UpdateModal = ({
+  selectedProduct,
+  closeModal,
+  handleUpdate,
+  handleImageChange,
+}) => {
   const categoryList = useSelector((state) => state.category.categoryList);
-  const [image, setImage] = React.useState(null);
-
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
-  };
-
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div className="bg-white max-h-[80vh] p-8 rounded shadow-lg w-full sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] 2xl:w-[30%]">
@@ -132,7 +129,6 @@ const UpdateModal = ({ selectedProduct, closeModal, handleUpdate }) => {
             <div className="sm:hidden flex">
               <button
                 type="submit"
-                onClick={closeModal}
                 className="flex-grow bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
               >
                 Save
