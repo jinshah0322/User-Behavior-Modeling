@@ -78,8 +78,9 @@ const ProductReviews = ({ selectedProduct, fetchData }) => {
     <section className="product-reviews p-12">
       <Container>
         <Toaster />
-        <ul>
+        <ul className="d-flex flex-wrap">
           <li
+            className="mb-2"
             style={{
               color: listSelected === "desc" ? "black" : "#9c9b9b",
             }}
@@ -88,6 +89,7 @@ const ProductReviews = ({ selectedProduct, fetchData }) => {
             Description
           </li>
           <li
+            className="mb-2"
             style={{
               color: listSelected === "rev" ? "black" : "#9c9b9b",
             }}
@@ -108,11 +110,11 @@ const ProductReviews = ({ selectedProduct, fetchData }) => {
           </p>
         ) : selectedProduct?.ratings?.length > 0 ? (
           <div>
-            <div className="grid grid-cols-4">
-              {selectedProduct?.ratings?.map((rate) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+              {selectedProduct?.ratings?.map((rate, index) => (
                 <div
                   className="rate-comment mt-3 bg-gray-200 ml-4 p-3 max-w-200px overflow-hidden overflow-ellipsis"
-                  key={rate.rating}
+                  key={index}
                 >
                   <span className="font-bold">{rate?.name}</span>
                   <span className="flex mt-2">

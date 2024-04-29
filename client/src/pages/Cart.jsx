@@ -16,7 +16,6 @@ const Cart = () => {
   const { cartList, total } = useSelector((state) => state.cart);
 
   const onChange = (value) => {
-    console.log("onChange:", value);
     setCurrent(value);
   };
 
@@ -35,7 +34,7 @@ const Cart = () => {
   return (
     <>
       {loading ? (
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center min-h-screen">
           <Loader />
         </div>
       ) : cartList?.length > 0 ? (
@@ -63,24 +62,20 @@ const Cart = () => {
               },
             ]}
           />
-          {current === 0 && (
-            <div>
+            {current === 0 && (
               <CartItem
                 setCurrent={setCurrent}
                 setIsAddress={setIsAddress}
                 cartList={cartList}
               />
-            </div>
-          )}
-          {current === 1 && (
-            <div>
+            )}
+            {current === 1 && (
               <AddressPage
                 setCurrent={setCurrent}
                 setIsPayment={setIsPayment}
               />
-            </div>
-          )}
-          {current === 2 && <PaymentPage setCurrent={setCurrent} />}
+            )}
+            {current === 2 && <PaymentPage setCurrent={setCurrent} />}
         </>
       ) : (
         <div className="no-items min-h-[76vh] product w-full flex justify-center items-center bg-gray-100">

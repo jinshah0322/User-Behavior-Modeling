@@ -43,7 +43,7 @@ const AddressPage = ({ setCurrent, setIsPayment }) => {
       toast.warning("Please fill in all fields");
     }
   };
-  
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -82,10 +82,10 @@ const AddressPage = ({ setCurrent, setIsPayment }) => {
   }, []);
   return (
     <div
-      className={`bg-gray-100 min-h-[70vh] grid ${
-        isVisible ? "lg:grid-cols-2" : "lg:grid-cols-1 w-full"
-      } justify-center items-center`}
-    >
+    className={`bg-gray-100 min-h-[70vh] grid ${
+      isVisible ? "lg:grid-cols-2" : "lg:grid-cols-1 w-full"
+    } justify-center items-center`}
+  >  
       <div
         className={` ${
           !isVisible ? "lg:mx-[450px]" : "lg:mx-[100px]"
@@ -115,12 +115,15 @@ const AddressPage = ({ setCurrent, setIsPayment }) => {
           )}
         </p>
         <div className="flex justify-center">
-          <div className="flex gap-3" style={{ maxWidth: "440px" }}>
+          <div
+            className="flex flex-col lg:flex-row gap-3"
+            style={{ maxWidth: "440px" }}
+          >
             <a href="#address" className="flex-1 flex justify-center">
               <button
                 className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-opacity-50"
                 onClick={() => setIsVisible(true)}
-                style={{ width: "220px", height: "40px" }}
+                style={{ minWidth: "220px", height: "40px" }}
               >
                 Change Address
               </button>
@@ -131,7 +134,7 @@ const AddressPage = ({ setCurrent, setIsPayment }) => {
               } text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50`}
               onClick={handleNextPage}
               disabled={isVisible}
-              style={{ width: "220px", height: "40px" }}
+              style={{ minWidth: "220px", height: "40px" }}
             >
               Proceed to Payment
             </button>
